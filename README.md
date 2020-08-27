@@ -3,7 +3,7 @@
 1. git checkout *develop*
 2. npm i
 
-*Description*
+*Dev info*
 
 Routes are defined in *App.js*
 For app-wide css usage, import the css in *index.js*
