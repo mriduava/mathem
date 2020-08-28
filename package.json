@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.5.2",
     "express": "^4.17.1",
+    "mongoosy": "^1.0.16",
     "react": "^16.13.1",
     "react-amazing-proxy": "^1.0.63",
     "react-dom": "^16.13.1",
