@@ -1,7 +1,24 @@
 *IMPORTANT*
-
+    *In the console*
 1. git checkout *develop*
 2. npm i
+
+    *In windows*
+1. Download MongoDB(use default)
+2. Open cmd promp in windows
+3. Uncomment the commented block in server.js
+4. In VSC, open a new terminal and run npm start or start script
+5. In the open cmd, locate mongo bin folder, default is: 
+    *C:\Program Files\MongoDB\Server\4.4\bin*
+6. Run mongod 
+7. Run mongo
+8. Run show dbs
+9. Confirm that mathem is shown in the list displayed
+10. Comment the uncommented block from earlier 
+
+*Note* 
+
+If anything fails that's probably some issues when MongoDB got installed, try reinstall with defaults in C: disk
 
 *Dev info*
 
