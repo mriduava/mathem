@@ -1,11 +1,17 @@
-import React from 'react'
+import React from "react";
 
-const homePage = () => {
-    return(
-        <div>
-            <h1>Home page</h1>
-        </div>
-    )
+import SearchField from './homePageComponents/searchField'
+import poster from '../Assets/poster.jpg'
+
+
+const HomePage = () => {
+
+    return (
+      <div className="container-fluid">
+        <SearchField />
+        <img src={poster} className="img-fluid poster" alt="food poster"/>
+      </div>
+    );
 }
 
-export default homePage;
+export default HomePage;
