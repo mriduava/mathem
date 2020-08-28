@@ -9,13 +9,14 @@
     "bootstrap": "^4.5.2",
     "express": "^4.17.1",
     "react": "^16.13.1",
+    "react-amazing-proxy": "^1.0.63",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "reactstrap": "^8.5.1"
   },
   "scripts": {
-    "start": "react-scripts start"
+    "start": "node node_modules/react-amazing-proxy/start"
   },
   "eslintConfig": {
     "extends": "react-app"
