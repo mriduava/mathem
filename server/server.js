@@ -10,6 +10,7 @@ const { app } = require('mongoosy')({
   }
 });
 
+//  create cart api
 app.post('/createCart', (req, res) => {
   // Insert logic here
   return res.send('Cart created')
@@ -20,6 +21,11 @@ app.post("/getProductsByFilter", (req, res) => {
   // Insert logic here
   return res.send("Products fetched");
 });
+
+app.get("/calculatePrice", (req, res) => {
+  // Insert logic here
+  return res.send("Calculated price")
+})
 
 //Example of product to save in MongoDB
 
