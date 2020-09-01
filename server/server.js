@@ -10,6 +10,17 @@ const { app } = require('mongoosy')({
   }
 });
 
+app.post('/createCart', (req, res) => {
+  // Insert logic here
+  return res.send('Cart created')
+})
+
+// Get products api
+app.post("/getProductsByFilter", (req, res) => {
+  // Insert logic here
+  return res.send("Products fetched");
+});
+
 //Example of product to save in MongoDB
 
 
