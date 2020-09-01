@@ -8,11 +8,8 @@ const SearchField = () => {
 
   return (
     <div>
-      <InputGroup>
-        <InputGroupAddon addonType="prepend">
-          <InputGroupText>Sök mat priser</InputGroupText>
-        </InputGroupAddon>
-        <Input />
+      <InputGroup className="mt-5">
+        <Input placeholder="Sök varor" />
       </InputGroup>
     </div>
   );

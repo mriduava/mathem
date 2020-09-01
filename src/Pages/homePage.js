@@ -9,7 +9,6 @@ const HomePage = () => {
     return (
       <div className="container-fluid">
         <SearchField />
-        <img src={poster} className="img-fluid poster" alt="food poster"/>
       </div>
     );
 }

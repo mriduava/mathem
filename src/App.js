@@ -9,7 +9,7 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
-      {header("Mat hem")}
+      {header("Mat Priser")}
       <main className="container">
         <Switch>
           <Route exact path="/" component={homePage}/>
