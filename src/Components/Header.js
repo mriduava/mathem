@@ -15,7 +15,7 @@ const MainHeader = (name) => {
   const toggleNavbar = () => setCollapsed(!collapsed);
 
   return (
-    <div className="container-fluid">
+    <div>
       <Navbar color="primary" dark>
         <NavbarBrand href="/" className="mr-auto ml-4">
             <h1>
