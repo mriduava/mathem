@@ -15,7 +15,9 @@ function App() {
           <Route exact path="/" component={homePage}/>
         </Switch>
       </main>
+      <div className="fixed-bottom">
       {footer()}
+      </div>
     </div>
     </BrowserRouter>
   );
