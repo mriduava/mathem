@@ -5,15 +5,19 @@ import homePage from './Pages/homePage'
 import header from './Components/Header'
 import footer from './Components/Footer'
 
+import ProductsContextProvider from './contexts/ProductsContextProvider'
+
 function App() {
   return (
     <BrowserRouter>
     <div className="App">
       {header("Mat Priser")}
       <main className="container">
+      <ProductsContextProvider>
         <Switch>
           <Route exact path="/" component={homePage}/>
         </Switch>
+      </ProductsContextProvider>
       </main>
       <div className="fixed-bottom">
       {footer()}
