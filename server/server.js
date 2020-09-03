@@ -12,11 +12,40 @@ const { app } = require('mongoosy')({
 });
 
  app.get("/api/harvestMathem", async (req, res) => {
+   let products = [];
    let dataHarvest = await fetch(
-     `https://api.mathem.io/product-search/noauth/search/query?size=1000&index=1&storeId=10&memberType=P&searchType=recommended`
+     `https://api.mathem.io/product-search/noauth/search/query?size=10&keyword=kyckling&searchType=searchResult&type=p&sortTerm=popular&sortOrder=desc&storeId=10&q=kyckling`
    );
    dataHarvest = await dataHarvest.json()
-   return res.send(dataHarvest);
+   dataHarvest = dataHarvest.products
+   dataHarvest.map(product => {
+               let dataProduct = {
+                 name: product.name,
+                 fullName: product.fullName,
+                 volume: `${product.quantity} ${product.unit}`,
+                 url: product.url,
+                 retail: "mathem",
+                 label: product.badges.forEach((badge) => {
+                   return badge.name;
+                 }),
+                 origin: product.origin ? product.origin.name : null,
+                 ecologic: product.badges.forEach((badge) => {
+                   badge.name === "Ekologisk" ? true : false;
+                 }),
+                 priceUnit: product.unit,
+                 price: product.price,
+                 comparePrice: product.comparisonPrice,
+                 compareUnit: product.comparisonUnit,
+                 discount: product.discount ? {
+                   memberDiscount: product.discount ? true : false,
+                   prePrice: product.discount ? product.price : null,
+                   discountPrice: product.discount ? product.discount.price : null,
+                   maxQuantity:product.discount ? product.discount.quantityToBeBought : null,
+                 } : null,
+               };
+               products.push(dataProduct)
+   })
+   return res.send(products);
  });
 
 //Example of product to save in MongoDB
