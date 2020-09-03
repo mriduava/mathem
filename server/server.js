@@ -1,5 +1,6 @@
 const db = 'mathem';
 const PORT = 3200
+const fetch = require("node-fetch");
 
 /*To connect with MongoDB
  It will create a db named 'mathem'
@@ -10,36 +11,13 @@ const { app } = require('mongoosy')({
   }
 });
 
-// const mathemHarvester = () => {
-//   const data = app.get(
-//     `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/frukt-o-gront?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`,
-//   (req, res) => {
-//     return res.json
-//   });
-//   console.log(data)
-//   return data
-// }
-// app.get('/dataLog',(req,res) => {
-//   console.log(mathemHarvester());
-//   return res.send('In datalog')
-// })
-
-// //  create cart api
-// app.post('/createCart', (req, res) => {
-//   // Insert logic here
-//   return res.send('Cart created')
-// })
-
-// // Get products api
-// app.post("/getProductsByFilter", (req, res) => {
-//   // Insert logic here
-//   return res.send("Products fetched");
-// });
-
-// app.get("/calculatePrice", (req, res) => {
-//   // Insert logic here
-//   return res.send("Calculated price")
-// })
+ app.get("/api/harvestMathem", async (req, res) => {
+   let dataHarvest = await fetch(
+     `https://api.mathem.io/product-search/noauth/search/query?size=1000&index=1&storeId=10&memberType=P&searchType=recommended`
+   );
+   dataHarvest = await dataHarvest.json()
+   return res.send(dataHarvest);
+ });
 
 //Example of product to save in MongoDB
 
