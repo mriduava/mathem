@@ -7,7 +7,6 @@ export default function StoreContextProvider(props){
     const mathemHarvester = async (searcWord) => {
         await fetch("/api/harvestMathem")
           .then((res) => res.json())
-          .then((data) => console.log(data));
         ;
     }
 

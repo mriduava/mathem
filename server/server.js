@@ -15,8 +15,8 @@ const { app } = require('mongoosy')({
    let products = [];
    let dataHarvest = await fetch(
      `https://api.mathem.io/product-search/noauth/search/query?size=1000&keyword=kyckling&searchType=searchResult&type=p&sortTerm=popular&sortOrder=desc&storeId=10&q=kyckling`
-   );
-   dataHarvest = await dataHarvest.json()
+   )
+   .then(data => data.json());
    dataHarvest = dataHarvest.products
    dataHarvest.map(product => {
                let dataProduct = {
