@@ -10,19 +10,19 @@ const { app } = require('mongoosy')({
   }
 });
 
-const mathemHarvester = () => {
-  const data = app.get(
-    `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/frukt-o-gront?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`,
-  (req, res) => {
-    return res.json
-  });
-  console.log(data)
-  return data
-}
-app.get('/dataLog',(req,res) => {
-  console.log(mathemHarvester());
-  return res.send('In datalog')
-})
+// const mathemHarvester = () => {
+//   const data = app.get(
+//     `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/frukt-o-gront?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`,
+//   (req, res) => {
+//     return res.json
+//   });
+//   console.log(data)
+//   return data
+// }
+// app.get('/dataLog',(req,res) => {
+//   console.log(mathemHarvester());
+//   return res.send('In datalog')
+// })
 
 // //  create cart api
 // app.post('/createCart', (req, res) => {
