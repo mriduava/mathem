@@ -24,13 +24,11 @@ const { app } = require('mongoosy')({
                  volume: `${product.quantity} ${product.unit}`,
                  url: product.url,
                  retail: "mathem",
-                 label: product.badges.forEach((badge) => {
-                   return badge.name;
-                 }),
-                 origin: product.origin ? product.origin.name : null,
-                 ecologic: product.badges.forEach((badge) => {
-                   badge.name === "Ekologisk" ? true : false;
-                 }),
+                 label: product.badges.length > 1 ? `${ product.badges.forEach((badge) => {
+                   this.label.concat(badge.name);
+                 })}` : null,
+                 origin: product.origin ? product.origin.name : 'Not specified',
+                 ecologic: product.badges.length > 1 ? product.badges.forEach(badge =>{badge.name == "Ekologisk" ? true : false}) : false,
                  priceUnit: product.unit,
                  price: product.price,
                  comparePrice: product.comparisonPrice,
@@ -42,6 +40,7 @@ const { app } = require('mongoosy')({
                    maxQuantity:product.discount ? product.discount.quantityToBeBought : null,
                  } : null,
                };
+               console.log(dataProduct);
                products.push(dataProduct)
    })
    return res.send(products);
