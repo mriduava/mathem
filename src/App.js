@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import StoreContext from './ContextProviders/storeContext'
 
 import homePage from './Pages/homePage'
 import header from './Components/Header'
@@ -11,6 +12,7 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
+      <StoreContext>
       {header("Mat Priser")}
       <main className="container">
       <ProductsContextProvider>
@@ -22,6 +24,7 @@ function App() {
       <div className="fixed-bottom">
       {footer()}
       </div>
+      </StoreContext>
     </div>
     </BrowserRouter>
   );
