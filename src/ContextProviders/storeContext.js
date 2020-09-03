@@ -4,11 +4,11 @@ export const StoreContext = createContext();
 
 export default function StoreContextProvider(props){
 
-    const mathemHarvester = async () => {
-        let res = await fetch('/api/harvestMathem');
-        res = await res.json();
-        console.log(res);
-
+    const mathemHarvester = async (searcWord) => {
+        await fetch("/api/harvestMathem")
+          .then((res) => res.json())
+          .then((data) => console.log(data));
+        ;
     }
 
     mathemHarvester()
