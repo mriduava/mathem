@@ -65,15 +65,6 @@ const { app } = require('mongoosy')({
 //Example of product to save in MongoDB
 
 
-let Products = require('./models/CitygrossProduct');
-
-// let product = new Product({
-//       title: "Gullök",
-//       desc: "Svensk Gullök, having a strong, sharp smell and taste!",
-//       price: "23.90"
-// })
-// product.save();
-
 // app.get('/citygross', (req, res)=>{
 //   Products.find({}, (err, result)=>{
 //     err?res.json(err):res.json(result)
