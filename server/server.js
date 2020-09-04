@@ -70,15 +70,6 @@ app.get("/api/mathem", (req, res) => {
   });
 });
 
-
-// app.get('/citygross', (req, res)=>{
-//   Products.find({}, (err, result)=>{
-//     err?res.json(err):res.json(result)
-//   })
-// })
-
-
-
 //SERVER 
 app.listen(PORT, ()=> 
       console.log(`Server is listening at port ${PORT}`))
