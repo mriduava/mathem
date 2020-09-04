@@ -27,7 +27,7 @@ const HomePage = () => {
         {/* <SearchField /> */}
 
         <Form 
-        onSubmit={fetchCitygrossProducts(search)}
+        onSubmit={() => fetchCitygrossProducts(search)}
         className="row">
         <FormGroup className="col-sm-12 col-md-8 col-lg-6">
           <Input 

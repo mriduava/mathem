@@ -64,6 +64,12 @@ const { app } = require('mongoosy')({
 
 //Example of product to save in MongoDB
 
+app.get("/api/mathem", (req, res) => {
+  Product.find({}, (err, result) => {
+    err ? res.json(err) : res.json(result);
+  });
+});
+
 
 // app.get('/citygross', (req, res)=>{
 //   Products.find({}, (err, result)=>{
