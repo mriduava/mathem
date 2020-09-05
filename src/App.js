@@ -6,7 +6,7 @@ import homePage from './Pages/homePage'
 import header from './Components/Header'
 import footer from './Components/Footer'
 
-import ProductsContextProvider from './contexts/ProductsContextProvider'
+import ProductContextProvider from './contexts/ProductContextProvider'
 
 function App() {
   return (
@@ -15,11 +15,11 @@ function App() {
       <StoreContext>
       {header("Mat Priser")}
       <main className="container">
-      <ProductsContextProvider>
+      <ProductContextProvider>
         <Switch>
           <Route exact path="/" component={homePage}/>
         </Switch>
-      </ProductsContextProvider>
+      </ProductContextProvider>
       </main>
       <div className="fixed-bottom">
       {footer()}
