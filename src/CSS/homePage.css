@@ -1,4 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+}
+
+.App{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column; 
+}
+
+.content { 
+    flex: 1; 
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    background: #a4b1b0;
+}
+
 .poster{
     width: 100vw;
     max-height: 300px;
+}
+
+.foot-wave {   
+    flex-shrink: 0; 
+    height: 50px;
+    text-align: center;
+    position: relative;
+}
+
+.mriduwave {
+    overflow: visible;
+    position: absolute;
+    bottom: 0;
+    transform: matrix(1,0,0,1,0,0);
 }

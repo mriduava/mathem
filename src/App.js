@@ -14,16 +14,14 @@ function App() {
     <div className="App">
       <StoreContext>
       {header("Mat Priser")}
-      <main className="container">
-      <ProductContextProvider>
-        <Switch>
-          <Route exact path="/" component={homePage}/>
-        </Switch>
-      </ProductContextProvider>
-      </main>
-      <div className="fixed-bottom">
-      {footer()}
+      <div className="content">
+        <ProductContextProvider>
+          <Switch>
+            <Route exact path="/" component={homePage}/>
+          </Switch>
+        </ProductContextProvider>
       </div>
+      {footer()}
       </StoreContext>
     </div>
     </BrowserRouter>

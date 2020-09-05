@@ -34,11 +34,14 @@ const HomePage = () => {
   
   return (
     <div className="container">
-      <FormGroup className="col-10">
-        <Input type="text" 
+      <div className="d-flex justify-content-center">
+      <FormGroup className="col-8 py-5">
+        <Input type="text" className="mt-5"
+          style={{padding: '25px', borderRadius: '20px', fontSize: '25px'}}
           onChange={e => autoSearch(e.target.value)}
           placeholder="Sök varor" />
       </FormGroup>
+      </div>
       
       <div>
         {productsList()}
