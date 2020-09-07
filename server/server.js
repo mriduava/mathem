@@ -47,6 +47,53 @@ const { app } = require('mongoosy')({
    return res.send(products);
  });
 
+ const bustCache = () =>{
+  return '?avoidCache=' + (Math.random() + '').split('.')[1]
+}
+
+const stringToLink = (url) => {
+  let updatedURL = url.replace(/ /g, "-")
+//  console.log(updatedURL)
+  return updatedURL
+}
+
+
+ app.get('/api/harvestWillys', async (req, res) => {
+   let products = []
+   let raw = await fetch('https://www.willys.se/c/' + 'Kott-chark-och-fagel/Fagel/Fryst-fagel' + bustCache() + '$size=1000').then((data) => data.json());
+   
+   raw = raw.results
+  // console.log(raw)
+   raw.map(product => {
+    let dataProduct = {
+      name: product.name,
+      fullName: product.pickupProductLine2,
+      volume: product.displayVolume,
+      url: 'https://www.willys.se/produkt/' + stringToLink(product.name) + '-' + product.code,
+      retail: "willys",
+      
+      origin: product.labels[1],
+   //   ecologic: product.badges.forEach((badge) => {
+    //    badge.name === "Ekologisk" ? true : false
+//}),
+      priceUnit: product.priceUnit,
+      price: product.price,
+      comparePrice: product.comparePrice,
+      compareUnit: product.comparePriceUnit,
+     // discount: product.discount ? {
+     //   memberDiscount: product.discount ? true : false,
+      //  prePrice: product.discount ? product.price : null,
+     //   discountPrice: product.discount ? product.discount.price : null,
+//maxQuantity:product.discount ? product.discount.quantityToBeBought : null,
+     // } : null,
+    };
+    products.push(dataProduct)
+    
+  })
+ // console.log(products)
+  return res.send(products);
+ })
+
 //Example of product to save in MongoDB
 
 
