@@ -86,7 +86,6 @@ const { app } = require('mongoosy')({
                    : null,
                });
                products.push(dataProduct)
-               //Needs check if exist in db or duplicates
                Product.find({productFullName : dataProduct.productFullName}, (err, result) => {
                  if(!result.length){
                   dataProduct.save()
