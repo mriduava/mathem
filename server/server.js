@@ -34,13 +34,16 @@ const { app } = require('mongoosy')({
     ]
     categories.forEach(async (category) => {
      let dataCategory = new Category({name: category})
-     try{
-       dataCategory.update()
-     }
-     catch{
-       dataCategory.save()
-     }
-     console.log(category);
+               Category.find(
+                 { name: category},
+                 (err, result) => {
+                   if (!result.length) {
+                     dataCategory.save();
+                   } else {
+                     dataCategory.update();
+                   }
+                 }
+               );
       let dataHarvest = await fetch(
      `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
    ).then((data) => data.json());
