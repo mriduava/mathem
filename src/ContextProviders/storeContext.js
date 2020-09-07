@@ -11,7 +11,7 @@ export default function StoreContextProvider(props){
         ;
     }
 
-    mathemHarvester()
+    mathemHarvester("yes")
 
     const values = {
 
