@@ -2,6 +2,7 @@ const db = 'mathem';
 const PORT = 3200
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
+const Category = require("./models/Category");
 
 /*To connect with MongoDB
  It will create a db named 'mathem'
@@ -14,8 +15,34 @@ const { app } = require('mongoosy')({
 
  app.get("/api/harvestMathem", async (req, res) => {
    let products = [];
-   let dataHarvest = await fetch(
-     `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/kott-o-chark?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
+   let categories = [
+     "frukt-o-gront",
+     "mejeri-o-ost",
+     "brod-o-bageri",
+     "kott-o-chark",
+     "dryck",
+     "skafferi",
+     "fisk-o-skaldjur",
+     "hem-o-hygien",
+     "fardigmat-o-halvfabrikat",
+     "glass-godis-o-snacks",
+     "barnmat-o-tillbehor",
+     "apotek-o-halsa",
+     "smaksattare",
+     "djurmat-o-tillbehor",
+     "kiosk",
+    ]
+    categories.forEach(async (category) => {
+     let dataCategory = new Category({name: category})
+     try{
+       dataCategory.update()
+     }
+     catch{
+       dataCategory.save()
+     }
+     console.log(category);
+      let dataHarvest = await fetch(
+     `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
    ).then((data) => data.json());
    dataHarvest = dataHarvest.products
    dataHarvest.map(product => {
@@ -55,11 +82,18 @@ const { app } = require('mongoosy')({
                      }
                    : null,
                });
-               console.log(dataProduct);
                products.push(dataProduct)
-               dataProduct.save()
+               //Needs check if exist in db or duplicates
+               Product.find({productFullName : dataProduct.productFullName}, (err, result) => {
+                 if(!result.length){
+                  dataProduct.save()
+                 }
+                 else{
+                  dataProduct.update()
+                 }
+               })
               })
-   return res.send(products);
+    })
  });
 
 //Example of product to save in MongoDB
