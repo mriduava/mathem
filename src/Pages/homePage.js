@@ -1,17 +1,21 @@
 import React, {useState, useContext} from "react";
 import { FormGroup, Input } from 'reactstrap'
-import { ProductContext } from '../contexts/ProductContextProvider'
 
 const HomePage = () => {
-  //const { products, setProducts } = useContext(ProductContext)
   const [products, setProducts] = useState([]);
 
   const searchProduct = async (search) => {
-    let res = await fetch('/api/harvestMathem/' + search)
+    let res = await fetch(`/api/mathem/${search}`);
     res = await res.json()
+    console.log(res);
     setProducts(res)
   }
-
+  // const searchProduct = async (search) => {
+  //   let res = await fetch('/api/harvestMathem/' + search)
+  //   res = await res.json()
+  //   setProducts(res)
+  // }
+  
   let searchTimer;
   const autoSearch = (search) => {
     clearTimeout(searchTimer)
