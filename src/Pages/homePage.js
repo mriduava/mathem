@@ -10,11 +10,6 @@ const HomePage = () => {
     console.log(res);
     setProducts(res)
   }
-  // const searchProduct = async (search) => {
-  //   let res = await fetch('/api/harvestMathem/' + search)
-  //   res = await res.json()
-  //   setProducts(res)
-  // }
   
   let searchTimer;
   const autoSearch = (search) => {
