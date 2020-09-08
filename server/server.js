@@ -153,14 +153,14 @@ const { app } = require('mongoosy')({
 //Example of product to save in MongoDB
 const Products = require("./models/CitygrossProduct");
 
-app.get("/api/mathem/:name", (req, res) => {
+app.get("/api/mathem/:name",async (req, res) => {
   console.log(req.params.name);
-  Products.find(
-    { productFullName: { $regex: `.*${req.params.name}.*` } },
-    (err, result) => {
-      err ? res.json(err) : res.json(result);
-    }
-  );
+    await Product.find(
+      { productFullName: { $regex: `.*${req.params.name}.*` } },
+      (err, result) => {
+        err ? res.json(err) : res.json(result);
+      }
+    );
 });
 
 //SERVER 
