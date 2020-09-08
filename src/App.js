@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import StoreContext from './ContextProviders/storeContext'
 
 import homePage from './Pages/homePage'
 import header from './Components/Header'
@@ -12,7 +11,6 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
-      <StoreContext>
       {header("Mat Priser")}
       <div className="content">
         <ProductContextProvider>
@@ -22,7 +20,6 @@ function App() {
         </ProductContextProvider>
       </div>
       {footer()}
-      </StoreContext>
     </div>
     </BrowserRouter>
   );
