@@ -3,6 +3,7 @@ const PORT = 3200
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
 const Category = require("./models/Category");
+const DateUpdate = require("./models/DateUpdate")
 
 /*To connect with MongoDB
  It will create a db named 'mathem'
@@ -14,6 +15,22 @@ const { app } = require('mongoosy')({
 });
 
  const mathemHarvester = () => {
+   let todaysDate = new DateUpdate({dateUpdated:new Date()})
+   DateUpdate.find({},(err, result) => {
+     if(!result.length){
+         todaysDate.save()
+     }
+     else{
+              result.map((date) => {
+                console.log(todaysDate.dateUpdated);
+                console.log(date.dateUpdated);
+                if(todaysDate.dateUpdated.getDate() > date.dateUpdated.getDate() && todaysDate.dateUpdated.getTime() > date.dateUpdated.getTime()){
+                  // todaysDate.save()
+                  return
+                }
+              });
+     }
+   })
    let products = [];
    let categories = [
      "frukt-o-gront",
@@ -46,6 +63,7 @@ const { app } = require('mongoosy')({
      ).then((data) => data.json());
      dataHarvest = dataHarvest.products;
      dataHarvest.map((product) => {
+       let labels = ''
        let dataProduct = new Product({
          productName: product.name,
          productFullName: product.fullName,
@@ -53,12 +71,12 @@ const { app } = require('mongoosy')({
          url: product.url,
          image: product.images.MEDIUM,
          retail: "mathem",
-         label:
+         label: labels ?
            product.badges.length > 1
-             ? `${product.badges.forEach((badge) => {
-                 return badge.name.concat();
-               })}`
-             : null,
+             ? product.badges.forEach((badge) => {
+                  labels.concat(badge.name);
+               })
+             : null : null,
          origin: product.origin ? product.origin.name : "Not specified",
          ecologic:
            product.badges.length > 1
@@ -82,16 +100,16 @@ const { app } = require('mongoosy')({
            : null,
        });
        products.push(dataProduct);
-       Product.find(
-         { productFullName: dataProduct.productFullName },
-         (err, result) => {
-           if (!result.length) {
-             dataProduct.save();
-           } else {
-             dataProduct.update();
-           }
-         }
-       );
+    //    Product.find(
+    //      { productFullName: dataProduct.productFullName },
+    //      (err, result) => {
+    //        if (!result.length) {
+    //          dataProduct.save();
+    //        } else {
+    //          dataProduct.update();
+    //        }
+    //      }
+    //    );
      });
    });
  }
