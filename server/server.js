@@ -51,6 +51,7 @@ const { app } = require('mongoosy')({
          productFullName: product.fullName,
          volume: `${product.quantity} ${product.unit}`,
          url: product.url,
+         image: product.images.MEDIUM,
          retail: "mathem",
          label:
            product.badges.length > 1

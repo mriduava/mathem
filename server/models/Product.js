@@ -6,6 +6,7 @@ let schema = new Schema({
   productFullName: { type: String, required: true },
   volume: { type: String, required: false },
   url: { type: String, required: false },
+  image: {type: String, required: false},
   retail: { type: String, required: true },
   label: { type: String, required: false },
   origin: { type: String, required: true },
