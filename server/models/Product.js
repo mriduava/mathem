@@ -7,7 +7,7 @@ let schema = new Schema({
   volume: { type: String, required: false },
   url: { type: String, required: false },
   retail: { type: String, required: true },
-  label: { type: Array, required: false },
+  label: { type: String, required: false },
   origin: { type: String, required: true },
   retail: { type: String, required: true },
   ecologic: {type: Boolean, required: false},

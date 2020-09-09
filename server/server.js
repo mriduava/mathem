@@ -55,7 +55,7 @@ const { app } = require('mongoosy')({
          label:
            product.badges.length > 1
              ? `${product.badges.forEach((badge) => {
-                 return badge.name;
+                 return badge.name.concat();
                })}`
              : null,
          origin: product.origin ? product.origin.name : "Not specified",
@@ -96,17 +96,19 @@ const { app } = require('mongoosy')({
  }
 
  const dailyDataHarvest = () => {
-   
+  mathemHarvester()
  }
 
+ dailyDataHarvest()
 
+
+//This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
 app.get("/api/mathem/:name",async (req, res) => {
     await Product.find(
-      { productFullName: { $regex: `.*${req.params.name}.*` } },
+      { productFullName: { $regex: `.*${req.params.name}.*`} },
       (err, result) => {
         err ? res.json(err) : res.json(result);
-      }
-    );
+      });
 });
 
 //SERVER 
