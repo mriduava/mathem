@@ -127,32 +127,13 @@ const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
 
  app.get('/api/harvestWillys', async (req, res) => {
    let products = []
-   let categories = [
-     'Kott, chark & fagel',
-     'Frukt & Gront',
-     'Mejeri, ost & ägg',
-     'Skafferi',
-     'Brod & Kakor',
-     'Fryst',
-     'Fisk & Skaldjur',
-     'Vegetariskt',
-     'Glass, godis & snacks',
-     'Dryck',
-     'Fardigmat',
-     'Barn',
-     'Blommor',
-     'Hem & Stad',
-     'Halsa & Skonhet',
-     'Apotek',
-     'Tradgard',
-     'Husdjur',
-     'Tobak',
-     'Tandare & tobakstillbehar',
-     'Lotter',
-     'Tidningar & bocker'
-   ]
    
-    let raw = await fetch('https://www.willys.se/c/' + 'Kott-chark-och-fagel/Fagel/Fryst-fagel' + bustCache() + '$size=1000').then((data) => data.json());
+   
+   let categories = await fetch('https://www.willys.se/leftMenu/categorytree' + bustCache())
+   categories = await categories.json()
+  
+
+  let raw = await fetch('https://www.willys.se/c/' + categories.url + bustCache() + '$size=1000').then((data) => data.json());
    
    raw = raw.results
   // console.log(raw)
@@ -193,7 +174,7 @@ const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
        }
      })
    })
-  console.log(products)
+  //console.log(products)
   return res.send(products);
  })
 
