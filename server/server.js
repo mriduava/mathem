@@ -125,6 +125,10 @@ const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
   return newWord
 }
 
+const genericNullValue = (value) => {
+  if (value === "") return 0
+}
+
  app.get('/api/harvestWillys', async (req, res) => {
    let products = []
    
@@ -132,11 +136,13 @@ const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
    let categories = await fetch('https://www.willys.se/leftMenu/categorytree' + bustCache())
    categories = await categories.json()
   
+  
+  for (let i = 0; i < categories.children.length; i++){
 
-  let raw = await fetch('https://www.willys.se/c/' + categories.url + bustCache() + '$size=1000').then((data) => data.json());
+  let raw = await fetch('https://www.willys.se/c/' + categories.children[i].url + bustCache() + '$size=1000').then((data) => data.json());
    
    raw = raw.results
-  // console.log(raw)
+   //console.log(raw)
    raw.map(product => {
      let dataProduct = new Product({
        productName: product.name,
@@ -149,8 +155,8 @@ const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
 
        priceUnit: product.priceUnit,
        price: convertPriceToEngSyntax(priceToInt(product.price)),
-       comparePrice: convertPriceToEngSyntax(priceToInt(product.comparePrice)),
-       compareUnit: product.comparePriceUnit,
+       comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
+       compareUnit: genericNullValue(product.comparePriceUnit),
        discount: product.discount
                    ? {
                        memberDiscount: product.potentialPromotions.applied ? true : false,
@@ -174,7 +180,9 @@ const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
        }
      })
    })
-  //console.log(products)
+
+  }
+  console.log(products)
   return res.send(products);
  })
 
