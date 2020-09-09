@@ -98,6 +98,23 @@ const { app } = require('mongoosy')({
     })
  });
 
+
+//Get all Products from MongoDB
+app.get("/api/mathem", async(req, res)=>{
+  await Product.find({}, (err, result)=>{
+    err? res.json(err): res.json(result);
+  })
+})
+
+//Find Product by ID
+app.get("/api/mathem/:id", async (req, res) => {
+    await Product.findOne(req.params.id, (err, result) => {
+        err ? res.json(err) : res.json(result);
+      }
+    );
+});
+
+//Search product by Product Name
 app.get("/api/mathem/:name",async (req, res) => {
     await Product.find(
       { productFullName: { $regex: `.*${req.params.name}.*` } },
