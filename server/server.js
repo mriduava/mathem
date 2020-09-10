@@ -176,10 +176,11 @@ const genericNullValue = (value) => {
        productFullName: product.pickupProductLine2,
        volume: product.displayVolume,
        url: 'https://www.willys.se/produkt/' + stringToLink(product.name) + '-' + product.code,
+       image: product.image.url,
        retail: 'willys',
 
        origin: "Not specified",
-
+       ecologic: false,
        priceUnit: product.priceUnit,
        price: convertPriceToEngSyntax(priceToInt(product.price)),
        comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
