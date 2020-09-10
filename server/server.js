@@ -47,6 +47,18 @@ const DateUpdate = require("./models/DateUpdate")
      ).then((data) => data.json());
      dataHarvest = dataHarvest.products;
      dataHarvest.map((product) => {
+       let getLabels = () => {
+         let labels = '';
+            product.badges.forEach((badge) => {
+              if(badge.name !== "Ekologisk"){
+                labels += badge.name + ", "    
+              }
+               })
+               if(labels === ''){
+                 labels = "No label"
+               }
+             return labels
+       }
        let dataProduct = new Product({
          productName: product.name,
          productFullName: product.fullName.toLowerCase(),
@@ -54,15 +66,10 @@ const DateUpdate = require("./models/DateUpdate")
          url: product.url,
          image: product.images.MEDIUM,
          retail: "mathem",
-         label:
-           product.badges.length > 1
-             ? product.badges.forEach((badge) => {
-                 badge.name != "Ekologisk" ? badge.name : "No label";
-               })
-             : "No label",
+         label: getLabels(),
          origin: product.origin ? product.origin.name : "Not specified",
          ecologic:
-           product.badges.length > 1
+           product.badges.length >= 1
              ? product.badges.forEach((badge) => {
                  return badge.name === "Ekologisk" ? true : false;
                })
@@ -82,6 +89,9 @@ const DateUpdate = require("./models/DateUpdate")
              }
            : null,
        });
+       if(dataProduct.label !== "No label"){
+         console.log(dataProduct.label);
+       }
        Product.find(
          { productFullName: dataProduct.productFullName.toLowerCase() },
          (err, result) => {
@@ -184,8 +194,8 @@ const genericNullValue = (value) => {
        ecologic: false,
        priceUnit: product.priceUnit,
        price: convertPriceToEngSyntax(priceToInt(product.price)),
-       comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
-       compareUnit: genericNullValue(product.comparePriceUnit),
+      //  comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
+      //  compareUnit: genericNullValue(product.comparePriceUnit),
        discount: product.discount
                    ? {
                        memberDiscount: product.potentialPromotions.applied ? true : false,

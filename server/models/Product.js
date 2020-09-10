@@ -13,8 +13,8 @@ let schema = new Schema({
   ecologic: { type: Boolean, required: false },
   priceUnit: { type: String, required: true },
   price: { type: Number, required: true },
-  compareUnit: { type: String, required: true },
-  comparePrice: { type: Number, required: true },
+  compareUnit: { type: String, required: false },
+  comparePrice: { type: Number, required: false },
   discount: {
     type: Object,
     required: false,
