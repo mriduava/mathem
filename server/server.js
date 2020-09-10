@@ -5,14 +5,14 @@ const Product = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate")
 
-/*To connect with MongoDB
- It will create a db named 'mathem'
-*/
-const { app } = require('mongoosy')({
-  connect: {
-    url: 'mongodb://localhost/' + db
-  }
-});
+// /*To connect with MongoDB
+//  It will create a db named 'mathem'
+// */
+ const { app } = require('mongoosy')({
+   connect: {
+     url: 'mongodb://localhost/' + db
+   }
+ });
 
 //Mathem's harvester and scrubber
  const mathemHarvester = () => {
@@ -156,7 +156,7 @@ const genericNullValue = (value) => {
   if (value === "") return 0
 }
 
- app.get('/api/harvestWillys', async (req, res) => {
+ const willysHarvester = async () => {
    let products = []
    
    
@@ -176,8 +176,10 @@ const genericNullValue = (value) => {
        productFullName: product.pickupProductLine2,
        volume: product.displayVolume,
        url: 'https://www.willys.se/produkt/' + stringToLink(product.name) + '-' + product.code,
+       image: product.image.url,
        retail: 'willys',
        origin: "Not specified",
+       ecologic: false,
        priceUnit: product.priceUnit,
        price: convertPriceToEngSyntax(priceToInt(product.price)),
        comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
@@ -207,9 +209,7 @@ const genericNullValue = (value) => {
    })
 
   }
-  console.log(products)
-  return res.send(products);
- })
+ }
 
  app.get('*api/willys', async(req, res) => {
    await Product.find({}, (err, result) => {
@@ -232,16 +232,6 @@ app.get("/api/willys/:id", async (req, res) => {
     }
   )
 })
-
-//Example of product to save in MongoDB
-
-
-// let Product = require('./models/Product');
-// let product = new Product({
-//       title: "Gullök",
-//       desc: "Svensk Gullök, having a strong, sharp smell and taste!",
-//       price: "23.90"
-// })
 
 //Updated search Function
 app.get('/api/mathem/:search', async (req,res)=>{
