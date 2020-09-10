@@ -8,8 +8,8 @@ const SearchField = () => {
 
   return (
     <div>
-      <InputGroup className="mt-5">
-        <Input placeholder="Sök varor" />
+      <InputGroup className="py-2">
+        <Input style={{borderRadius: '20px', padding: '23px 15px'}} placeholder="Sök varor" />
       </InputGroup>
     </div>
   );
