@@ -46,16 +46,19 @@ const { app } = require('mongoosy')({
      ).then((data) => data.json());
      dataHarvest = dataHarvest.products;
      dataHarvest.map((product) => {
-       let labels = product.badges.length >= 1 ? product.badges : ''
-       console.log(labels.includes('Ekologisk'));
        let dataProduct = new Product({
          productName: product.name,
-         productFullName: product.fullName,
+         productFullName: product.fullName.toLowerCase(),
          volume: `${product.quantity} ${product.unit}`,
          url: product.url,
          image: product.images.MEDIUM,
          retail: "mathem",
-         label: labels,
+         label:
+           product.badges.length > 1
+             ? product.badges.forEach((badge) => {
+                 badge.name != "Ekologisk" ? badge.name : "No label";
+               })
+             : "No label",
          origin: product.origin ? product.origin.name : "Not specified",
          ecologic:
            product.badges.length > 1
@@ -77,9 +80,9 @@ const { app } = require('mongoosy')({
                  : null,
              }
            : null,
-       })
+       });
        Product.find(
-         { productFullName: dataProduct.productFullName },
+         { productFullName: dataProduct.productFullName.toLowerCase() },
          (err, result) => {
            if (!result.length) {
              dataProduct.save();
@@ -121,7 +124,7 @@ const { app } = require('mongoosy')({
 //This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
 app.get("/api/mathem/:name",async (req, res) => {
     await Product.find(
-      { productFullName: { $regex: `.*${req.params.name}.*`} },
+      { productFullName: { $regex: `.*${req.params.name.toLowerCase()}.*`} },
       (err, result) => {
         err ? res.json(err) : res.json(result);
       });
