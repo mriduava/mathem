@@ -3,6 +3,7 @@ const PORT = 3200
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
 const Category = require("./models/Category");
+const DateUpdate = require("./models/DateUpdate")
 
 /*To connect with MongoDB
  It will create a db named 'mathem'
@@ -13,8 +14,8 @@ const { app } = require('mongoosy')({
   }
 });
 
- app.get("/api/harvestMathem", async (req, res) => {
-   let products = [];
+//Mathem's harvester and scrubber
+ const mathemHarvester = () => {
    let categories = [
      "frukt-o-gront",
      "mejeri-o-ost",
@@ -31,73 +32,103 @@ const { app } = require('mongoosy')({
      "smaksattare",
      "djurmat-o-tillbehor",
      "kiosk",
-    ]
-    categories.forEach(async (category) => {
-     let dataCategory = new Category({name: category})
-               Category.find(
-                 { name: category},
-                 (err, result) => {
-                   if (!result.length) {
-                     dataCategory.save();
-                   } else {
-                     dataCategory.update();
-                   }
-                 }
-               );
-      let dataHarvest = await fetch(
-     `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
-   ).then((data) => data.json());
-   dataHarvest = dataHarvest.products
-   dataHarvest.map(product => {
-               let dataProduct = new Product({
-                 productName: product.name,
-                 productFullName: product.fullName,
-                 volume: `${product.quantity} ${product.unit}`,
-                 url: product.url,
-                 retail: "mathem",
-                 label:
-                   product.badges.length > 1
-                     ? `${product.badges.forEach((badge) => {
-                         return badge.name;
-                       })}`
-                     : null,
-                 origin: product.origin ? product.origin.name : "Not specified",
-                 ecologic:
-                   product.badges.length > 1
-                     ? product.badges.forEach((badge) => {
-                         badge.name == "Ekologisk" ? true : false;
-                       })
-                     : false,
-                 priceUnit: product.unit,
-                 price: product.price,
-                 comparePrice: product.comparisonPrice,
-                 compareUnit: product.comparisonUnit,
-                 discount: product.discount
-                   ? {
-                       memberDiscount: product.discount ? true : false,
-                       prePrice: product.discount ? product.price : null,
-                       discountPrice: product.discount
-                         ? product.discount.price
-                         : null,
-                       maxQuantity: product.discount
-                         ? product.discount.quantityToBeBought
-                         : null,
-                     }
-                   : null,
-               });
-               products.push(dataProduct)
-               Product.find({productFullName : dataProduct.productFullName}, (err, result) => {
-                 if(!result.length){
-                  dataProduct.save()
-                 }
-                 else{
-                  dataProduct.update()
-                 }
+   ];
+   categories.forEach(async (category) => {
+     let dataCategory = new Category({ name: category, categoryId: null, retailName: 'Mathem' });
+     Category.find({ name: category }, (err, result) => {
+       if (!result.length) {
+         dataCategory.save();
+       } else {
+         dataCategory.update();
+       }
+     });
+     let dataHarvest = await fetch(
+       `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
+     ).then((data) => data.json());
+     dataHarvest = dataHarvest.products;
+     dataHarvest.map((product) => {
+       let dataProduct = new Product({
+         productName: product.name,
+         productFullName: product.fullName,
+         volume: `${product.quantity} ${product.unit}`,
+         url: product.url,
+         image: product.images.MEDIUM,
+         retail: "mathem",
+         label: product.badges.length >= 1 ? product.badges : "No labels",
+         origin: product.origin ? product.origin.name : "Not specified",
+         ecologic:
+           product.badges.length > 1
+             ? product.badges.forEach((badge) => {
+                 return badge.name === "Ekologisk" ? true : false;
                })
-              })
-    })
- });
+             : false,
+         priceUnit: product.unit,
+         price: product.price,
+         comparePrice: product.comparisonPrice,
+         compareUnit: product.comparisonUnit,
+         discount: product.discount
+           ? {
+               memberDiscount: product.discount ? true : false,
+               prePrice: product.discount ? product.price : null,
+               discountPrice: product.discount ? product.discount.price : null,
+               maxQuantity: product.discount
+                 ? product.discount.quantityToBeBought
+                 : null,
+             }
+           : null,
+       })
+       Product.find(
+         { productFullName: dataProduct.productFullName },
+         (err, result) => {
+           if (!result.length) {
+             dataProduct.save();
+           } else {
+             dataProduct.update();
+           }
+         }
+       );
+      });
+    });
+  }
 
+ //Function that checks if today's already been fetched. If not then fetch data/harvest
+ const dailyDataHarvestCheck = () => {
+   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
+   DateUpdate.find({}, (err, result) => {
+     if (!result.length) {
+       todaysDate.save();
+         mathemHarvester();
+     } else {
+       const condition =
+         todaysDate.dateUpdated.getDate() >
+           result[result.length - 1].dateUpdated.getDate() &&
+         todaysDate.dateUpdated.getTime() >
+           result[result.length - 1].dateUpdated.getTime();
+       if (condition) {
+         todaysDate.save();
+          mathemHarvester();
+       }
+     }
+   });
+ }
+
+ dailyDataHarvestCheck()
+
+//Get all Products from MongoDB
+app.get("/api/mathem", async(req, res)=>{
+  await Product.find({}, (err, result)=>{
+    err? res.json(err): res.json(result);
+  })
+})
+
+//This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
+// app.get("/api/mathem/:name",async (req, res) => {
+//     await Product.find(
+//       { productFullName: { $regex: `.*${req.params.name}.*`} },
+//       (err, result) => {
+//         err ? res.json(err) : res.json(result);
+//       });
+// });
  const bustCache = () =>{
   return '?avoidCache=' + (Math.random() + '').split('.')[1]
 }
@@ -217,12 +248,23 @@ app.get("/api/willys/:id", async (req, res) => {
 //       price: "23.90"
 // })
 
-//Example of product to save in MongoDB
-const Products = require("./models/CitygrossProduct");
-app.get("/api/mathem", (req, res) => {
-  Products.find({}, (err, result) => {
-    err ? res.json(err) : res.json(result);
-  });
+//Updated search Function
+app.get('/api/mathem/:search', async (req,res)=>{
+    var regex = new RegExp(req.params.search, 'i'); 
+    await Product.find(
+      {$text: {$search: regex}},
+      (err, result)=>{
+        return res.send(result);
+    }).limit(10);
+});
+
+
+//Find Product by ID
+app.get("/api/mathems/:id", async (req, res) => {
+    await Product.findById(req.params.id, (err, result) => {
+        err ? res.json(err) : res.json(result);
+      }
+    );
 });
 
 //SERVER 

@@ -1,17 +1,15 @@
 import React, {useState, useContext} from "react";
-import { FormGroup, Input } from 'reactstrap'
-import { ProductContext } from '../contexts/ProductContextProvider'
+import { FormGroup, Input, Container, Row, Col, CardImg } from 'reactstrap'
 
 const HomePage = () => {
-  //const { products, setProducts } = useContext(ProductContext)
   const [products, setProducts] = useState([]);
 
   const searchProduct = async (search) => {
-    let res = await fetch('/api/harvestMathem/' + search)
+    let res = await fetch(`/api/mathem/${search}`);
     res = await res.json()
     setProducts(res)
   }
-
+  
   let searchTimer;
   const autoSearch = (search) => {
     clearTimeout(searchTimer)
@@ -23,17 +21,21 @@ const HomePage = () => {
   const productsList = () => {
     return products.map((product, i) => {
       return (
-        <div key={product._id}>
-          <h4 style={{color:'#424242'}}>{product.productName}</h4>
-          <h5 style={{color:'#FA5858'}}>{product.price} :-</h5>
-          <p>{product.retail}</p>
-        </div>
+        <Row key={product._id}>
+          <Col xs="1" sm="1">
+            <CardImg top width="100%" src={product.image} alt="Card image cap" />
+          </Col>
+          <Col xs="5" sm="5"><h4 style={{color:'#424242'}}>{product.productName}</h4></Col>
+          <Col xs="3" sm="3"><h5 style={{color:'#FA5858'}}>{product.price} :-</h5></Col>
+          <Col xs="3" sm="3" style={{textAlign: 'right'}}><p>{product.retail}</p></Col>
+          <hr/>
+        </Row>
       )
     })
   }
   
   return (
-    <div className="container">
+    <div>
       <div className="d-flex justify-content-center">
       <FormGroup className="col-8 py-5">
         <Input type="text" className="mt-5"
@@ -43,9 +45,16 @@ const HomePage = () => {
       </FormGroup>
       </div>
       
-      <div>
+      <Container>
+        <hr/>
+        <Row >
+          <Col xs="6" sm="6">Produkter</Col>
+          <Col xs="4" sm="4">Pris</Col>
+          <Col xs="2" sm="2" style={{textAlign: 'right'}}>Antal</Col>       
+        </Row>
+        <hr/>
         {productsList()}
-      </div>
+      </Container>
     </div>
   );
 }
