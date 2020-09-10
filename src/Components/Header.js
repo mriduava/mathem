@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import {
-  Collapse,
   Navbar,
-  NavbarToggler,
   NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
+
 } from "reactstrap";
 
 import SearchField from '../Pages/homePageComponents/searchField'
