@@ -13,10 +13,8 @@ const { app } = require('mongoosy')({
     url: 'mongodb://localhost/' + db
   }
 });
-
 //Mathem's harvester and scrubber
  const mathemHarvester = () => {
-   let products = [];
    let categories = [
      "frukt-o-gront",
      "mejeri-o-ost",
@@ -48,7 +46,6 @@ const { app } = require('mongoosy')({
      ).then((data) => data.json());
      dataHarvest = dataHarvest.products;
      dataHarvest.map((product) => {
-       let labels = ''
        let dataProduct = new Product({
          productName: product.name,
          productFullName: product.fullName,
@@ -56,12 +53,7 @@ const { app } = require('mongoosy')({
          url: product.url,
          image: product.images.MEDIUM,
          retail: "mathem",
-         label: labels ?
-           product.badges.length > 1
-             ? product.badges.forEach((badge) => {
-                  labels.concat(badge.name);
-               })
-             : null : null,
+         label: product.badges.length >= 1 ? product.badges : "No labels",
          origin: product.origin ? product.origin.name : "Not specified",
          ecologic:
            product.badges.length > 1
@@ -83,8 +75,7 @@ const { app } = require('mongoosy')({
                  : null,
              }
            : null,
-       });
-       products.push(dataProduct);
+       })
        Product.find(
          { productFullName: dataProduct.productFullName },
          (err, result) => {
@@ -97,7 +88,9 @@ const { app } = require('mongoosy')({
        );
       });
     });
- }
+  }
+
+
 
  //Function that checks if today's already been fetched. If not then fetch data/harvest
  const dailyDataHarvestCheck = () => {
