@@ -5,14 +5,14 @@ const Product = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate")
 
-/*To connect with MongoDB
- It will create a db named 'mathem'
-*/
-const { app } = require('mongoosy')({
-  connect: {
-    url: 'mongodb://localhost/' + db
-  }
-});
+// /*To connect with MongoDB
+//  It will create a db named 'mathem'
+// */
+// const { app } = require('mongoosy')({
+//   connect: {
+//     url: 'mongodb://localhost/' + db
+//   }
+// });
 
 //Mathem's harvester and scrubber
  const mathemHarvester = () => {
@@ -49,12 +49,17 @@ const { app } = require('mongoosy')({
      dataHarvest.map((product) => {
        let dataProduct = new Product({
          productName: product.name,
-         productFullName: product.fullName,
+         productFullName: product.fullName.toLowerCase(),
          volume: `${product.quantity} ${product.unit}`,
          url: product.url,
          image: product.images.MEDIUM,
          retail: "mathem",
-         label: product.badges.length >= 1 ? product.badges : "No labels",
+         label:
+           product.badges.length > 1
+             ? product.badges.forEach((badge) => {
+                 badge.name != "Ekologisk" ? badge.name : "No label";
+               })
+             : "No label",
          origin: product.origin ? product.origin.name : "Not specified",
          ecologic:
            product.badges.length > 1
@@ -76,9 +81,9 @@ const { app } = require('mongoosy')({
                  : null,
              }
            : null,
-       })
+       });
        Product.find(
-         { productFullName: dataProduct.productFullName },
+         { productFullName: dataProduct.productFullName.toLowerCase() },
          (err, result) => {
            if (!result.length) {
              dataProduct.save();
@@ -121,14 +126,6 @@ app.get("/api/mathem", async(req, res)=>{
   })
 })
 
-//This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
-// app.get("/api/mathem/:name",async (req, res) => {
-//     await Product.find(
-//       { productFullName: { $regex: `.*${req.params.name}.*`} },
-//       (err, result) => {
-//         err ? res.json(err) : res.json(result);
-//       });
-// });
  const bustCache = () =>{
   return '?avoidCache=' + (Math.random() + '').split('.')[1]
 }

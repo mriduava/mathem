@@ -15,7 +15,7 @@ const HomePage = () => {
     clearTimeout(searchTimer)
     searchTimer = setTimeout(async () => {
       await searchProduct(search)
-    }, 200);
+    }, 500);
   }
 
   const productsList = () => {
