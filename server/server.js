@@ -89,9 +89,6 @@ const DateUpdate = require("./models/DateUpdate")
              }
            : null,
        });
-       if(dataProduct.label !== "No label"){
-         console.log(dataProduct.label);
-       }
        Product.find(
          { productFullName: dataProduct.productFullName.toLowerCase() },
          (err, result) => {
