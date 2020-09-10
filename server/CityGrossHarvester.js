@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 
+//Temporary
 let categoryList = [
   3467,
   1501,
@@ -25,6 +26,7 @@ let categoryList = [
   2680,
   3473,
 ];
+
 let data = [];
 
 async function FetchData(categoryID) {
@@ -40,7 +42,7 @@ async function FetchData(categoryID) {
 /// Makes the api data readable to our database
 ///</Summary>
 async function Scrubber() {
-  products = [];
+  let products = [];
   data[0].map((item) => {
     let product = {
       productName: item.name,
@@ -82,10 +84,11 @@ async function GetAllProducts() {
 
 GetAllProducts().then(() => {
   Scrubber();
-  console.log(products);
 });
 
-function UploadToDB() {}
+function UploadToDB() {
+  // Will this function be here?
+}
 
 //Utility functions
 
