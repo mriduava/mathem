@@ -46,6 +46,8 @@ const { app } = require('mongoosy')({
      ).then((data) => data.json());
      dataHarvest = dataHarvest.products;
      dataHarvest.map((product) => {
+       let labels = product.badges.length >= 1 ? product.badges : ''
+       console.log(labels.includes('Ekologisk'));
        let dataProduct = new Product({
          productName: product.name,
          productFullName: product.fullName,
@@ -53,7 +55,7 @@ const { app } = require('mongoosy')({
          url: product.url,
          image: product.images.MEDIUM,
          retail: "mathem",
-         label: product.badges.length >= 1 ? product.badges : "No labels",
+         label: labels,
          origin: product.origin ? product.origin.name : "Not specified",
          ecologic:
            product.badges.length > 1
