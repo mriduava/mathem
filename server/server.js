@@ -137,7 +137,7 @@ app.get('/api/mathem/:search', async (req,res)=>{
       {$text: {$search: regex}},
       (err, result)=>{
         return res.send(result);
-    });
+    }).limit(10);
 });
 
 
