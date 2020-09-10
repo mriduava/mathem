@@ -114,8 +114,7 @@ const convertPriceToEngSyntax = (num) => {
 }
 
 const priceToInt = (price) => {
-  let newPrice = price.replace(/k/g, "")
-  newPrice = newPrice.replace(/r/g, "")
+  let newPrice = price.replace(/kr/g, "")
   newPrice = newPrice.replace(/ /g, "")
   return newPrice
 }
@@ -185,6 +184,28 @@ const genericNullValue = (value) => {
   console.log(products)
   return res.send(products);
  })
+
+ app.get('*api/willys', async(req, res) => {
+   await Product.find({}, (err, result) => {
+     err? res.json(err): res.json(result)
+   })
+ })
+
+ app.get('/api/willys/:search', async (req,res)=>{
+  var regex = new RegExp(req.params.search, 'i')
+  await Product.find(
+    {$text: {$search: regex}},
+    (err, result)=>{
+      return res.send(result)
+  }).limit(10)
+});
+
+app.get("/api/willys/:id", async (req, res) => {
+  await Product.findById(req.params.id, (err, result) => {
+      err ? res.json(err) : res.json(result)
+    }
+  )
+})
 
 //Example of product to save in MongoDB
 
