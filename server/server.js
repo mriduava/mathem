@@ -35,7 +35,7 @@ const { app } = require('mongoosy')({
      "kiosk",
    ];
    categories.forEach(async (category) => {
-     let dataCategory = new Category({ name: category });
+     let dataCategory = new Category({ name: category, categoryId: null, retailName: 'Mathem' });
      Category.find({ name: category }, (err, result) => {
        if (!result.length) {
          dataCategory.save();
