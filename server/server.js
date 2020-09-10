@@ -15,22 +15,6 @@ const { app } = require('mongoosy')({
 });
 
  const mathemHarvester = () => {
-   let todaysDate = new DateUpdate({dateUpdated:new Date()})
-   DateUpdate.find({},(err, result) => {
-     if(!result.length){
-         todaysDate.save()
-     }
-     else{
-              result.map((date) => {
-                console.log(todaysDate.dateUpdated);
-                console.log(date.dateUpdated);
-                if(todaysDate.dateUpdated.getDate() > date.dateUpdated.getDate() && todaysDate.dateUpdated.getTime() > date.dateUpdated.getTime()){
-                  // todaysDate.save()
-                  return
-                }
-              });
-     }
-   })
    let products = [];
    let categories = [
      "frukt-o-gront",
@@ -100,22 +84,38 @@ const { app } = require('mongoosy')({
            : null,
        });
        products.push(dataProduct);
-    //    Product.find(
-    //      { productFullName: dataProduct.productFullName },
-    //      (err, result) => {
-    //        if (!result.length) {
-    //          dataProduct.save();
-    //        } else {
-    //          dataProduct.update();
-    //        }
-    //      }
-    //    );
-     });
-   });
+       Product.find(
+         { productFullName: dataProduct.productFullName },
+         (err, result) => {
+           if (!result.length) {
+             dataProduct.save();
+           } else {
+             dataProduct.update();
+           }
+         }
+       );
+      });
+    });
  }
 
  const dailyDataHarvest = () => {
-  mathemHarvester()
+   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
+   DateUpdate.find({}, (err, result) => {
+     if (!result.length) {
+       todaysDate.save();
+         mathemHarvester();
+     } else {
+       const condition =
+         todaysDate.dateUpdated.getDate() >
+           result[result.length - 1].dateUpdated.getDate() &&
+         todaysDate.dateUpdated.getTime() >
+           result[result.length - 1].dateUpdated.getTime();
+       if (condition) {
+         todaysDate.save();
+          mathemHarvester();
+       }
+     }
+   });
  }
 
  dailyDataHarvest()
