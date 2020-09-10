@@ -129,6 +129,124 @@ app.get("/api/mathem", async(req, res)=>{
 //         err ? res.json(err) : res.json(result);
 //       });
 // });
+ const bustCache = () =>{
+  return '?avoidCache=' + (Math.random() + '').split('.')[1]
+}
+
+const stringToLink = (url) => {
+  let updatedURL = url.replace(/ /g, "-")
+//  console.log(updatedURL)
+  return updatedURL
+}
+
+const convertPriceToEngSyntax = (num) => {
+  let updatedNum = num.replace(/,/g, ".")
+  return updatedNum
+}
+
+const priceToInt = (price) => {
+  let newPrice = price.replace(/kr/g, "")
+  newPrice = newPrice.replace(/ /g, "")
+  return newPrice
+}
+
+const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
+  let newWord = word.replace(/wordToBeRemoved/g, wordToReplaceWith)
+  return newWord
+}
+
+const genericNullValue = (value) => {
+  if (value === "") return 0
+}
+
+ app.get('/api/harvestWillys', async (req, res) => {
+   let products = []
+   
+   
+   let categories = await fetch('https://www.willys.se/leftMenu/categorytree' + bustCache())
+   categories = await categories.json()
+  
+  
+  for (let i = 0; i < categories.children.length; i++){
+
+  let raw = await fetch('https://www.willys.se/c/' + categories.children[i].url + bustCache() + '$size=1000').then((data) => data.json());
+   
+   raw = raw.results
+   //console.log(raw)
+   raw.map(product => {
+     let dataProduct = new Product({
+       productName: product.name,
+       productFullName: product.pickupProductLine2,
+       volume: product.displayVolume,
+       url: 'https://www.willys.se/produkt/' + stringToLink(product.name) + '-' + product.code,
+       retail: 'willys',
+
+       origin: "Not specified",
+
+       priceUnit: product.priceUnit,
+       price: convertPriceToEngSyntax(priceToInt(product.price)),
+       comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
+       compareUnit: genericNullValue(product.comparePriceUnit),
+       discount: product.discount
+                   ? {
+                       memberDiscount: product.potentialPromotions.applied ? true : false,
+                       prePrice: removeWords(priceToInt(product.conditionLabel), 'Spara', '') ? product.comparePrice : null,
+                       discountPrice: product.discount
+                         ? product.discount.price
+                         : null,
+                       maxQuantity: product.discount
+                         ? product.discount.quantityToBeBought
+                         : null,
+                     }
+                   : null,
+               
+     }) 
+     products.push(dataProduct)
+     Product.find({productFullName : dataProduct.productFullName}, (err, result) => {
+       if (!result.length){
+         dataProduct.save()
+       }else{
+         dataProduct.update()
+       }
+     })
+   })
+
+  }
+  console.log(products)
+  return res.send(products);
+ })
+
+ app.get('*api/willys', async(req, res) => {
+   await Product.find({}, (err, result) => {
+     err? res.json(err): res.json(result)
+   })
+ })
+
+ app.get('/api/willys/:search', async (req,res)=>{
+  var regex = new RegExp(req.params.search, 'i')
+  await Product.find(
+    {$text: {$search: regex}},
+    (err, result)=>{
+      return res.send(result)
+  }).limit(10)
+});
+
+app.get("/api/willys/:id", async (req, res) => {
+  await Product.findById(req.params.id, (err, result) => {
+      err ? res.json(err) : res.json(result)
+    }
+  )
+})
+
+//Example of product to save in MongoDB
+
+
+// let Product = require('./models/Product');
+// let product = new Product({
+//       title: "Gullök",
+//       desc: "Svensk Gullök, having a strong, sharp smell and taste!",
+//       price: "23.90"
+// })
 
 //Updated search Function
 app.get('/api/mathem/:search', async (req,res)=>{
