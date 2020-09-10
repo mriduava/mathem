@@ -25,41 +25,7 @@ let categoryList = [
   2680,
   3473,
 ];
-
 let data = [];
-
-function units(type) {
-  return {
-    0: "g",
-    1: "hg",
-    2: "kg",
-  }[type];
-}
-
-function isBrand(type) {
-  return {
-    SVANEN: true,
-    ECOCERT_COSMOS_ORGANIC: true,
-    FAIR_TRADE_MARK: true,
-    EU_ORGANIC_FARMING: true,
-    RAINFOREST_ALLIANCE: true,
-    UTZ_CERTIFIED: true,
-    KRAV_MARK: true,
-  }[type];
-}
-
-function isEcological(arr) {
-  let b = false;
-  if (!Array.isArray(arr)) return b;
-
-  arr.forEach((e) => {
-    if (isBrand(e.code) === true) {
-      b = true;
-    }
-  });
-
-  return b;
-}
 
 async function FetchData(categoryID) {
   let raw = await fetch(
@@ -70,6 +36,9 @@ async function FetchData(categoryID) {
   return (await raw.json()).data;
 }
 
+///<Summary>
+/// Makes the api data readable to our database
+///</Summary>
 async function Scrubber() {
   products = [];
   data[0].map((item) => {
@@ -90,7 +59,7 @@ async function Scrubber() {
       price: item.defaultPrice.currentPrice.price,
       comparisonPrice: item.defaultPrice.currentPrice.comparisonPrice,
 
-        /// --------------------------------------------
+      /// --------------------------------------------
 
       discount: !item.defaultPrice.hasDiscount
         ? {
@@ -106,10 +75,9 @@ async function Scrubber() {
 
 async function GetAllProducts() {
   // Add a request to get categories from the database when implemented.
-  // for (let i = 0; i < categoryList.length; i++) {
-  //   data.push(await FetchData(categoryList[i]));
-  // }
-  data.push(await FetchData(categoryList[7]));
+  for (let i = 0; i < categoryList.length; i++) {
+    data.push(await FetchData(categoryList[i]));
+  }
 }
 
 GetAllProducts().then(() => {
@@ -118,3 +86,41 @@ GetAllProducts().then(() => {
 });
 
 function UploadToDB() {}
+
+//Utility functions
+
+///<Summary>
+///Loops through the citygross markings array to search for ecological labels
+///</Summary >
+function isEcological(arr) {
+  let b = false;
+  if (!Array.isArray(arr)) return b;
+
+  arr.forEach((e) => {
+    if (isBrand(e.code) === true) {
+      b = true;
+    }
+  });
+
+  return b;
+}
+
+function isBrand(type) {
+  return {
+    SVANEN: true,
+    ECOCERT_COSMOS_ORGANIC: true,
+    FAIR_TRADE_MARK: true,
+    EU_ORGANIC_FARMING: true,
+    RAINFOREST_ALLIANCE: true,
+    UTZ_CERTIFIED: true,
+    KRAV_MARK: true,
+  }[type];
+}
+
+function units(type) {
+  return {
+    0: "g",
+    1: "hg",
+    2: "kg",
+  }[type];
+}
