@@ -82,16 +82,16 @@ const DateUpdate = require("./models/DateUpdate")
              }
            : null,
        });
-       Product.find(
-         { productFullName: dataProduct.productFullName.toLowerCase() },
-         (err, result) => {
-           if (!result.length) {
-             dataProduct.save();
-           } else {
-             dataProduct.update();
-           }
-         }
-       );
+      Product.find(
+        { productFullName: dataProduct.productFullName.toLowerCase() },
+        (err, result) => {
+          if (!result.length) {
+            dataProduct.save();
+          } else {
+            dataProduct.update();
+          }
+        }
+      );
       });
     });
   }
