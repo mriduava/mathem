@@ -36,25 +36,29 @@ function units(type) {
   }[type];
 }
 
-function ecologicCheck(arr) {
-  switch (arr) {
-    case "SVANEN":
-      return true;
-    case "ECOCERT_COSMOS_ORGANIC":
-      return true;
-    case "FAIR_TRADE_MARK":
-      return true;
-    case "EU_ORGANIC_FARMING":
-      return true;
-    case "RAINFOREST_ALLIANCE":
-      return true;
-    case "UTZ_CERTIFIED":
-      return true;
-    case "KRAV_MARK":
-      return true;
-    default:
-      return false;
-  }
+function isBrand(type) {
+  return {
+    SVANEN: true,
+    ECOCERT_COSMOS_ORGANIC: true,
+    FAIR_TRADE_MARK: true,
+    EU_ORGANIC_FARMING: true,
+    RAINFOREST_ALLIANCE: true,
+    UTZ_CERTIFIED: true,
+    KRAV_MARK: true,
+  }[type];
+}
+
+function isEcological(arr) {
+  let b = false;
+  if (!Array.isArray(arr)) return b;
+
+  arr.forEach((e) => {
+    if (isBrand(e.code) === true) {
+      b = true;
+    }
+  });
+
+  return b;
 }
 
 async function FetchData(categoryID) {
@@ -72,7 +76,7 @@ async function Scrubber() {
     let product = {
       productName: item.name,
       productFullName: item.name,
-      volume: `${item.grossWeight.value} ${units(
+      volume: `${item.grossWeight.value}${units(
         item.grossWeight.unitOfMeasure
       )}`,
       url:
@@ -85,12 +89,16 @@ async function Scrubber() {
       descriptiveSize: item.descriptiveSize,
       price: item.defaultPrice.currentPrice.price,
       comparisonPrice: item.defaultPrice.currentPrice.comparisonPrice,
+
+        /// --------------------------------------------
+
       discount: !item.defaultPrice.hasDiscount
         ? {
             memberPrice: item.defaultPrice.memberPrice,
             prePrice: item.defaultPrice.ordinaryPrice.price,
           }
         : undefined,
+      ecological: isEcological(item.markings),
     };
     products.push(product);
   });
@@ -101,11 +109,12 @@ async function GetAllProducts() {
   // for (let i = 0; i < categoryList.length; i++) {
   //   data.push(await FetchData(categoryList[i]));
   // }
-  data.push(await FetchData(categoryList[1]));
+  data.push(await FetchData(categoryList[7]));
 }
 
 GetAllProducts().then(() => {
   Scrubber();
   console.log(products);
 });
+
 function UploadToDB() {}
