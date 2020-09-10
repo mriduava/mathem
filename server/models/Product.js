@@ -24,5 +24,6 @@ let schema = new Schema({
     maxQuantity: { type: Number, required: false },
   },
 });
+schema.index({'$**': 'text'});
  
 module.exports = model(modelName, schema);

@@ -7,7 +7,7 @@ const HomePage = () => {
   const searchProduct = async (search) => {
     let res = await fetch(`/api/mathem/${search}`);
     res = await res.json()
-    console.log(res);
+    //console.log(res);
     setProducts(res)
   }
   

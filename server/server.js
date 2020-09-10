@@ -13,6 +13,7 @@ const { app } = require('mongoosy')({
     url: 'mongodb://localhost/' + db
   }
 });
+
 //Mathem's harvester and scrubber
  const mathemHarvester = () => {
    let categories = [
@@ -58,7 +59,7 @@ const { app } = require('mongoosy')({
          ecologic:
            product.badges.length > 1
              ? product.badges.forEach((badge) => {
-                 badge.name == "Ekologisk" ? true : false;
+                 return badge.name === "Ekologisk" ? true : false;
                })
              : false,
          priceUnit: product.unit,
@@ -90,8 +91,6 @@ const { app } = require('mongoosy')({
     });
   }
 
-
-
  //Function that checks if today's already been fetched. If not then fetch data/harvest
  const dailyDataHarvestCheck = () => {
    let todaysDate = new DateUpdate({ dateUpdated: new Date() });
@@ -122,22 +121,32 @@ app.get("/api/mathem", async(req, res)=>{
   })
 })
 
+//This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
+// app.get("/api/mathem/:name",async (req, res) => {
+//     await Product.find(
+//       { productFullName: { $regex: `.*${req.params.name}.*`} },
+//       (err, result) => {
+//         err ? res.json(err) : res.json(result);
+//       });
+// });
+
+//Updated search Function
+app.get('/api/mathem/:search', async (req,res)=>{
+    var regex = new RegExp(req.params.search, 'i'); 
+    await Product.find(
+      {$text: {$search: regex}},
+      (err, result)=>{
+        return res.send(result);
+    });
+});
+
+
 //Find Product by ID
-app.get("/api/mathem/:id", async (req, res) => {
+app.get("/api/mathems/:id", async (req, res) => {
     await Product.findById(req.params.id, (err, result) => {
         err ? res.json(err) : res.json(result);
       }
     );
-});
-
-//Search product by Product Name
-//This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
-app.get("/api/mathem/:name",async (req, res) => {
-    await Product.find(
-      { productFullName: { $regex: `.*${req.params.name}.*`} },
-      (err, result) => {
-        err ? res.json(err) : res.json(result);
-      });
 });
 
 //SERVER 
