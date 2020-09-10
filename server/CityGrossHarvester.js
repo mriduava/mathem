@@ -50,13 +50,14 @@ async function Scrubber() {
       volume: `${item.grossWeight.value}${units(
         item.grossWeight.unitOfMeasure
       )}`,
-      url:
+      image:
         "https://www.citygross.se/images/products/" +
         item.images[0].url +
         "?w=300",
+      url: item.url,
       label: item.brand,
-      orgin: item.country,
       retail: "City gross",
+      orgin: item.country,
       descriptiveSize: item.descriptiveSize,
       price: item.defaultPrice.currentPrice.price,
       comparisonPrice: item.defaultPrice.currentPrice.comparisonPrice,
@@ -69,7 +70,7 @@ async function Scrubber() {
             prePrice: item.defaultPrice.ordinaryPrice.price,
           }
         : undefined,
-      ecological: isEcological(item.markings),
+      ecologic: isEcological(item.markings),
     };
     products.push(product);
   });
