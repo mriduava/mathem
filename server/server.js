@@ -8,11 +8,11 @@ const DateUpdate = require("./models/DateUpdate")
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
 // */
-// const { app } = require('mongoosy')({
-//   connect: {
-//     url: 'mongodb://localhost/' + db
-//   }
-// });
+ const { app } = require('mongoosy')({
+   connect: {
+     url: 'mongodb://localhost/' + db
+   }
+ });
 
 //Mathem's harvester and scrubber
  const mathemHarvester = () => {
@@ -156,7 +156,7 @@ const genericNullValue = (value) => {
   if (value === "") return 0
 }
 
- app.get('/api/harvestWillys', async (req, res) => {
+ const willysHarvester = async () => {
    let products = []
    
    
@@ -210,9 +210,7 @@ const genericNullValue = (value) => {
    })
 
   }
-  console.log(products)
-  return res.send(products);
- })
+ }
 
  app.get('*api/willys', async(req, res) => {
    await Product.find({}, (err, result) => {
