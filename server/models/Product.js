@@ -8,7 +8,7 @@ let schema = new Schema({
   url: { type: String, required: false },
   image: {type: String, required: false},
   retail: { type: String, required: true },
-  label: { type: Object, required: false },
+  label: { type: String, required: false },
   origin: { type: String, required: true },
   ecologic: {type: Boolean, required: false},
   priceUnit: { type: String, required: true },
