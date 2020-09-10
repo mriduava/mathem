@@ -126,14 +126,6 @@ app.get("/api/mathem", async(req, res)=>{
   })
 })
 
-//This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
-// app.get("/api/mathem/:name",async (req, res) => {
-//     await Product.find(
-//       { productFullName: { $regex: `.*${req.params.name.toLowerCase()}.*`} },
-//       (err, result) => {
-//         err ? res.json(err) : res.json(result);
-//       });
-// });
  const bustCache = () =>{
   return '?avoidCache=' + (Math.random() + '').split('.')[1]
 }
