@@ -14,6 +14,7 @@ const { app } = require('mongoosy')({
   }
 });
 
+//Mathem's harvester and scrubber
  const mathemHarvester = () => {
    let products = [];
    let categories = [
@@ -98,7 +99,8 @@ const { app } = require('mongoosy')({
     });
  }
 
- const dailyDataHarvest = () => {
+ //Function that checks if today's already been fetched. If not then fetch data/harvest
+ const dailyDataHarvestCheck = () => {
    let todaysDate = new DateUpdate({ dateUpdated: new Date() });
    DateUpdate.find({}, (err, result) => {
      if (!result.length) {
@@ -118,7 +120,7 @@ const { app } = require('mongoosy')({
    });
  }
 
- dailyDataHarvest()
+ dailyDataHarvestCheck()
 
 
 //This is the api that finds products in the db, can increase query flexibility by adding fields in the find params.
