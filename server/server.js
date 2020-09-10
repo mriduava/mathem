@@ -103,6 +103,7 @@ const DateUpdate = require("./models/DateUpdate")
      if (!result.length) {
        todaysDate.save();
          mathemHarvester();
+        // willysHarvester()
      } else {
        const condition =
          todaysDate.dateUpdated.getDate() >
@@ -112,6 +113,7 @@ const DateUpdate = require("./models/DateUpdate")
        if (condition) {
          todaysDate.save();
           mathemHarvester();
+          // willysHarvester();
        }
      }
    });
