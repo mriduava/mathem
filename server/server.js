@@ -5,14 +5,14 @@ const Product = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate")
 
-/*To connect with MongoDB
- It will create a db named 'mathem'
-*/
-const { app } = require('mongoosy')({
-  connect: {
-    url: 'mongodb://localhost/' + db
-  }
-});
+// /*To connect with MongoDB
+//  It will create a db named 'mathem'
+// */
+// const { app } = require('mongoosy')({
+//   connect: {
+//     url: 'mongodb://localhost/' + db
+//   }
+// });
 
 //Mathem's harvester and scrubber
  const mathemHarvester = () => {
