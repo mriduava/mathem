@@ -128,6 +128,8 @@ const DateUpdate = require("./models/DateUpdate")
 
  dailyDataHarvestCheck()
 
+ //Above is mathem harvester and below is willys harvester
+
 //Get all Products from MongoDB
 app.get("/api/mathem", async(req, res)=>{
   await mathemProduct.find({}, (err, result)=>{
@@ -220,6 +222,7 @@ const genericNullValue = (value) => {
   }
  }
 
+ //Below is APIs
  app.get('*api/willys', async(req, res) => {
    await mathemProduct.find({}, (err, result) => {
      err? res.json(err): res.json(result)
