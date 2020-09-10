@@ -1,7 +1,7 @@
 const db = 'mathem';
 const PORT = 3200
 const fetch = require("node-fetch");
-const Product = require("./models/Product");
+const mathemProduct = require("./models/mathemProduct");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate")
 
@@ -59,7 +59,7 @@ const DateUpdate = require("./models/DateUpdate")
                }
              return labels
        }
-       let dataProduct = new Product({
+       let dataProduct = new mathemProduct({
          productName: product.name,
          productFullName: product.fullName.toLowerCase(),
          volume: `${product.quantity} ${product.unit}`,
@@ -89,7 +89,7 @@ const DateUpdate = require("./models/DateUpdate")
              }
            : null,
        });
-       Product.find(
+       mathemProduct.find(
          { productFullName: dataProduct.productFullName.toLowerCase() },
          (err, result) => {
            if (!result.length) {
@@ -130,7 +130,7 @@ const DateUpdate = require("./models/DateUpdate")
 
 //Get all Products from MongoDB
 app.get("/api/mathem", async(req, res)=>{
-  await Product.find({}, (err, result)=>{
+  await mathemProduct.find({}, (err, result)=>{
     err? res.json(err): res.json(result);
   })
 })
@@ -180,7 +180,7 @@ const genericNullValue = (value) => {
    raw = raw.results
    //console.log(raw)
    raw.map(product => {
-     let dataProduct = new Product({
+     let dataProduct = new mathemProduct({
        productName: product.name,
        productFullName: product.pickupProductLine2,
        volume: product.displayVolume,
@@ -208,7 +208,7 @@ const genericNullValue = (value) => {
                
      }) 
      products.push(dataProduct)
-     Product.find({productFullName : dataProduct.productFullName}, (err, result) => {
+     mathemProduct.find({productFullName : dataProduct.productFullName}, (err, result) => {
        if (!result.length){
          dataProduct.save()
        }else{
@@ -221,14 +221,14 @@ const genericNullValue = (value) => {
  }
 
  app.get('*api/willys', async(req, res) => {
-   await Product.find({}, (err, result) => {
+   await mathemProduct.find({}, (err, result) => {
      err? res.json(err): res.json(result)
    })
  })
 
  app.get('/api/willys/:search', async (req,res)=>{
   var regex = new RegExp(req.params.search, 'i')
-  await Product.find(
+  await mathemProduct.find(
     {$text: {$search: regex}},
     (err, result)=>{
       return res.send(result)
@@ -236,7 +236,7 @@ const genericNullValue = (value) => {
 });
 
 app.get("/api/willys/:id", async (req, res) => {
-  await Product.findById(req.params.id, (err, result) => {
+  await mathemProduct.findById(req.params.id, (err, result) => {
       err ? res.json(err) : res.json(result)
     }
   )
@@ -245,7 +245,7 @@ app.get("/api/willys/:id", async (req, res) => {
 //Updated search Function
 app.get('/api/mathem/:search', async (req,res)=>{
     var regex = new RegExp(req.params.search, 'i'); 
-    await Product.find(
+    await mathemProduct.find(
       {$text: {$search: regex}},
       (err, result)=>{
         return res.send(result);
@@ -255,7 +255,7 @@ app.get('/api/mathem/:search', async (req,res)=>{
 
 //Find Product by ID
 app.get("/api/mathems/:id", async (req, res) => {
-    await Product.findById(req.params.id, (err, result) => {
+    await mathemProduct.findById(req.params.id, (err, result) => {
         err ? res.json(err) : res.json(result);
       }
     );
