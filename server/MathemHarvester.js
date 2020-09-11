@@ -1,43 +1,24 @@
 const mathemProduct = require("./models/mathemProduct");
 const Category = require("./models/Category");
 
-const mathem = class {
-    mathemHarvester = () => {
-  let categories = [
-    "frukt-o-gront",
-    "mejeri-o-ost",
-    "brod-o-bageri",
-    "kott-o-chark",
-    "dryck",
-    "skafferi",
-    "fisk-o-skaldjur",
-    "hem-o-hygien",
-    "fardigmat-o-halvfabrikat",
-    "glass-godis-o-snacks",
-    "barnmat-o-tillbehor",
-    "apotek-o-halsa",
-    "smaksattare",
-    "djurmat-o-tillbehor",
-    "kiosk",
-  ];
-  categories.forEach(async (category) => {
-    let dataCategory = new Category({
-      name: category,
-      categoryId: null,
-      retailName: "Mathem",
-    });
-    Category.find({ name: category }, (err, result) => {
-      if (!result.length) {
-        dataCategory.save();
-      } else {
-        dataCategory.update();
-      }
-    });
-    let dataHarvest = await fetch(
+const Mathem = () => {
+    harvester = () => {
+        databaseCategories().forEach(async category => {
+             let dataHarvest = await fetch(
       `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
     ).then((data) => data.json());
+    console.log(category);
     dataHarvest = dataHarvest.products;
-    dataHarvest.map((product) => {
+    scrubber(dataHarvest)
+    console.log("Harvest complete");
+        })
+};
+}
+ const mathem = () => {
+    return new Mathem()
+};
+scrubber = (dataharvest) => {
+        dataHarvest.map((product) => {
       let getLabels = () => {
         let labels = "";
         product.badges.forEach((badge) => {
@@ -91,8 +72,38 @@ const mathem = class {
         }
       );
     });
-  });
-};
-
 }
-//Mathem's harvester and scrubber
+
+ databaseCategories = () => {
+          let categories = [
+    "frukt-o-gront",
+    "mejeri-o-ost",
+    "brod-o-bageri",
+    "kott-o-chark",
+    "dryck",
+    "skafferi",
+    "fisk-o-skaldjur",
+    "hem-o-hygien",
+    "fardigmat-o-halvfabrikat",
+    "glass-godis-o-snacks",
+    "barnmat-o-tillbehor",
+    "apotek-o-halsa",
+    "smaksattare",
+    "djurmat-o-tillbehor",
+    "kiosk",
+  ];
+  categories.forEach(async (category) => {
+    let dataCategory = new Category({
+      name: category,
+      categoryId: null,
+      retailName: "Mathem",
+    });
+    Category.find({ name: category }, (err, result) => {
+      if (!result.length) {
+        dataCategory.save();
+      } else {
+        dataCategory.update();
+      }
+    });
+    return categories
+    })}
