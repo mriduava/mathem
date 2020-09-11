@@ -50,7 +50,7 @@ const HomePage = () => {
         <Row >
           <Col xs="6" sm="6">Produkter</Col>
           <Col xs="4" sm="4">Pris</Col>
-          <Col xs="2" sm="2" style={{textAlign: 'right'}}>Antal</Col>       
+          <Col xs="2" sm="2" style={{textAlign: 'right'}}>Butik</Col>       
         </Row>
         <hr/>
         {productsList()}
