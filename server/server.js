@@ -1,7 +1,7 @@
 const db = "mathem";
 const PORT = 3200;
 const fetch = require("node-fetch");
-const mathemProduct = require("./models/mathemProduct");
+const mathemProduct = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
 //Classes here
