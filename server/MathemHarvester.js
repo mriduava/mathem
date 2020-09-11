@@ -1,4 +1,4 @@
-const mathemProduct = require("./models/mathemProduct");
+const mathemProduct = require("./models/Product");
 const Category = require("./models/Category");
 const fetch = require("node-fetch");
 

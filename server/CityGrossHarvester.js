@@ -1,6 +1,5 @@
 const fetch = require("node-fetch");
-const mongoose = require("mongoose");
-const Product = require("./models/mathemProduct");
+const Product = require("./models/Product");
 
 //Temporary
 let categoryList = [
@@ -43,9 +42,8 @@ class Citygross {
   /// Makes the api data readable to our database
   ///</Summary>
   async saveCategories(categories) {
-    const that = this;
     return Promise.all(
-      categories.map((category) => that.saveCategoryProducts(category))
+      categories.map((category) => this.saveCategoryProducts(category))
     );
   }
 
@@ -75,14 +73,13 @@ class Citygross {
           price: product.defaultPrice.currentPrice.price,
           comparisonPrice: product.defaultPrice.currentPrice.comparisonPrice,
 
-          /// --------------------------------------------
-
           discount: !product.defaultPrice.hasDiscount
             ? {
                 memberPrice: product.defaultPrice.memberPrice,
                 prePrice: product.defaultPrice.ordinaryPrice.price,
               }
             : undefined,
+          
           ecologic: this.isEcological(product.markings),
         };
 
