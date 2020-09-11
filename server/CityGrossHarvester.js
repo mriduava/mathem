@@ -1,4 +1,6 @@
 const fetch = require("node-fetch");
+const mongoose = require("mongoose");
+const Product = require("./models/mathemProduct");
 
 //Temporary
 let categoryList = [
@@ -27,8 +29,6 @@ let categoryList = [
   3473,
 ];
 
-let data = [];
-
 async function FetchData(categoryID) {
   let raw = await fetch(
     "https://www.citygross.se/api/v1/esales/products?categoryId=" +
@@ -41,55 +41,83 @@ async function FetchData(categoryID) {
 ///<Summary>
 /// Makes the api data readable to our database
 ///</Summary>
-async function Scrubber() {
-  let products = [];
-  data[0].map((item) => {
-    let product = {
-      productName: item.name,
-      productFullName: item.name,
-      volume: `${item.grossWeight.value}${units(
-        item.grossWeight.unitOfMeasure
-      )}`,
-      image:
-        "https://www.citygross.se/images/products/" +
-        item.images[0].url +
-        "?w=300",
-      url: item.url,
-      label: item.brand,
-      retail: "City gross",
-      orgin: item.country,
-      descriptiveSize: item.descriptiveSize,
-      price: item.defaultPrice.currentPrice.price,
-      comparisonPrice: item.defaultPrice.currentPrice.comparisonPrice,
+async function saveCategories(categories) {
+  return Promise.all(
+    categories.map((category) => saveCategoryProducts(category))
+  );
+}
 
-      /// --------------------------------------------
+async function saveCategoryProducts(categoryProducts) {
+  return Promise.all(
+    categoryProducts.map((product) => {
+      const volume = product.grossWeight
+        ? `${product.grossWeight.value}${units(
+            product.grossWeight.unitOfMeasure
+          )}`
+        : undefined;
 
-      discount: !item.defaultPrice.hasDiscount
-        ? {
-            memberPrice: item.defaultPrice.memberPrice,
-            prePrice: item.defaultPrice.ordinaryPrice.price,
-          }
-        : undefined,
-      ecologic: isEcological(item.markings),
-    };
-    products.push(product);
-  });
+      const p = {
+        categoryName: product.superCategory,
+        productName: product.name,
+        productFullName: product.name,
+        volume,
+        image:
+          "https://www.citygross.se/images/products/" +
+          product.images[0].url +
+          "?w=300",
+        url: "https://www.citygross.se" + product.url,
+        label: product.brand,
+        retail: "City gross",
+        origin: product.country || "unknown",
+        descriptiveSize: product.descriptiveSize,
+        price: product.defaultPrice.currentPrice.price,
+        comparisonPrice: product.defaultPrice.currentPrice.comparisonPrice,
+
+        /// --------------------------------------------
+
+        discount: !product.defaultPrice.hasDiscount
+          ? {
+              memberPrice: product.defaultPrice.memberPrice,
+              prePrice: product.defaultPrice.ordinaryPrice.price,
+            }
+          : undefined,
+        ecologic: isEcological(product.markings),
+      };
+
+      return Product.replaceOne({ productFullName: p.productFullName }, p, {
+        upsert: true,
+      }).exec();
+    })
+  );
 }
 
 async function GetAllProducts() {
   // Add a request to get categories from the database when implemented.
-  for (let i = 0; i < categoryList.length; i++) {
-    data.push(await FetchData(categoryList[i]));
+  return Promise.all(categoryList.map((category) => FetchData(category)));
+}
+
+async function doStuff() {
+  const categories = await GetAllProducts();
+
+  await mongoose.connect("mongodb://localhost:27017", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  });
+  console.log("connected");
+
+  try {
+    await saveCategories(categories);
+  } catch (err) {
+    console.log(err);
   }
+
+  await mongoose.disconnect();
+  console.log("disconnected");
 }
 
-GetAllProducts().then(() => {
-  Scrubber();
-});
-
-function UploadToDB() {
-  // Will this function be here?
-}
+doStuff();
 
 //Utility functions
 
@@ -128,3 +156,5 @@ function units(type) {
     2: "kg",
   }[type];
 }
+
+exports.Harvester = doStuff;
