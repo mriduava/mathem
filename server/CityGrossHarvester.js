@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
-const Product = require("./models/CitygrossProduct");
+const Product = require("./models/mathemProduct");
+
 //Temporary
 let categoryList = [
   3467,
@@ -155,3 +156,5 @@ function units(type) {
     2: "kg",
   }[type];
 }
+
+exports.Harvester = doStuff;
