@@ -167,7 +167,7 @@ const removeCharacters = (word, replace, replaceWith) => {
   
   for (let i = 0; i < categories.children.length; i++){
 
-  let raw = await fetch('https://www.willys.se/c/' + categories.children[i].url + bustCache() + '$size=1000').then((data) => data.json());
+  let raw = await fetch('https://www.willys.se/c/' + categories.children[i].url + bustCache() + '$size=10000').then((data) => data.json());
    
    raw = raw.results
    //console.log(raw)
@@ -200,7 +200,7 @@ const removeCharacters = (word, replace, replaceWith) => {
                
      }) 
      products.push(dataProduct)
-     WillysProduct.find({productFullName : dataProduct.productFullName}, (err, result) => {
+     WillysProduct.find({productFullName : dataProduct.productFullName.toLowerCase()}, (err, result) => {
        if (!result.length){
          dataProduct.save()
        }else{
@@ -213,14 +213,14 @@ const removeCharacters = (word, replace, replaceWith) => {
  }
 
  app.get('*api/willys', async(req, res) => {
-   await Product.find({}, (err, result) => {
+   await WillysProduct.find({}, (err, result) => {
      err? res.json(err): res.json(result)
    })
  })
 
  app.get('/api/willys/:search', async (req,res)=>{
   var regex = new RegExp(req.params.search, 'i')
-  await Product.find(
+  await WillysProduct.find(
     {$text: {$search: regex}},
     (err, result)=>{
       return res.send(result)
@@ -228,7 +228,7 @@ const removeCharacters = (word, replace, replaceWith) => {
 });
 
 app.get("/api/willys/:id", async (req, res) => {
-  await Product.findById(req.params.id, (err, result) => {
+  await WillysProduct.findById(req.params.id, (err, result) => {
       err ? res.json(err) : res.json(result)
     }
   )
