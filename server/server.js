@@ -4,6 +4,7 @@ const fetch = require("node-fetch");
 const Product = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate")
+const WillysProduct = require('./models/WillysProduct')
 
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
@@ -103,7 +104,7 @@ const DateUpdate = require("./models/DateUpdate")
      if (!result.length) {
        todaysDate.save();
          mathemHarvester();
-        // willysHarvester()
+         willysHarvester()
      } else {
        const condition =
          todaysDate.dateUpdated.getDate() >
@@ -113,7 +114,7 @@ const DateUpdate = require("./models/DateUpdate")
        if (condition) {
          todaysDate.save();
           mathemHarvester();
-          // willysHarvester();
+          willysHarvester();
        }
      }
    });
@@ -138,24 +139,13 @@ const stringToLink = (url) => {
   return updatedURL
 }
 
-const convertPriceToEngSyntax = (num) => {
-  let updatedNum = num.replace(/,/g, ".")
-  return updatedNum
-}
-
-const priceToInt = (price) => {
-  let newPrice = price.replace(/kr/g, "")
-  newPrice = newPrice.replace(/ /g, "")
-  return newPrice
-}
-
-const removeWords = (word, wordToBeRemoved, wordToReplaceWith) => {
-  let newWord = word.replace(/wordToBeRemoved/g, wordToReplaceWith)
-  return newWord
-}
-
-const genericNullValue = (value) => {
-  if (value === "") return 0
+// This functions can both remove characters from a String and replace characters.
+// - word: The word you want to manipulate
+// - replace: The word or character you want to change in the string.
+// - replaceWith: The word or character to change to.
+const removeCharacters = (word, replace, replaceWith) => {
+  let updatedWord = word.replace(/replace/g, replaceWith)
+  return updatedWord
 }
 
  const willysHarvester = async () => {
@@ -173,7 +163,7 @@ const genericNullValue = (value) => {
    raw = raw.results
    //console.log(raw)
    raw.map(product => {
-     let dataProduct = new Product({
+     let dataProduct = new WillysProduct({
        productName: product.name,
        productFullName: product.pickupProductLine2,
        volume: product.displayVolume,
@@ -183,13 +173,13 @@ const genericNullValue = (value) => {
        origin: "Not specified",
        ecologic: false,
        priceUnit: product.priceUnit,
-       price: convertPriceToEngSyntax(priceToInt(product.price)),
-       comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
-       compareUnit: genericNullValue(product.comparePriceUnit),
+       price: removeCharacters(removeCharacters(product.price, ' kr', ""), ',', '.'),
+       //comparePrice: genericNullValue(convertPriceToEngSyntax(priceToInt(product.comparePrice))),
+       //compareUnit: genericNullValue(product.comparePriceUnit),
        discount: product.discount
                    ? {
                        memberDiscount: product.potentialPromotions.applied ? true : false,
-                       prePrice: removeWords(priceToInt(product.conditionLabel), 'Spara', '') ? product.comparePrice : null,
+                       prePrice: 1, //removeCharacters(priceToInt(product.conditionLabel), 'Spara', '') ? product.comparePrice : null,
                        discountPrice: product.discount
                          ? product.discount.price
                          : null,
@@ -201,7 +191,7 @@ const genericNullValue = (value) => {
                
      }) 
      products.push(dataProduct)
-     Product.find({productFullName : dataProduct.productFullName}, (err, result) => {
+     WillysProduct.find({productFullName : dataProduct.productFullName}, (err, result) => {
        if (!result.length){
          dataProduct.save()
        }else{
@@ -213,15 +203,15 @@ const genericNullValue = (value) => {
   }
  }
 
- app.get('*api/willys', async(req, res) => {
-   await Product.find({}, (err, result) => {
+ app.get('/api/willys', async(req, res) => {
+   await WillysProduct.find({}, (err, result) => {
      err? res.json(err): res.json(result)
    })
  })
 
  app.get('/api/willys/:search', async (req,res)=>{
   var regex = new RegExp(req.params.search, 'i')
-  await Product.find(
+  await WillysProduct.find(
     {$text: {$search: regex}},
     (err, result)=>{
       return res.send(result)
@@ -229,7 +219,7 @@ const genericNullValue = (value) => {
 });
 
 app.get("/api/willys/:id", async (req, res) => {
-  await Product.findById(req.params.id, (err, result) => {
+  await WillysProduct.findById(req.params.id, (err, result) => {
       err ? res.json(err) : res.json(result)
     }
   )
