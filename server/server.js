@@ -4,6 +4,7 @@ const fetch = require("node-fetch");
 const mathemProduct = require("./models/mathemProduct");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
+//Classes here
 const Mathem = require('./MathemHarvester')
 let mathem = new Mathem()
 
