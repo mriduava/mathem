@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
 
-//Temporary
+//TODO: Move to database and use their categories instead
 let categoryList = [
   3467,
   1501,
@@ -50,17 +50,11 @@ class Citygross {
   async saveCategoryProducts(categoryProducts) {
     return Promise.all(
       categoryProducts.map((product) => {
-        const volume = product.grossWeight
-          ? `${product.grossWeight.value}${this.units(
-              product.grossWeight.unitOfMeasure
-            )}`
-          : undefined;
-
         const p = {
           categoryName: product.superCategory,
           productName: product.name,
           productFullName: product.name,
-          volume,
+          volume: this.calcVolume(product),
           image:
             "https://www.citygross.se/images/products/" +
             product.images[0].url +
@@ -72,24 +66,13 @@ class Citygross {
           descriptiveSize: product.descriptiveSize,
           price: product.defaultPrice.currentPrice.price,
           comparisonPrice: product.defaultPrice.currentPrice.comparisonPrice,
-
-          discount: !product.defaultPrice.hasDiscount
-            ? {
-                memberPrice: product.defaultPrice.memberPrice,
-                prePrice: product.defaultPrice.ordinaryPrice.price,
-              }
-            : undefined,
-          
+          discount: this.checkDiscount(product),
           ecologic: this.isEcological(product.markings),
         };
 
-        return Product.replaceOne(
-          { productFullName: p.productFullName },
-          p,
-          {
-            upsert: true,
-          }
-        ).exec();
+        return Product.replaceOne({ productFullName: p.productFullName }, p, {
+          upsert: true,
+        }).exec();
       })
     );
   }
@@ -142,6 +125,24 @@ class Citygross {
       1: "hg",
       2: "kg",
     }[type];
+  }
+
+  calcVolume(product) {
+    //Might have to consult a lookup table for specific item descs ((LOOK AT DESCRIPTIVE SIZE))
+    return product.grossWeight
+      ? `${product.grossWeight.value}${this.units(
+          product.grossWeight.unitOfMeasure
+        )}`
+      : undefined;
+  }
+
+  checkDiscount(product) {
+    return product.defaultPrice.hasDiscount
+      ? {
+          memberPrice: product.defaultPrice.memberPrice,
+          prePrice: product.defaultPrice.ordinaryPrice.price,
+        }
+      : undefined;
   }
 }
 
