@@ -24,7 +24,6 @@ let mathem = new Mathem()
      if (!result.length) {
        todaysDate.save();
        mathem.harvester()
-        //  mathemHarvester();
         // willysHarvester()
      } else {
        const condition =
@@ -35,7 +34,6 @@ let mathem = new Mathem()
        if (condition) {
          todaysDate.save();
          mathem.harvester();
-          // mathemHarvester();
           // willysHarvester();
        }
      }
