@@ -56,7 +56,6 @@ async function saveCategoryProducts(categoryProducts) {
         : undefined;
 
       const p = {
-        citygrossID: product.id,
         categoryName: product.superCategory,
         productName: product.name,
         productFullName: product.name,
@@ -84,7 +83,7 @@ async function saveCategoryProducts(categoryProducts) {
         ecologic: isEcological(product.markings),
       };
 
-      return Product.replaceOne({ citygrossID: p.citygrossID }, p, {
+      return Product.replaceOne({ productFullName: p.productFullName }, p, {
         upsert: true,
       }).exec();
     })

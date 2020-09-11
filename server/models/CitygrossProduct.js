@@ -3,7 +3,6 @@ const modelName = "CitygrossProduct";
 
 let schema = new Schema({
   productName: { type: String, required: true },
-  citygrossID: { type: Number, required: true },
   productFullName: { type: String, required: true },
   volume: { type: String, required: false },
   url: { type: String, required: false },
