@@ -38,6 +38,7 @@ const dailyDataHarvestCheck = () => {
       if (condition) {
         todaysDate.save();
         mathem.harvester();
+        citygross.harvester();
         // mathemHarvester();
         // willysHarvester();
       }

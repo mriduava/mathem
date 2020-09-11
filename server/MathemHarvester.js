@@ -13,6 +13,7 @@ const fetch = require("node-fetch");
        this.scrubber(dataHarvest);
      });
    };
+   
    databaseCategories = () => {
      let categories = [
        "frukt-o-gront",
