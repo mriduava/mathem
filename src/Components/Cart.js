@@ -8,7 +8,7 @@ const Cart = () => {
 
     return (
       <div>
-        <Button color="danger" onClick={toggle}>
+        <Button color="warning" onClick={toggle}>
           Kundvagn
         </Button>
         <Modal isOpen={modal} toggle={toggle}>
@@ -17,7 +17,7 @@ const Cart = () => {
           <ModalFooter>
             <Button color="warning" className="mr-auto">Jämför</Button>
             <Button color="primary">Köp</Button>{" "}
-            <Button color="secondary">Stäng</Button>
+            <Button color="success">Stäng</Button>
           </ModalFooter>
         </Modal>
       </div>
