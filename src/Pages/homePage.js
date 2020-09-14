@@ -39,12 +39,13 @@ const HomePage = () => {
 
   const addProduct = (product, operator) => {
     // add product too the context
-    const matchingProduct = productList.find((x) => x.product === product);
+    const matchingProduct = productList.find(
+      (x) => x.product === product
+    );
     if (matchingProduct !== undefined) {
-      console.log(matchingProduct);
       matchingProduct.quantity = operators[operator](matchingProduct.quantity);
     } else {
-      updateProductList({ product: product });
+      updateProductList({ product: product, quantity: 1 });
     }
   };
 
