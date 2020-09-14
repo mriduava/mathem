@@ -12,17 +12,12 @@ const Cart = () => {
           Kundvagn
         </Button>
         <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Kundvagn</ModalHeader>
-          <ModalBody>
-            Kund produkter här
-          </ModalBody>
+          <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
+          <ModalBody>Kund produkter här</ModalBody>
           <ModalFooter>
-            <Button color="primary">
-              Köp
-            </Button>{" "}
-            <Button color="secondary">
-              Stäng
-            </Button>
+            <Button color="warning" className="mr-auto">Jämför</Button>
+            <Button color="primary">Köp</Button>{" "}
+            <Button color="secondary">Stäng</Button>
           </ModalFooter>
         </Modal>
       </div>
