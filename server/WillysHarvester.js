@@ -28,7 +28,31 @@ module.exports = class WillysHarvester {
                 let scrubbed = await WillysScrubber.scrubAll(raw)
                 scrubbedData.push(scrubbed)
             }
-            return scrubbedData
+            let data = []
+            for (let i = 0; i < scrubbedData.length; i++){
+              for (let j = 0; j < scrubbedData[i].length; j++){
+                let p = new Product({
+                  name: scrubbedData[i][j].name,
+                  brand: scrubbedData[i][j].brand,
+                  volume: scrubbedData[i][j].unitVolume,
+                  url: 'ja',
+                  image: scrubbedData[i][j].imageUrl,
+                  retail: 'Willys',
+                  label: scrubbedData[i][j].name,
+                  origin: scrubbedData[i][j].countryOfOrigin,
+                  ecologic: scrubbedData[i][j].ecological,
+                  priceUnit: scrubbedData[i][j].unitMeasurement,
+                  price: scrubbedData[i][j].unitPrice,
+                  compareUnit: scrubbedData[i][j].compareMeasurement,
+                  comparePrice: scrubbedData[i][j].comparePrice,
+                  discount: null,
+                })
+                //console.log(p)
+                data.push(p)
+              }
+            }
+
+            this.uploadData(data)
       }
 
       static async uploadCategories(categories){
@@ -53,7 +77,6 @@ module.exports = class WillysHarvester {
             Product.find(
                 { name : data[i].name.toLowerCase() },
                 (err, result) => {
-                    console.log(result)
                     if (!result.length){
                         data[i].save()
                     }else{
@@ -61,6 +84,7 @@ module.exports = class WillysHarvester {
                     }
                 }
             )
+        
           }
       }
 
@@ -70,11 +94,10 @@ module.exports = class WillysHarvester {
 
         
         console.log('Connected to DB!!!')
-
+        
         try {
          this.uploadCategories(categories)
-         let data = this.getData(categories)
-         this.uploadData(data)
+         this.getData(categories)
         }catch(err){
             console.log(err)
         }
