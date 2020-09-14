@@ -8,9 +8,30 @@ module.exports = class WillysScrubber extends Scrubber {
     brand: x => x.manufacturer,
     imageUrl: x => x.image && x.image.url,
     unitPrice: x => x.priceValue,
-    unitVolume: x => parseFloat(x.displayVolume.replace(/,/, '.')),
-    unitMeasurement: x => x.displayVolume.replace(/[0-9\.]/g, ''),
-    comparePrice: x => parseFloat(x.comparePrice.replace(/,/, '.')),
+    unitVolume: x => { 
+      let value = parseFloat(x.displayVolume.replace(/,/, '.'))
+      if(value === '' || value === 'NaN'){
+        return 'kg'
+      }else{
+        return value
+      }
+    },
+    unitMeasurement: x => {
+      let value = x.displayVolume.replace(/[0-9\.]/g, '')
+      if (value === '' || value === 'NaN'){
+        return 'kg'
+      }else{
+        return value
+      }
+    },
+    comparePrice: x => {
+      let value = parseFloat(x.comparePrice.replace(/,/, '.'))
+      if (value === '' || value === 'NaN'){
+        return 0
+      }else{
+        return value
+      }
+    },
     compareMeasurement: x => x.comparePriceUnit,
     inStock: x => !x.outOfStock,
     frozen: x => x.labels.includes('frozen'),
