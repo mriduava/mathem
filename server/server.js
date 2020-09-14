@@ -189,6 +189,10 @@ app.get("/api/mathem/:search", async (req, res) => {
     .limit(10);
 });
 
+app.get("/api/cart/:list", async (req, res) => {
+  /*req.params.search*/
+});
+
 //Find Product by ID
 app.get("/api/mathems/:id", async (req, res) => {
   await mathemProduct.findById(req.params.id, (err, result) => {
