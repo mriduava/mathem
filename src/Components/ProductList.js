@@ -1,8 +1,7 @@
 import React from 'react'
+import { FormGroup, Input, Container, Row, Col, CardImg } from "reactstrap";
 
-const cartProducts = (products) => {
-    
-    
+const productList = (products) => {
     return(
     <div>
     {products.map((product, i) => {
@@ -20,4 +19,4 @@ const cartProducts = (products) => {
     })}
     </div>)
 }
-export default cartProduct
+export default productList
