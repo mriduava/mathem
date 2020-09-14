@@ -35,7 +35,7 @@ module.exports = class WillysHarvester {
                   name: scrubbedData[i][j].name,
                   brand: scrubbedData[i][j].brand,
                   volume: scrubbedData[i][j].unitVolume,
-                  url: 'ja',
+                  url: scrubbedData[i][j].url,
                   image: scrubbedData[i][j].imageUrl,
                   retail: 'Willys',
                   label: scrubbedData[i][j].name,
@@ -45,9 +45,14 @@ module.exports = class WillysHarvester {
                   price: scrubbedData[i][j].unitPrice,
                   compareUnit: scrubbedData[i][j].compareMeasurement,
                   comparePrice: scrubbedData[i][j].comparePrice,
-                  discount: null,
+                  discount: {
+                    memberDiscount: scrubbedData[i][j].discount[0],
+                    prePrice: scrubbedData[i][j].discount[1],
+                    discountPrice: scrubbedData[i][j].discount[2],
+                    maxQuantity: scrubbedData[i][j].discount[3],
+                    applied: scrubbedData[i][j].discount[4]
+                  },
                 })
-                //console.log(p)
                 data.push(p)
               }
             }
@@ -77,6 +82,7 @@ module.exports = class WillysHarvester {
             Product.find(
                 { name : data[i].name.toLowerCase() },
                 (err, result) => {
+                    console.log('HEJ')
                     if (!result.length){
                         data[i].save()
                     }else{
@@ -92,12 +98,12 @@ module.exports = class WillysHarvester {
       static async harvest(){
         let categories = await this.getCategories()
 
-        
         console.log('Connected to DB!!!')
         
         try {
          this.uploadCategories(categories)
          this.getData(categories)
+
         }catch(err){
             console.log(err)
         }

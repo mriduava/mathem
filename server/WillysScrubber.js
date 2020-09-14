@@ -1,11 +1,19 @@
 const fetch = require('node-fetch');
 const Scrubber = require('./Scrubber');
+const Product = require('./models/WillysProduct')
 
 module.exports = class WillysScrubber extends Scrubber {
 
   static translateSchema = {
     name: x => x.name,
-    brand: x => x.manufacturer,
+    brand: x => {
+     let value =  x.manufacturer
+     if (value === '' || value === 'NaN'){
+       return 'Sverige'
+     }else {
+       return value
+     }
+    },
     imageUrl: x => x.image && x.image.url,
     unitPrice: x => x.priceValue,
     unitVolume: x => { 
@@ -39,6 +47,47 @@ module.exports = class WillysScrubber extends Scrubber {
     Swedish: x => x.labels.includes('swedish_flag'),
     countryOfOrigin: async x => {
       return 'Sweden'
+    },
+    url: x => {
+      let productName = x.name.replace(/ /g, '-')
+      let link = 'https://www.willys.se/produkt/' + productName + '-' + x.code
+      return link
+    },
+    discount: x =>{
+      let discountObj = []
+      if(x.potentialPromotions.length <= 0){
+        discountObj.push('')
+        discountObj.push('')
+        discountObj.push('')
+        discountObj.push('')
+        discountObj.push(false)
+        return discountObj
+      }
+
+      let memberDiscount = false
+      discountObj.push(memberDiscount)
+      let prePrice = x.priceValue
+      discountObj.push(prePrice)
+      let discountPrice
+      try{
+        discountPrice = x.potentialPromotions.price.formattedValue.replace(/ kr/g, '')
+      }catch(err){
+        discountPrice = 0
+      }
+      let maxQuantity
+      discountObj.push(discountPrice)
+      try{
+        maxQuantity = x.potentialPromotions.redeemLimitLabel.replace(/Max|köp| /g, '')
+      }catch(err){
+        maxQuantity = 0
+      }
+      
+      discountObj.push(maxQuantity)
+      let applied = x.potentialPromotions.applied
+      discountObj.push(applied)
+      
+
+      return discountObj
     }
   }
 

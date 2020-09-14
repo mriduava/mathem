@@ -22,6 +22,7 @@ let schema = new Schema({
     prePrice: { type: Number, required: false },
     discountPrice: { type: Number, required: false },
     maxQuantity: { type: Number, required: false },
+    applied: {type: Boolean, required: true}
   },
 });
 schema.index({ "$**": "text" });
