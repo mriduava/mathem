@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   FormGroup,
   Input,
@@ -8,9 +8,20 @@ import {
   CardImg,
   Button,
 } from "reactstrap";
+import { ProductContext } from "../contexts/ProductContextProvider";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
+  const { productList, updateProductList } = useContext(ProductContext);
+
+  const operators = {
+    "+": function (a) {
+      return a + 1;
+    },
+    "-": function (a) {
+      return a - 1;
+    },
+  };
 
   const searchProduct = async (search) => {
     let res = await fetch(`/api/mathem/${search}`);
@@ -24,6 +35,17 @@ const HomePage = () => {
     searchTimer = setTimeout(async () => {
       await searchProduct(search);
     }, 500);
+  };
+
+  const addProduct = (product, operator) => {
+    // add product too the context
+    const matchingProduct = productList.find((x) => x.product === product);
+    if (matchingProduct !== undefined) {
+      console.log(matchingProduct);
+      matchingProduct.quantity = operators[operator](matchingProduct.quantity);
+    } else {
+      updateProductList({ product: product });
+    }
   };
 
   const productsList = () => {
@@ -45,12 +67,20 @@ const HomePage = () => {
             <h5 style={{ color: "#FA5858" }}>{product.price} :-</h5>
           </Col>
           <Col xs="1" sm="1">
-            <div class="btn-group">
-              <Button type="" className="btn btn-warning btn-circle">
+            <div className="btn-group">
+              <Button
+                className="btn btn-warning btn-circle"
+                onClick={() => addProduct(product, "+")}
+              >
                 +
               </Button>
               <h4>1</h4>
-              <Button className="btn-warning btn-circle">-</Button>
+              <Button
+                className="btn-warning btn-circle"
+                onClick={() => addProduct(product, "-")}
+              >
+                -
+              </Button>
             </div>
           </Col>
           <Col xs="1" sm="2" style={{ textAlign: "right" }}>
