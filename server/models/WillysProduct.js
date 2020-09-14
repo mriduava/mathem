@@ -2,8 +2,8 @@ const { Schema, model } = require("mongoose");
 const modelName = "WillysProduct";
 
 let schema = new Schema({
-  productName: { type: String, required: true },
-  productFullName: { type: String, required: true },
+  name: { type: String, required: true },
+  brand: { type: String, required: false },
   volume: { type: String, required: false },
   url: { type: String, required: false },
   image: { type: String, required: false },
@@ -14,7 +14,7 @@ let schema = new Schema({
   priceUnit: { type: String, required: true },
   price: { type: Number, required: true },
   compareUnit: { type: String, required: false },
-  comparePrice: { type: Number, required: false },
+  comparePrice: { required: false },
   discount: {
     type: Object,
     required: false,
