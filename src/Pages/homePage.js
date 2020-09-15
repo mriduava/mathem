@@ -1,13 +1,8 @@
 import React, { useContext, useState } from "react";
-import {
-  FormGroup,
-  Input,
-  Container,
-  Row,
-  Col,
-  CardImg,
-  Button,
-} from "reactstrap";
+import { Link } from 'react-router-dom';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {FormGroup, Input, Container, Row, Col, CardImg, Button} from "reactstrap";
+import ProductModal from "../Components/Modal"
 import { ProductContext } from "../contexts/ProductContextProvider";
 
 const HomePage = () => {
@@ -52,7 +47,8 @@ const HomePage = () => {
   const productsList = () => {
     return products.map((product, i) => {
       return (
-        <Row key={product._id}>
+        <Row key={product._id}
+          style={{cursor: 'pointer', margin: '5px 0', padding: '10px 0', border: '1px solid #e9e9e9'}}>
           <Col xs="1" sm="1">
             <CardImg
               top
@@ -88,6 +84,7 @@ const HomePage = () => {
             <p>{product.retail}</p>
           </Col>
           <hr />
+          {/* <ProductModal/> */}
         </Row>
       );
     });
