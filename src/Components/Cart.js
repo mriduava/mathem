@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import ProductList from './ProductList'
+import ProductData from './ProductData'
+import { ProductContext } from '../contexts/ProductContextProvider'
 
 const Cart = () => {
+       const { productList } = useContext(ProductContext);
       const [modal, setModal] = useState(false);
 
       const toggle = () => setModal(!modal);
 
-      let cartProducts = ProductList()
 
     return (
       <div>
@@ -16,7 +17,7 @@ const Cart = () => {
         </Button>
         <Modal isOpen={modal} toggle={toggle}>
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
-          <ModalBody>{cartProducts}</ModalBody>
+          <ModalBody><ProductData products={productList}/></ModalBody>
           <ModalFooter>
             <Button color="warning" className="mr-auto">Jämför</Button>
             <Button color="primary">Köp</Button>{" "}

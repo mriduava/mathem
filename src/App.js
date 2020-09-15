@@ -11,15 +11,15 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
+          <ProductContextProvider>
         {header("Mat Priser")}
         <div className="content">
-          <ProductContextProvider>
             <Switch>
               <Route exact path="/" component={homePage} />
             </Switch>
-          </ProductContextProvider>
         </div>
         {footer()}
+          </ProductContextProvider>
       </div>
     </BrowserRouter>
   );
