@@ -49,30 +49,6 @@ const dailyDataHarvestCheck = () => {
   });
 };
 
- //Function that checks if today's already been fetched. If not then fetch data/harvest
- const dailyDataHarvestCheck = () => {
-   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
-   DateUpdate.find({}, (err, result) => {
-     if (!result.length) {
-       todaysDate.save();
-         mathemHarvester();
-        // willysHarvester()
-     } else {
-       const condition =
-         todaysDate.dateUpdated.getDate() >
-           result[result.length - 1].dateUpdated.getDate() &&
-         todaysDate.dateUpdated.getTime() >
-           result[result.length - 1].dateUpdated.getTime();
-       if (condition) {
-         todaysDate.save();
-        // willys.harvest()
-          mathemHarvester();
-          // willysHarvester();
-       }
-     }
-   });
- }
-
 //Above is mathem harvester and below is willys harvester
 
 //Get all Products from MongoDB
