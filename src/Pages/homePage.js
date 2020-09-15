@@ -1,23 +1,46 @@
 import React, {useState, useContext} from "react";
 import { FormGroup, Input, Container, Row, Col, CardImg } from 'reactstrap'
 import ProductList from '../Components/ProductList'
+import { ProductContext } from "../contexts/ProductContextProvider";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
+  const { productList, updateProductList } = useContext(ProductContext);
+
+  const operators = {
+    "+": function (a) {
+      return a + 1;
+    },
+    "-": function (a) {
+      return a - 1;
+    },
+  };
 
   const searchProduct = async (search) => {
     let res = await fetch(`/api/mathem/${search}`);
-    res = await res.json()
-    setProducts(res)
-  }
-  
+    res = await res.json();
+    setProducts(res);
+  };
+
   let searchTimer;
   const autoSearch = (search) => {
-    clearTimeout(searchTimer)
+    clearTimeout(searchTimer);
     searchTimer = setTimeout(async () => {
-      await searchProduct(search)
+      await searchProduct(search);
     }, 500);
-  }
+  };
+
+  const addProduct = (product, operator) => {
+    // add product too the context
+    const matchingProduct = productList.find(
+      (x) => x.product === product
+    );
+    if (matchingProduct !== undefined) {
+      matchingProduct.quantity = operators[operator](matchingProduct.quantity);
+    } else {
+      updateProductList({ product: product, quantity: 1 });
+    }
+  };
 
   let productData = ProductList(products)
   
@@ -53,6 +76,6 @@ const HomePage = () => {
       </Container>
     </div>
   );
-}
+};
 
 export default HomePage;
