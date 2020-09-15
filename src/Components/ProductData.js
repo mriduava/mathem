@@ -16,7 +16,6 @@ const ProductMap = ({products}) => {
       };
 
       const addProduct = (product, operator) => {
-        // add product too the context
         const matchingProduct = productList.find((x) => x.product === product);
         if (matchingProduct !== undefined) {
           matchingProduct.quantity = operators[operator](
@@ -26,6 +25,7 @@ const ProductMap = ({products}) => {
           updateProductList(product);
         }
       };
+      
     return(
     <div>
       {products ? products.map((product, i) => {

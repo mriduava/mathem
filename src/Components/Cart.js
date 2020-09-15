@@ -17,7 +17,9 @@ const Cart = () => {
         </Button>
         <Modal isOpen={modal} toggle={toggle} size="lg">
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
-          <ModalBody><ProductData products={productList}/></ModalBody>
+          <ModalBody>
+            {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}
+            </ModalBody>
           <ModalFooter>
             <Button color="warning" className="mr-auto">Jämför</Button>
             <Button color="primary">Köp</Button>{" "}
