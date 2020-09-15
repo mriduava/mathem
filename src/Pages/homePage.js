@@ -1,22 +1,11 @@
-import React, { useContext, useState } from "react";
-import { Link } from 'react-router-dom';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import {FormGroup, Input, Container, Row, Col, CardImg, Button} from "reactstrap";
-import ProductModal from "../Components/Modal"
-import { ProductContext } from "../contexts/ProductContextProvider";
+import React, {useState} from "react";
+import { FormGroup, Input, Container, Row, Col} from 'reactstrap'
+import ProductData from '../Components/ProductData'
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  const { productList, updateProductList } = useContext(ProductContext);
 
-  const operators = {
-    "+": function (a) {
-      return a + 1;
-    },
-    "-": function (a) {
-      return a - 1;
-    },
-  };
+
 
   const searchProduct = async (search) => {
     let res = await fetch(`/api/mathem/${search}`);
@@ -31,65 +20,7 @@ const HomePage = () => {
       await searchProduct(search);
     }, 500);
   };
-
-  const addProduct = (product, operator) => {
-    // add product too the context
-    const matchingProduct = productList.find(
-      (x) => x.product === product
-    );
-    if (matchingProduct !== undefined) {
-      matchingProduct.quantity = operators[operator](matchingProduct.quantity);
-    } else {
-      updateProductList({ product: product, quantity: 1 });
-    }
-  };
-
-  const productsList = () => {
-    return products.map((product, i) => {
-      return (
-        <Row key={product._id}
-          style={{cursor: 'pointer', margin: '5px 0', padding: '10px 0', border: '1px solid #e9e9e9'}}>
-          <Col xs="1" sm="1">
-            <CardImg
-              top
-              width="100%"
-              src={product.image}
-              alt="Card image cap"
-            />
-          </Col>
-          <Col xs="5" sm="5">
-            <h4 style={{ color: "#424242" }}>{product.productName}</h4>
-          </Col>
-          <Col xs="3" sm="3">
-            <h5 style={{ color: "#FA5858" }}>{product.price} :-</h5>
-          </Col>
-          <Col xs="1" sm="1">
-            <div className="btn-group">
-              <Button
-                className="btn btn-warning btn-circle"
-                onClick={() => addProduct(product, "+")}
-              >
-                +
-              </Button>
-              <h4>1</h4>
-              <Button
-                className="btn-warning btn-circle"
-                onClick={() => addProduct(product, "-")}
-              >
-                -
-              </Button>
-            </div>
-          </Col>
-          <Col xs="1" sm="2" style={{ textAlign: "right" }}>
-            <p>{product.retail}</p>
-          </Col>
-          <hr />
-          {/* <ProductModal/> */}
-        </Row>
-      );
-    });
-  };
-
+  
   return (
     <div>
       <div className="d-flex justify-content-center">
@@ -118,7 +49,8 @@ const HomePage = () => {
           </Col>
         </Row>
         <hr />
-        {productsList()}
+        {/* {productData} */}
+        <ProductData products={products}/>
       </Container>
     </div>
   );
