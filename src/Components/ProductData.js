@@ -28,6 +28,12 @@ const ProductMap = ({products}) => {
         }
       };
       
+
+      /* you're gonna have to take row tag as the modal opener tag*/
+      //So in this case, every row that has the link to the product will be
+      //the product modal opener, you're gonna have to create a productModal.js file
+      //I'd say that it's gonna look something like:
+      //products.map, <ProductData product=product keyproduct._id+i></ProductData>
     return(
     <div>
       {products ? products.map((product, i) => {
