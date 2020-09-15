@@ -25,7 +25,6 @@ const ProductMap = ({products}) => {
         } else {
           product.quantity = 1
           updateProductList(product);
-          console.log(product);
         }
       };
       
