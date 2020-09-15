@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import {
   Navbar,
   NavbarBrand,
-
 } from "reactstrap";
-
-import SearchField from '../Pages/homePageComponents/searchField'
+import Cart from './Cart'
 
 const MainHeader = (name) => {
   const [collapsed, setCollapsed] = useState(true);
@@ -20,6 +18,7 @@ const MainHeader = (name) => {
               Mat <span style={{color: '#294360', backgroundColor: '#FFC654', borderRadius: '6px 6px', padding: '0 5px'}}>Priser</span>
             </h1>
         </NavbarBrand>
+        <Cart/>
       </Navbar>
     </div>
   );

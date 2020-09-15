@@ -1,16 +1,20 @@
-import React, {createContext, useState, useEffect} from 'react'
+import React, {createContext, useState} from 'react'
 
 export const ProductContext = createContext();
 
 const ProductContextProvider = (props) => {
-  const [products, setProducts] = useState([])
+    const [productList, setProductList] = useState([]);
+
+    const updateProductList = (updates) => {
+      setProductList(productList.concat(updates));
+    };
 
   //Get Data from Mathem API
 
-  const values={
-    products,
-    setProducts
-  }
+  const values = {
+    productList,
+    updateProductList,
+  };
 
   return (
     <ProductContext.Provider value={values}>

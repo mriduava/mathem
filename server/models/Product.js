@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const modelName = "mathemProduct";
+const modelName = "Product";
 
 let schema = new Schema({
   productName: { type: String, required: true },

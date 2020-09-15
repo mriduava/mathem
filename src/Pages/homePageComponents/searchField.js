@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InputGroup, InputGroupText, InputGroupAddon, Input } from "reactstrap";
+import { InputGroup,  Input } from "reactstrap";
 
 const SearchField = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
