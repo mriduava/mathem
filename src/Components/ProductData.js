@@ -16,13 +16,17 @@ const ProductMap = ({products}) => {
       };
 
       const addProduct = (product, operator) => {
-        const matchingProduct = productList.find((x) => x.product === product);
+        const matchingProduct = productList.find(
+          (x) => x.productFullName === product.productFullName
+        );
         if (matchingProduct !== undefined) {
           matchingProduct.quantity = operators[operator](
             matchingProduct.quantity
           );
         } else {
+          product.quantity = 1
           updateProductList(product);
+          console.log(product);
         }
       };
       
