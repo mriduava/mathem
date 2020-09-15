@@ -1,7 +1,6 @@
-import React, {useState, useContext} from "react";
-import { FormGroup, Input, Container, Row, Col, CardImg } from 'reactstrap'
+import React, {useState} from "react";
+import { FormGroup, Input, Container, Row, Col} from 'reactstrap'
 import ProductData from '../Components/ProductData'
-import { ProductContext } from "../contexts/ProductContextProvider";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);

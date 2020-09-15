@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import { FormGroup, Input, Container, Row, Col, CardImg } from "reactstrap";
+import {  Row, Col, CardImg } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 
 const ProductMap = ({products}) => {
       const { productList, updateProductList } = useContext(ProductContext);
-      console.log(products);
 
       const operators = {
         "+": function (a) {
