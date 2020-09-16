@@ -1,7 +1,12 @@
-import React from 'react'
-import { Row, Col } from 'reactstrap'
+import React, { useState } from 'react'
+import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
-const Footer = () => {
+const Footer = (props) => {
+
+    const [modal, setModal] = useState(false)
+
+    const toggle = () => setModal(!modal)
+
     return (
         <footer className="container-fluid">
             <Row className="foot-wave">
@@ -20,9 +25,24 @@ const Footer = () => {
                     </path>
                 </svg>
                 <Col cs="12" className="text-light p-3 text-center" style={{backgroundColor: '#294360'}}>
+                <div className="about-mathem">
+                    <Button style={{background: 'rgba(52, 52, 52, 0)', border: 'none'}} onClick={toggle} className="footer-button">About</Button>
+                    <Modal isOpen={modal} toggle={toggle} className="test">
+                        <ModalHeader toggle={toggle}>About mathem</ModalHeader>
+                        <ModalBody>
+                            Mathem is a website where you can compare prices of food, drinks and more from CityGross, Willys and Mathem.
+                            <br></br><br></br>This site is created by Maruf, Martin, Anton and Hampus.
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button style={{color: 'rgba(219,219,219,1)'}} onClick={toggle}>Cancel</Button>
+                        </ModalFooter>
+                        </Modal>
+                </div>
                     &copy; 2020 MATHEM
                 </Col>
+                
             </Row>
+            
         </footer>
     )
 }
