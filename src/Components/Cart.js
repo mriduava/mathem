@@ -17,7 +17,6 @@ const Cart = () => {
           });
           res = await res.json()
           console.log(res);
-          console.log(productList);
         };
 
 

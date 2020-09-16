@@ -4,9 +4,8 @@ const Cart = require('./models/Cart')
 class Shopping{
 
     //Implement cart registration to db to simulate cart checkout
-    createCart(){
-        cartData = new Cart({products: this.cart})
-        cartData.save()
+    createCart(products){
+        new Cart({products: products}).save()
     }
     
     //Calculate price and compare with other stores of similar product

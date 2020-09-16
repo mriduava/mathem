@@ -1,7 +1,7 @@
 const db = "mathem";
 const PORT = 3200;
 const fetch = require("node-fetch");
-const mathemProduct = require("./models/Product");
+const Product = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
 //Classes here
@@ -54,7 +54,7 @@ dailyDataHarvestCheck();
 
 //Get all Products from MongoDB
 app.get("/api/mathem", async (req, res) => {
-  await mathemProduct.find({}, (err, result) => {
+  await Product.find({}, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
 });
@@ -108,7 +108,7 @@ const willysHarvester = async () => {
     raw = raw.results;
     //console.log(raw)
     raw.map((product) => {
-      let dataProduct = new mathemProduct({
+      let dataProduct = new Product({
         productName: product.name,
         productFullName: product.pickupProductLine2,
         volume: product.displayVolume,
@@ -145,7 +145,7 @@ const willysHarvester = async () => {
           : null,
       });
       products.push(dataProduct);
-      mathemProduct.find(
+      Product.find(
         { productFullName: dataProduct.productFullName },
         (err, result) => {
           if (!result.length) {
@@ -161,14 +161,14 @@ const willysHarvester = async () => {
 
 //Below is APIs
 app.get("*api/willys", async (req, res) => {
-  await mathemProduct.find({}, (err, result) => {
+  await Product.find({}, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
 });
 
 app.get("/api/willys/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  await mathemProduct
+  await Product
     .find({ $text: { $search: regex } }, (err, result) => {
       return res.send(result);
     })
@@ -176,7 +176,7 @@ app.get("/api/willys/:search", async (req, res) => {
 });
 
 app.get("/api/willys/:id", async (req, res) => {
-  await mathemProduct.findById(req.params.id, (err, result) => {
+  await Product.findById(req.params.id, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
 });
@@ -184,28 +184,37 @@ app.get("/api/willys/:id", async (req, res) => {
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  await mathemProduct
+  await Product
     .find({ $text: { $search: regex } }, (err, result) => {
       return res.send(result);
     })
     .limit(10);
 });
 
-app.get("/api/cart/:list", async (req, res) => {
-  /*req.params.search*/
-});
-
 //Find Product by ID
 app.get("/api/mathems/:id", async (req, res) => {
-  await mathemProduct.findById(req.params.id, (err, result) => {
+  await Product.findById(req.params.id, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
 });
 
 app.post("/api/cart/shopping", async (req, res) => {
-  console.log(req.body);
+  let compareList = [];
+  cart.createCart(req.body)
   let cartData = req.body;
-  return res.send(cartData)
+  await cartData.forEach(async data => {
+    var regex = new RegExp(data.productName, "i");
+  compareList = compareList.concat(
+     await Product.find({ $text: { $search: regex }}, (err, result) => {
+       if (result.length) {
+         console.log(result);
+         return result
+       }
+     })
+   );
+  })
+  console.log(compareList);
+  return res.send(compareList)
 });
 
 //SERVER
