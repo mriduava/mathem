@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, { useState, useContext } from "react";
+import { Button, Modal, ModalHeader, ModalBody} from "reactstrap";
+import { ProductContext } from '../contexts/ProductContextProvider'
 
-const ModalExample = (props) => {
-  const {buttonLabel, className} = props;
 
+const ProductModal = () => {
+  const {productInfo, getProductInfo} = useContext(ProductContext)
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
   return (
     <div>
-      <Button color="danger" onClick={toggle}>{buttonLabel}</Button>
-      <Modal isOpen={props.modal} toggle={props.toggle} className={className}>
-        <ModalHeader toggle={props.toggle}>Modal title</ModalHeader>
+      <Button color="warning" onClick={toggle}>Open Modal</Button>
+      <Modal isOpen={modal} toggle={toggle} size="lg" onClick={toggle}>
+        <ModalHeader toggle={toggle} charCode="" className="mx-auto">
+          <h4>{productInfo.productName}</h4>
+        </ModalHeader>
         <ModalBody>
-          Display Product Description! ...
+          <p>Product description goes here...</p>
         </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={props.toggle}>Do Something</Button>{' '}
-          <Button color="secondary" onClick={props.toggle}>Cancel</Button>
-        </ModalFooter>
       </Modal>
     </div>
   );
 }
-
-export default ModalExample;
+export default ProductModal
