@@ -203,7 +203,7 @@ app.post("/api/cart/shopping", async (req, res) => {
   // cart.createCart(req.body)
   let cartData = req.body;
   cartData.map(async (data, i) => {
-    let regex = new RegExp(data.productFullName, "i");
+    let regex = new RegExp(data.productName, "i");
     await Product.find({ $text: { $search: regex } }, (err, result) => {
       if(err && i !== cartData.length){
         compareList = compareList.concat(result)
