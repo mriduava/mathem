@@ -200,18 +200,14 @@ app.get("/api/mathems/:id", async (req, res) => {
 
 app.post("/api/cart/shopping", async (req, res) => {
   let compareList = [];
-  cart.createCart(req.body)
+  // cart.createCart(req.body)
   let cartData = req.body;
-  await cartData.forEach(async data => {
-    var regex = new RegExp(data.productName, "i");
-  compareList = compareList.concat(
-     await Product.find({ $text: { $search: regex }}, (err, result) => {
-       if (result.length) {
-         console.log(result);
-         return result
-       }
-     })
-   );
+  await cartData.map(async data => {
+    var regex = new RegExp(data.productFullName, "i");
+   let matches = await Product.find(
+      { $text: { $search: regex } }).limit(10);
+    compareList = compareList.concat(matches)
+    console.log(compareList.length);
   })
   console.log(compareList);
   return res.send(compareList)
