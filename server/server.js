@@ -202,15 +202,20 @@ app.post("/api/cart/shopping", async (req, res) => {
   let compareList = [];
   // cart.createCart(req.body)
   let cartData = req.body;
-  await cartData.map(async data => {
-    var regex = new RegExp(data.productFullName, "i");
-   let matches = await Product.find(
-      { $text: { $search: regex } }).limit(10);
-    compareList = compareList.concat(matches)
-    console.log(compareList.length);
+  cartData.map(async (data, i) => {
+    let regex = new RegExp(data.productFullName, "i");
+    await Product.find({ $text: { $search: regex } }, (err, result) => {
+      if(err && i !== cartData.length){
+        compareList = compareList.concat(result)
+      }
+      else{
+        compareList = compareList.concat(result)
+        compareList = compareList.filter(product => product.retail !== data.retail)
+        compareList = [...compareList]
+        return res.json(compareList)
+      }
+    });
   })
-  console.log(compareList);
-  return res.send(compareList)
 });
 
 //SERVER
