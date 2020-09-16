@@ -9,6 +9,16 @@ const Cart = () => {
 
       const toggle = () => setModal(!modal);
 
+        const getProductComparison = async () => {
+          let res = await fetch(`/api/cart/shopping`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(productList)
+          });
+          res = await res.json()
+          console.log(res);
+        };
+
 
     return (
       <div>
@@ -21,7 +31,7 @@ const Cart = () => {
             {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}
             </ModalBody>
           <ModalFooter>
-            <Button color="warning" className="mr-auto">Jämför</Button>
+            <Button color="warning" className="mr-auto" onClick={() => getProductComparison()}>Jämför</Button>
             <Button color="primary">Köp</Button>{" "}
             <Button color="success">Stäng</Button>
           </ModalFooter>

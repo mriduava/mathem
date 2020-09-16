@@ -7,8 +7,10 @@ const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
 const Citygross = require("./CityGrossHarvester");
+const ShoppingCart = require('./Shopping')
 let mathem = new Mathem();
 let citygross = new Citygross();
+let cart = new ShoppingCart();
 
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
@@ -198,6 +200,12 @@ app.get("/api/mathems/:id", async (req, res) => {
   await mathemProduct.findById(req.params.id, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
+});
+
+app.post("/api/cart/shopping", async (req, res) => {
+  console.log(req.body);
+  let cartData = req.body;
+  return res.send(cartData)
 });
 
 //SERVER
