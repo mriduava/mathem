@@ -29,16 +29,11 @@ const ProductMap = ({products}) => {
       };
       
 
-      /* you're gonna have to take row tag as the modal opener tag*/
-      //So in this case, every row that has the link to the product will be
-      //the product modal opener, you're gonna have to create a productModal.js file
-      //I'd say that it's gonna look something like:
-      //products.map, <ProductInformation product=product keyproduct._id+i/>
     return(
     <div>
       {products ? products.map((product, i) => {
       return (
-        <Row key={product._id + i} onClick={() => addProduct(product,undefined)}>
+        <Row key={product._id + i} onClick={() => addProduct(product,'+')}>
           <Col xs="1" sm="1">
             <CardImg top width="100%" src={product.image} alt="Card image cap" />
           </Col>
