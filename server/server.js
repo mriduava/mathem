@@ -197,24 +197,24 @@ app.get("/api/mathems/:id", async (req, res) => {
     err ? res.json(err) : res.json(result);
   });
 });
+let dataPayload
 
 app.post("/api/cart/shopping", async (req, res) => {
   let compareList = [];
   // cart.createCart(req.body)
   let cartData = req.body;
   cartData.map(async (data, i) => {
+    i = i+1
     let regex = new RegExp(data.productName, "i");
     await Product.find({ $text: { $search: regex } }, (err, result) => {
-      if(err && i !== cartData.length){
-        compareList = compareList.concat(result)
-      }
-      else{
         compareList = compareList.concat(result)
         compareList = compareList.filter(product => product.retail !== data.retail)
         compareList = [...compareList]
-        return res.json(compareList)
-      }
-    });
+        dataPayload = compareList    
+    }).limit(10);
+    if(i === cartData.length){
+      return res.send(dataPayload)
+    }
   })
 });
 
