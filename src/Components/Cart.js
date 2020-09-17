@@ -7,7 +7,7 @@ const Cart = () => {
        const { productList } = useContext(ProductContext);
       const [modal, setModal] = useState(false);
       const [compareList, setCompareList] = useState([])
-
+      let debounceID = null
       const toggle = () => setModal(!modal);
 
         const getProductComparison = async () => {
@@ -22,6 +22,15 @@ const Cart = () => {
           }
         };
 
+          const debounceHelper = () => {
+            if (debounceID !== null) {
+              clearTimeout(debounceID);
+              debounceID = null;
+            }
+            debounceID = setTimeout(() => {
+              getProductComparison()
+            }, 250);
+          };
 
     return (
       <div>
@@ -34,7 +43,7 @@ const Cart = () => {
             {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}
             </ModalBody>
           <ModalFooter>
-            <Button color="warning" className="mr-auto" onClick={() => getProductComparison()}>Jämför</Button>
+            <Button color="warning" className="mr-auto" onClick={() => debounceHelper()}>Jämför</Button>
             <Button color="primary">Köp</Button>{" "}
             <Button color="success">Stäng</Button>
           </ModalFooter>
