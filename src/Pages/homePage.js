@@ -4,7 +4,7 @@ import ProductData from '../Components/ProductData'
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-
+  let debounceID = null
 
 
   const searchProduct = async (search) => {
@@ -13,13 +13,15 @@ const HomePage = () => {
     setProducts(res);
   };
 
-  let searchTimer;
-  const autoSearch = (search) => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(async () => {
-      await searchProduct(search);
-    }, 500);
-  };
+  const debounceHelper = (search) => {
+    if(debounceID !== null){
+      clearTimeout(debounceID)
+      debounceID = null
+    }
+    debounceID = setTimeout(() => {
+      searchProduct(search)
+    },250)
+  }
   
   return (
     <div>
@@ -29,7 +31,7 @@ const HomePage = () => {
             type="text"
             className="mt-5"
             style={{ padding: "25px", borderRadius: "20px", fontSize: "25px" }}
-            onChange={(e) => autoSearch(e.target.value)}
+            onChange={(e) => debounceHelper(e.target.value)}
             placeholder="Sök varor"
           />
         </FormGroup>
