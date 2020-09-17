@@ -37,22 +37,28 @@ const HomePage = () => {
         </FormGroup>
       </div>
 
-      <Container>
+      <Container >
         <hr />
         <Row>
           <Col xs="6" sm="6">
             Produkter
           </Col>
-          <Col xs="4" sm="4">
+          <Col xs="2" sm="2">
             Pris
           </Col>
-          <Col xs="2" sm="2" style={{ textAlign: "right" }}>
+          <Col xs="1" sm="1">
             Butik
+          </Col>
+          <Col xs="3" sm="3" style={{ textAlign: "right" }}>
+            Antal
           </Col>
         </Row>
         <hr />
         {/* {productData} */}
-        <ProductData products={products}/>
+        <div className="product-list">
+         <ProductData products={products}/>
+        </div>
+       
       </Container>
     </div>
   );
