@@ -1,33 +1,36 @@
-import React, { useContext } from "react";
-import {  Row, Col, CardImg } from "reactstrap";
+import React, { useState, useContext } from "react";
+import {  Row, Col, CardImg, Button } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
+import ProductModal from './Modal'
 
 const ProductMap = ({products}) => {
-      const { productList, updateProductList } = useContext(ProductContext);
+  const { productList, updateProductList, getProductInfo } = useContext(ProductContext);
 
-      const operators = {
-        "+": function (a) {
-          return a + 1;
-        },
-        "-": function (a) {
-          return a - 1;
-        },
-      };
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
 
-      const addProduct = (product, operator) => {
-        const matchingProduct = productList.find(
-          (x) => x.productFullName === product.productFullName
+  const operators = {
+    "+": function (a) {
+      return a + 1;
+    },
+    "-": function (a) {
+      return a - 1;
+    },
+  };
+
+    const addProduct = (product, operator) => {
+      const matchingProduct = productList.find(
+        (x) => x.productFullName === product.productFullName
+      );
+      if (matchingProduct !== undefined) {
+        matchingProduct.quantity = operators[operator](
+          matchingProduct.quantity
         );
-        if (matchingProduct !== undefined) {
-          matchingProduct.quantity = operators[operator](
-            matchingProduct.quantity
-          );
-        } else {
-          product.quantity = 1
-          updateProductList(product);
-        }
-      };
-      
+      } else {
+        product.quantity = 1;
+        updateProductList(product);
+      }
+    };
 
     return(
     <div>
