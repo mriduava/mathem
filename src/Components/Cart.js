@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Row } from "reactstrap";
 import ProductData from './ProductData'
 import { ProductContext } from '../contexts/ProductContextProvider'
 
 const Cart = () => {
        const { productList } = useContext(ProductContext);
       const [modal, setModal] = useState(false);
+      const [compareList, setCompareList] = useState([])
 
       const toggle = () => setModal(!modal);
 
@@ -17,6 +18,9 @@ const Cart = () => {
           });
           res = await res.json()
           console.log(res);
+          if(res.length > 0){
+            setCompareList(res)
+          }
         };
 
 
@@ -35,6 +39,7 @@ const Cart = () => {
             <Button color="primary">Köp</Button>{" "}
             <Button color="success">Stäng</Button>
           </ModalFooter>
+          {compareList.length > 0 ? <ProductData products={compareList}/> : null}
         </Modal>
       </div>
     );
