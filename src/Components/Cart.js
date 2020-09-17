@@ -17,7 +17,6 @@ const Cart = () => {
             body: JSON.stringify(productList)
           });
           res = await res.json()
-          console.log(res);
           if(res.length > 0){
             setCompareList(res)
           }
