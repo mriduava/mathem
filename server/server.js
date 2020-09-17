@@ -100,9 +100,9 @@ app.get("/api/mathems/:id", async (req, res) => {
     err ? res.json(err) : res.json(result);
   });
 });
-let dataPayload
 
 app.post("/api/cart/shopping", async (req, res) => {
+  let dataPayload
   let compareList = [];
   // cart.createCart(req.body)
   let cartData = req.body;
