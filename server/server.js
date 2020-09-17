@@ -101,10 +101,10 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
+//This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
   let dataPayload
   let compareList = [];
-  // cart.createCart(req.body)
   let cartData = req.body;
   cartData.map(async (data, i) => {
     i = i+1

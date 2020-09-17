@@ -13,6 +13,11 @@ const HomePage = () => {
     setProducts(res);
   };
 
+  //The debounce is used to reduce the overall load on the frontend and used often in searchfields and large data transfers to api/rest
+  //To make it simple, the debounce consists of a local variable in this case debounceID on line 7.
+  //This is to prevent it from creating several copies of the variable. Check JS pointers and references on google.
+  //And in the debounce helper function it checks if the debounceID isn't null/already has an instance running and stop the instance
+  //Then creates a new instance. In simplicity it keeps on instance running all the time when somethi
   const debounceHelper = (search) => {
     if(debounceID !== null){
       clearTimeout(debounceID)
