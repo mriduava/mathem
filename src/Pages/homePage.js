@@ -1,98 +1,35 @@
-import React, { useContext, useState } from "react";
-import {
-  FormGroup,
-  Input,
-  Container,
-  Row,
-  Col,
-  CardImg,
-  Button,
-} from "reactstrap";
-import { ProductContext } from "../contexts/ProductContextProvider";
+import React, {useState} from "react";
+import { FormGroup, Input, Container, Row, Col} from 'reactstrap'
+import ProductData from '../Components/ProductData'
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  const { productList, updateProductList } = useContext(ProductContext);
-
-  const operators = {
-    "+": function (a) {
-      return a + 1;
-    },
-    "-": function (a) {
-      return a - 1;
-    },
-  };
-
+  
+  
   const searchProduct = async (search) => {
     let res = await fetch(`/api/mathem/${search}`);
     res = await res.json();
     setProducts(res);
   };
-
-  let searchTimer;
-  const autoSearch = (search) => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(async () => {
-      await searchProduct(search);
-    }, 500);
-  };
-
-  const addProduct = (product, operator) => {
-    // add product too the context
-    const matchingProduct = productList.find(
-      (x) => x.product === product
-    );
-    if (matchingProduct !== undefined) {
-      matchingProduct.quantity = operators[operator](matchingProduct.quantity);
-    } else {
-      updateProductList({ product: product, quantity: 1 });
+  
+  let debounceID = null
+  //The debounce is used to reduce the overall load on the frontend and used often in searchfields and large data transfers to api/rest
+  //To make it simple, the debounce consists of a local variable in this case debounceID on line 7.
+  //This is to prevent it from creating several copies of the variable. Check JS pointers and references on google.
+  //And in the debounce helper function it checks if the debounceID isn't null/already has an instance running and stop the instance
+  //Then creates a new instance. In simplicity it keeps on instance running all the time when something is searched in the field.
+  //This in turn also keeps the fetch from backend in one instance instead of creating several fetches at same time.
+  //NOTE: A debounce is used widely in almost every project to reduce load on frontend and increase performance in the app overall.
+  const debounceHelper = (search) => {
+    if(debounceID !== null){
+      clearTimeout(debounceID)
+      debounceID = null
     }
-  };
-
-  const productsList = () => {
-    return products.map((product, i) => {
-      return (
-        <Row key={product._id}>
-          <Col xs="1" sm="1">
-            <CardImg
-              top
-              width="100%"
-              src={product.image}
-              alt="Card image cap"
-            />
-          </Col>
-          <Col xs="5" sm="5">
-            <h4 style={{ color: "#424242" }}>{product.productName}</h4>
-          </Col>
-          <Col xs="3" sm="3">
-            <h5 style={{ color: "#FA5858" }}>{product.price} :-</h5>
-          </Col>
-          <Col xs="1" sm="1">
-            <div className="btn-group">
-              <Button
-                className="btn btn-warning btn-circle"
-                onClick={() => addProduct(product, "+")}
-              >
-                +
-              </Button>
-              <h4>1</h4>
-              <Button
-                className="btn-warning btn-circle"
-                onClick={() => addProduct(product, "-")}
-              >
-                -
-              </Button>
-            </div>
-          </Col>
-          <Col xs="1" sm="2" style={{ textAlign: "right" }}>
-            <p>{product.retail}</p>
-          </Col>
-          <hr />
-        </Row>
-      );
-    });
-  };
-
+    debounceID = setTimeout(() => {
+      searchProduct(search)
+    },250)
+  }
+  
   return (
     <div>
       <div className="d-flex justify-content-center">
@@ -101,27 +38,34 @@ const HomePage = () => {
             type="text"
             className="mt-5"
             style={{ padding: "25px", borderRadius: "20px", fontSize: "25px" }}
-            onChange={(e) => autoSearch(e.target.value)}
+            onChange={(e) => debounceHelper(e.target.value)}
             placeholder="Sök varor"
           />
         </FormGroup>
       </div>
 
-      <Container>
+      <Container >
         <hr />
         <Row>
           <Col xs="6" sm="6">
             Produkter
           </Col>
-          <Col xs="4" sm="4">
+          <Col xs="2" sm="2">
             Pris
           </Col>
-          <Col xs="2" sm="2" style={{ textAlign: "right" }}>
+          <Col xs="1" sm="1">
             Butik
+          </Col>
+          <Col xs="3" sm="3" style={{ textAlign: "right" }}>
+            Antal
           </Col>
         </Row>
         <hr />
-        {productsList()}
+        {/* {productData} */}
+        <div className="product-list">
+         <ProductData products={products}/>
+        </div>
+       
       </Container>
     </div>
   );

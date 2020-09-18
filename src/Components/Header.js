@@ -5,8 +5,6 @@ import {
 } from "reactstrap";
 import Cart from './Cart'
 
-import SearchField from '../Pages/homePageComponents/searchField'
-
 const MainHeader = (name) => {
   const [collapsed, setCollapsed] = useState(true);
 
