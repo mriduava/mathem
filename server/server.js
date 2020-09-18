@@ -101,31 +101,42 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
+  let debounceID = null
+  const debounceHelper = () => {
+
+  }
+
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
   let dataPayload = ""
   let compareList = [];
   let cartData = req.body;
-  cartData.map(async (data, i) => {
-    i = i+1
-    let keywords = data.productName.split(" ")
-    await Product.find(
-      { productFullName: { $regex: `.*${keywords[0]}.*` } },
-      (err, result) => {
-        
-        compareList = compareList.concat(result);
-        compareList = compareList.filter(
-          (product) => product.retail !== data.retail
-        );
-        compareList = [...compareList];
-        dataPayload = compareList;
+      if (debounceID !== null) {
+        clearTimeout(debounceID);
+        debounceID = null;
       }
-    ).limit(20);
-    if(i === cartData.length){
-      console.log(dataPayload.length);
-      return res.send(dataPayload)
-    }
+      debounceID = setTimeout(() => {
+    cartData.map(async (data, i) => {
+    let keywords = data.productName.split(" ")
+    keywords.map(async (word, j) => {
+      await Product.find(
+        { productFullName: { $regex: `.*${word}.*` } },
+        (err, result) => {
+          compareList = compareList.concat(result);
+          compareList = compareList.filter(
+            (product) => product.retail !== data.retail
+          );
+          compareList = [...compareList];
+          dataPayload = compareList;
+        }
+      ).limit(5);
+      if(i === cartData.length-1 && j === keywords.length-1){
+        console.log(dataPayload.length);
+        return res.send(dataPayload)
+      }
+    })
   })
+      }, 250);
 });
 
 //SERVER
