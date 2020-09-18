@@ -55,7 +55,7 @@ class FilterManager {
 
   // Return products in price range
   filterPriceRange = (arr, min, max) => {
-    return arr.filter((element) => min < element && element < max);
+    return arr.filter((element) => min < element.price && element.price < max);
   };
 
   // Sort by price
