@@ -29,7 +29,7 @@ const Footer = (props) => {
                 <Col cs="12" className="text-light p-3 text-center" style={{backgroundColor: '#294360'}}>
                 <div className="about-mathem">
                     <Button style={{background: 'rgba(52, 52, 52, 0)', border: 'none'}} onClick={toggleAbout} className="footer-button">About</Button>
-                    <Modal isOpen={aboutModal} toggle={toggleAbout} className="test">
+                    <Modal isOpen={aboutModal} toggle={toggleAbout} className="about-us">
                         <ModalHeader toggle={toggleAbout}>About mathem</ModalHeader>
                         <ModalBody>
                             Mathem is a website where you can compare prices of food, drinks and more from CityGross, Willys and Mathem.
