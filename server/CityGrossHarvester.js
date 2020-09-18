@@ -38,9 +38,6 @@ class Citygross {
     return (await raw.json()).data;
   }
 
-  ///<Summary>
-  /// Makes the api data readable to our database
-  ///</Summary>
   async saveCategories(categories) {
     return Promise.all(
       categories.map((category) => this.saveCategoryProducts(category))
@@ -78,7 +75,6 @@ class Citygross {
   }
 
   async getAllProducts() {
-    // Add a request to get categories from the database when implemented.
     return Promise.all(
       categoryList.map((category) => this.fetchData(category))
     );
@@ -89,11 +85,6 @@ class Citygross {
     await this.saveCategories(categories);
   }
 
-  //Utility functions
-
-  ///<Summary>
-  ///Loops through the citygross markings array to search for ecological labels
-  ///</Summary >
   isEcological(arr) {
     let b = false;
     if (!Array.isArray(arr)) return b;
@@ -128,7 +119,6 @@ class Citygross {
   }
 
   calcVolume(product) {
-    //Might have to consult a lookup table for specific item descs ((LOOK AT DESCRIPTIVE SIZE))
     return product.grossWeight
       ? `${product.grossWeight.value}${this.units(
           product.grossWeight.unitOfMeasure
