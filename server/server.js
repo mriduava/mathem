@@ -133,10 +133,10 @@ app.post("/api/cart/shopping", async (req, res) => {
       ).limit(5);
       if(i === cartData.length-1 && j === keywords.length-1){
         return res.send(dataPayload)
-      }
+       }
+      })
     })
-  })
-      }, 250);
+  }, 250);
 });
 
 //SERVER
