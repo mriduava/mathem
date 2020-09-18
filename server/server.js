@@ -29,6 +29,7 @@ const dailyDataHarvestCheck = () => {
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
   DateUpdate.find({}, (err, result) => {
     if (!result.length) {
+      console.log("no date saved");
       todaysDate.save();
       mathem.harvester();
       citygross.harvester();
@@ -41,6 +42,7 @@ const dailyDataHarvestCheck = () => {
         todaysDate.dateUpdated.getTime() >
           result[result.length - 1].dateUpdated.getTime();
       if (condition) {
+        console.log("date");
         todaysDate.save();
         mathem.harvester();
         citygross.harvester();
@@ -50,6 +52,8 @@ const dailyDataHarvestCheck = () => {
     }
   });
 };
+
+dailyDataHarvestCheck()
 
 //Above is mathem harvester and below is willys harvester
 

@@ -4,7 +4,7 @@ import ProductData from './ProductData'
 import { ProductContext } from '../contexts/ProductContextProvider'
 
 const Cart = () => {
-       const { productList } = useContext(ProductContext);
+      const { productList } = useContext(ProductContext);
       const [modal, setModal] = useState(false);
       const [compareList, setCompareList] = useState([])
       let debounceID = null
