@@ -45,7 +45,7 @@ const HomePage = () => {
       </div>
 
       <Container >
-        <hr />
+        {/* <hr />
         <Row>
           <Col xs="6" sm="6">
             Produkter
@@ -60,7 +60,7 @@ const HomePage = () => {
             Antal
           </Col>
         </Row>
-        <hr />
+        <hr /> */}
         {/* {productData} */}
         <div className="product-list">
          <ProductData products={products}/>
