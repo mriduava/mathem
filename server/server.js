@@ -113,7 +113,6 @@ app.post("/api/cart/shopping", async (req, res) => {
   let dataPayload = ""
   let compareList = [];
   let cartData = req.body;
-  let searchWords = []
       if (debounceID !== null) {
         clearTimeout(debounceID);
         debounceID = null;
