@@ -14,7 +14,7 @@ let schema = new Schema({
   priceUnit: { type: String, required: true },
   price: { type: Number, required: true },
   compareUnit: { type: String, required: false },
-  comparePrice: { type: Number, required: false },
+  comparePrice: { required: false },
   discount: {
     type: Object,
     required: false,

@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const Product = require('./models/WillysProduct')
+const Product = require('./models/Product')
 const WillysScrubber = require('./WillysScrubber')
 const Category = require("./models/Category");
 
@@ -32,8 +32,8 @@ module.exports = class WillysHarvester {
             for (let i = 0; i < scrubbedData.length; i++){
               for (let j = 0; j < scrubbedData[i].length; j++){
                 let p = new Product({
-                  name: scrubbedData[i][j].name,
-                  brand: scrubbedData[i][j].brand,
+                  productName: scrubbedData[i][j].name,
+                  productFullName: scrubbedData[i][j].name,
                   volume: scrubbedData[i][j].unitVolume,
                   url: scrubbedData[i][j].url,
                   image: scrubbedData[i][j].imageUrl,
@@ -78,11 +78,11 @@ module.exports = class WillysHarvester {
       }
 
       static async uploadData(data){
+        console.log(data)
           for (let i = 0; i < data.length; i++){
             Product.find(
-                { name : data[i].name.toLowerCase() },
+                { productFullName : data[i].productFullName.toLowerCase() },
                 (err, result) => {
-                    console.log('HEJ')
                     if (!result.length){
                         data[i].save()
                     }else{
