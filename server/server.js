@@ -15,6 +15,7 @@ const WillysProduct = require('./models/WillysProduct')
 const WillysHarvester = require('./WillysHarvester')
 
 
+
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
 // */
@@ -29,12 +30,11 @@ const dailyDataHarvestCheck = () => {
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
   DateUpdate.find({}, (err, result) => {
     if (!result.length) {
-      console.log("no date saved");
       todaysDate.save();
       mathem.harvester();
       citygross.harvester();
-      //  mathemHarvester();
-      // willysHarvester()
+      WillysHarvester.harvest()
+
     } else {
       const condition =
         todaysDate.dateUpdated.getDate() >
@@ -42,19 +42,17 @@ const dailyDataHarvestCheck = () => {
         todaysDate.dateUpdated.getTime() >
           result[result.length - 1].dateUpdated.getTime();
       if (condition) {
-        console.log("date");
         todaysDate.save();
         mathem.harvester();
         citygross.harvester();
-        // mathemHarvester();
-        // willysHarvester();
+        WillysHarvester.harvest()
       }
     }
   });
 };
 
+//WillysHarvester.harvest()
 dailyDataHarvestCheck()
-
 //Above is mathem harvester and below is willys harvester
 
 //Get all Products from MongoDB
@@ -66,15 +64,15 @@ app.get("/api/mathem", async (req, res) => {
 
 
 
- app.get('*api/willys', async(req, res) => {
-   await WillysProduct.find({}, (err, result) => {
+ app.get('/api/willys', async(req, res) => {
+   await Product.find({}, (err, result) => {
      err? res.json(err): res.json(result)
    })
  })
 
  app.get('/api/willys/:search', async (req,res)=>{
   var regex = new RegExp(req.params.search, 'i')
-  await WillysProduct.find(
+  await Product.find(
     {$text: {$search: regex}},
     (err, result)=>{
       return res.send(result)
@@ -82,7 +80,7 @@ app.get("/api/mathem", async (req, res) => {
 });
 
 app.get("/api/willys/:id", async (req, res) => {
-  await WillysProduct.findById(req.params.id, (err, result) => {
+  await Product.findById(req.params.id, (err, result) => {
       err ? res.json(err) : res.json(result)
     }
   )
