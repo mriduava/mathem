@@ -1,14 +1,16 @@
 const db = "mathem";
 const PORT = 3200;
 const fetch = require("node-fetch");
-const mathemProduct = require("./models/Product");
+const Product = require("./models/Product");
 const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
 const Citygross = require("./CityGrossHarvester");
+const ShoppingCart = require('./Shopping')
 let mathem = new Mathem();
 let citygross = new Citygross();
+let cart = new ShoppingCart();
 const WillysProduct = require('./models/WillysProduct')
 const WillysHarvester = require('./WillysHarvester')
 
@@ -53,7 +55,7 @@ const dailyDataHarvestCheck = () => {
 
 //Get all Products from MongoDB
 app.get("/api/mathem", async (req, res) => {
-  await mathemProduct.find({}, (err, result) => {
+  await Product.find({}, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
 });
@@ -85,22 +87,38 @@ app.get("/api/willys/:id", async (req, res) => {
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  await mathemProduct
+  await Product
     .find({ $text: { $search: regex } }, (err, result) => {
       return res.send(result);
     })
     .limit(10);
 });
 
-app.get("/api/cart/:list", async (req, res) => {
-  /*req.params.search*/
-});
-
 //Find Product by ID
 app.get("/api/mathems/:id", async (req, res) => {
-  await mathemProduct.findById(req.params.id, (err, result) => {
+  await Product.findById(req.params.id, (err, result) => {
     err ? res.json(err) : res.json(result);
   });
+});
+
+//This post is for the comparison list and returns possible products from other stores.
+app.post("/api/cart/shopping", async (req, res) => {
+  let dataPayload
+  let compareList = [];
+  let cartData = req.body;
+  cartData.map(async (data, i) => {
+    i = i+1
+    let regex = new RegExp(data.productName, "i");
+    await Product.find({ $text: { $search: regex } }, (err, result) => {
+        compareList = compareList.concat(result)
+        compareList = compareList.filter(product => product.retail !== data.retail)
+        compareList = [...compareList]
+        dataPayload = compareList    
+    }).limit(10);
+    if(i === cartData.length){
+      return res.send(dataPayload)
+    }
+  })
 });
 
 //SERVER

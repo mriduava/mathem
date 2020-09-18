@@ -4,7 +4,7 @@ import ProductData from '../Components/ProductData'
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-
+  let debounceID = null
 
 
   const searchProduct = async (search) => {
@@ -13,13 +13,20 @@ const HomePage = () => {
     setProducts(res);
   };
 
-  let searchTimer;
-  const autoSearch = (search) => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(async () => {
-      await searchProduct(search);
-    }, 500);
-  };
+  //The debounce is used to reduce the overall load on the frontend and used often in searchfields and large data transfers to api/rest
+  //To make it simple, the debounce consists of a local variable in this case debounceID on line 7.
+  //This is to prevent it from creating several copies of the variable. Check JS pointers and references on google.
+  //And in the debounce helper function it checks if the debounceID isn't null/already has an instance running and stop the instance
+  //Then creates a new instance. In simplicity it keeps on instance running all the time when somethi
+  const debounceHelper = (search) => {
+    if(debounceID !== null){
+      clearTimeout(debounceID)
+      debounceID = null
+    }
+    debounceID = setTimeout(() => {
+      searchProduct(search)
+    },250)
+  }
   
   return (
     <div>
@@ -29,28 +36,34 @@ const HomePage = () => {
             type="text"
             className="mt-5"
             style={{ padding: "25px", borderRadius: "20px", fontSize: "25px" }}
-            onChange={(e) => autoSearch(e.target.value)}
+            onChange={(e) => debounceHelper(e.target.value)}
             placeholder="Sök varor"
           />
         </FormGroup>
       </div>
 
-      <Container>
+      <Container >
         <hr />
         <Row>
           <Col xs="6" sm="6">
             Produkter
           </Col>
-          <Col xs="4" sm="4">
+          <Col xs="2" sm="2">
             Pris
           </Col>
-          <Col xs="2" sm="2" style={{ textAlign: "right" }}>
+          <Col xs="1" sm="1">
             Butik
+          </Col>
+          <Col xs="3" sm="3" style={{ textAlign: "right" }}>
+            Antal
           </Col>
         </Row>
         <hr />
         {/* {productData} */}
-        <ProductData products={products}/>
+        <div className="product-list">
+         <ProductData products={products}/>
+        </div>
+       
       </Container>
     </div>
   );
