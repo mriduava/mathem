@@ -111,6 +111,7 @@ app.post("/api/cart/shopping", async (req, res) => {
   let dataPayload = ""
   let compareList = [];
   let cartData = req.body;
+  let searchWords = []
       if (debounceID !== null) {
         clearTimeout(debounceID);
         debounceID = null;
@@ -131,7 +132,6 @@ app.post("/api/cart/shopping", async (req, res) => {
         }
       ).limit(5);
       if(i === cartData.length-1 && j === keywords.length-1){
-        console.log(dataPayload.length);
         return res.send(dataPayload)
       }
     })
