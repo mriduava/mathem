@@ -5,14 +5,14 @@
     border: none;
 }
 
-.App{
+.App {
     display: flex;
     min-height: 100vh;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
-.content { 
-    flex: 1; 
+.content {
+    flex: 1;
 }
 
 html {
@@ -22,21 +22,23 @@ html {
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
 }
+
 ::-webkit-scrollbar-thumb {
     border-radius: 7px;
     background: #a4b1b0;
 }
 
-.poster{
+.poster {
     width: 100vw;
     max-height: 300px;
 }
 
-.foot-wave {   
-    flex-shrink: 0; 
+.foot-wave {
+    flex-shrink: 0;
     height: 50px;
     text-align: center;
     position: relative;
@@ -47,5 +49,25 @@ html {
     overflow: visible;
     position: absolute;
     bottom: 0;
-    transform: matrix(1,0,0,1,0,0);
+    transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+
+.btn-group{
+    display: flexbox
+    
+}
+
+.footer-button{
+    z-index: 1;
+    font-size: 15pt;
 }

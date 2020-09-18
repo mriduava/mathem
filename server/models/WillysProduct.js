@@ -1,9 +1,9 @@
 const { Schema, model } = require("mongoose");
-const modelName = "CitygrossProduct";
+const modelName = "WillysProduct";
 
 let schema = new Schema({
-  productName: { type: String, required: true },
-  productFullName: { type: String, required: true },
+  name: { type: String, required: true },
+  brand: { type: String, required: false },
   volume: { type: String, required: false },
   url: { type: String, required: false },
   image: { type: String, required: false },
@@ -11,10 +11,10 @@ let schema = new Schema({
   label: { type: String, required: false },
   origin: { type: String, required: true },
   ecologic: { type: Boolean, required: false },
-  priceUnit: { type: String, required: false },
+  priceUnit: { type: String, required: true },
   price: { type: Number, required: true },
   compareUnit: { type: String, required: false },
-  comparePrice: { type: Number, required: false },
+  comparePrice: { required: false },
   discount: {
     type: Object,
     required: false,
@@ -22,6 +22,7 @@ let schema = new Schema({
     prePrice: { type: Number, required: false },
     discountPrice: { type: Number, required: false },
     maxQuantity: { type: Number, required: false },
+    applied: {type: Boolean, required: true}
   },
 });
 schema.index({ "$**": "text" });
