@@ -1,7 +1,14 @@
-import React from 'react'
-import { Row, Col } from 'reactstrap'
+import React, { useState } from 'react'
+import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
-const Footer = () => {
+const Footer = (props) => {
+
+    const [aboutModal, setAboutModal] = useState(false)
+    const [contacUsModal, setContactUsModal] = useState(false)
+
+    const toggleAbout = () => setAboutModal(!aboutModal)
+    const toggleContactUs = () => setContactUsModal(!contacUsModal)
+
     return (
         <footer className="container-fluid">
             <Row className="foot-wave">
@@ -20,9 +27,38 @@ const Footer = () => {
                     </path>
                 </svg>
                 <Col cs="12" className="text-light p-3 text-center" style={{backgroundColor: '#294360'}}>
+                <div className="about-mathem">
+                    <Button style={{background: 'rgba(52, 52, 52, 0)', border: 'none'}} onClick={toggleAbout} className="footer-button">About</Button>
+                    <Modal isOpen={aboutModal} toggle={toggleAbout} className="about-us">
+                        <ModalHeader toggle={toggleAbout}>About mathem</ModalHeader>
+                        <ModalBody>
+                            Mathem is a website where you can compare prices of food, drinks and more from CityGross, Willys and Mathem.
+                            <br></br><br></br>This site is created by Maruf, Martin, Anton and Hampus.
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button style={{color: 'rgba(219,219,219,1)'}} onClick={toggleAbout}>Close</Button>
+                        </ModalFooter>
+                        </Modal>
+                </div>
+                <div className="contact-us">
+                    <Button style={{background: 'rgba(52, 52, 52, 0)', border: 'none'}} onClick={toggleContactUs} className="footer-button">Contact us</Button>
+                    <Modal isOpen={contacUsModal} toggle={toggleContactUs} className="contact-us">
+                        <ModalHeader toggle={toggleContactUs}>Contact us</ModalHeader>
+                        <ModalBody>
+                            Email: mathemLund@mathem.se
+                            <br></br>
+                            Phone: 0742857991
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button style={{color: 'rgba(219,219,219,1)'}} onClick={toggleContactUs}>Close</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
                     &copy; 2020 MATHEM
                 </Col>
+                
             </Row>
+            
         </footer>
     )
 }
