@@ -15,6 +15,7 @@ const WillysProduct = require('./models/WillysProduct')
 const WillysHarvester = require('./WillysHarvester')
 
 
+
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
 // */
@@ -29,12 +30,10 @@ const dailyDataHarvestCheck = () => {
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
   DateUpdate.find({}, (err, result) => {
     if (!result.length) {
-      console.log("no date saved");
       todaysDate.save();
       mathem.harvester();
       citygross.harvester();
-      //  mathemHarvester();
-      // willysHarvester()
+
     } else {
       const condition =
         todaysDate.dateUpdated.getDate() >
@@ -42,12 +41,9 @@ const dailyDataHarvestCheck = () => {
         todaysDate.dateUpdated.getTime() >
           result[result.length - 1].dateUpdated.getTime();
       if (condition) {
-        console.log("date");
         todaysDate.save();
         mathem.harvester();
         citygross.harvester();
-        // mathemHarvester();
-        // willysHarvester();
       }
     }
   });
