@@ -62,30 +62,6 @@ app.get("/api/mathem", async (req, res) => {
   });
 });
 
-
-
- app.get('/api/willys', async(req, res) => {
-   await Product.find({}, (err, result) => {
-     err? res.json(err): res.json(result)
-   })
- })
-
- app.get('/api/willys/:search', async (req,res)=>{
-  var regex = new RegExp(req.params.search, 'i')
-  await Product.find(
-    {$text: {$search: regex}},
-    (err, result)=>{
-      return res.send(result)
-  }).limit(10)
-});
-
-app.get("/api/willys/:id", async (req, res) => {
-  await Product.findById(req.params.id, (err, result) => {
-      err ? res.json(err) : res.json(result)
-    }
-  )
-})
-
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
@@ -103,10 +79,7 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-  let debounceID = null
-  const debounceHelper = () => {
-
-  }
+let debounceID = null;
 
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {

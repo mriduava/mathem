@@ -30,27 +30,6 @@ const ProductMap = ({products}, props) => {
     }
   };
 
-  // const listHeader = ()=>{
-  //   return (<div>
-  //       <hr />
-  //         <Row>
-  //           <Col xs="6" sm="6">
-  //             Produkter
-  //           </Col>
-  //           <Col xs="2" sm="2">
-  //             Pris
-  //           </Col>
-  //           <Col xs="1" sm="1">
-  //             Butik
-  //           </Col>
-  //           <Col xs="3" sm="3" style={{ textAlign: "right" }}>
-  //             Antal
-  //           </Col>
-  //         </Row>
-  //       <hr />
-  //     </div>)
-  // }
-
   return(
     <div>
       {products ? 
@@ -61,22 +40,32 @@ const ProductMap = ({products}, props) => {
           <Col xs="10" sm="10" onClick={()=>{toggle(); getProductInfo(product._id);}}>
             <Row style={{cursor: 'pointer', backgroundColor: 'rgb(247 247 255)', padding: '1.2% 0'}}>
               <Col xs="1" sm="1">
-                <CardImg top width="100%" src={product.image} alt="Card image cap" />
+                <div style={{width: '60px', height: '60px', backgroundSize: 'cover', overflow: 'hidden'}}>
+                  <CardImg top width="100%" src={product.image} alt="Card image cap"/>
+                </div>
               </Col>
-              <Col xs="5" sm="5">
+              <Col xs="6" sm="6">
                 <h4 style={{color:'#424242'}}>{product.productName}</h4>
+                <p style={{textTransform: 'uppercase'}}>{product.retail}</p>
               </Col>
               <Col xs="2" sm="2">
                 <h5 style={{color:'#FA5858'}}>{product.price} :-</h5>
-              </Col>
-              <Col xs="1" sm="1">
-                <p>{product.retail}</p>
               </Col>
             </Row>
           </Col>
           <Col xs="2" sm="2" style={{textAlign: 'right', backgroundColor: 'rgb(234 234 234)'}} 
             onClick={() => addProduct(product,'+')}>
-            <p>ADD</p>
+              <div className="d-flex justify-content-end" style={{margin: '15px 0 0 0'}}>
+                <div style={{color: 'red'}}>
+                  <h2><i class="fas fa-minus-circle"></i></h2>
+                </div>
+                <div style={{margin: '2px 5px 0 5px', width:"65px"}}>
+                  <Input type="number" min="0" max="100" placeholder="0" />
+                </div>
+                <div style={{color: 'green'}}>
+                  <h2><i class="fas fa-plus-circle"></i></h2>
+                </div>
+              </div>
           </Col>
           <hr/> 
         </Row>
@@ -100,14 +89,14 @@ const ProductMap = ({products}, props) => {
               </div>
               <p style={{color: '#294360', fontSize: '24px', textTransform: 'uppercase', margin: '5px 0 0 0'}}>{productInfo.retail}</p>        
               <div className="d-flex" style={{margin: '18px 0 0 0'}}>
-                <div style={{color: 'green'}}>
-                <h1><i class="fas fa-minus-circle"></i></h1>
+                <div style={{color: 'red'}}>
+                  <h1><i class="fas fa-minus-circle"></i></h1>
                 </div>
                 <div style={{margin: '6px 5px 0 5px', width:"65px"}}>
                   <Input type="number" min="0" max="100" placeholder="0" />
                 </div>
-                <div style={{color: 'red'}}>
-                <h1><i class="fas fa-plus-circle"></i></h1>
+                <div style={{color: 'green'}}>
+                  <h1><i class="fas fa-plus-circle"></i></h1>
                 </div>
               </div>
             </div>
