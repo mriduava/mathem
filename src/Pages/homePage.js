@@ -7,9 +7,14 @@ const HomePage = () => {
   
   
   const searchProduct = async (search) => {
-    let res = await fetch(`/api/mathem/${search}`);
-    res = await res.json();
-    setProducts(res);
+    if(search !== ""){
+      let res = await fetch(`/api/mathem/${search}`);
+      res = await res.json();
+      setProducts(res);
+    }
+    else{
+      setProducts([])
+    }
   };
   
   let debounceID = null
@@ -29,6 +34,21 @@ const HomePage = () => {
       searchProduct(search)
     },250)
   }
+
+   const listHeader = ()=>{
+    if (products.length !== 0) {
+      return (<div>
+      <hr />
+        <Row>
+          <Col xs="6" sm="6">Produkter</Col>
+          <Col xs="2" sm="2">Pris</Col>
+          <Col xs="1" sm="1">Butik</Col>
+          <Col xs="3" sm="3" style={{ textAlign: "right" }}>Antal</Col>
+        </Row>
+      <hr />
+    </div>)
+    }
+  }
   
   return (
     <div>
@@ -45,23 +65,7 @@ const HomePage = () => {
       </div>
 
       <Container >
-        {/* <hr />
-        <Row>
-          <Col xs="6" sm="6">
-            Produkter
-          </Col>
-          <Col xs="2" sm="2">
-            Pris
-          </Col>
-          <Col xs="1" sm="1">
-            Butik
-          </Col>
-          <Col xs="3" sm="3" style={{ textAlign: "right" }}>
-            Antal
-          </Col>
-        </Row>
-        <hr /> */}
-        {/* {productData} */}
+        {listHeader()}
         <div className="product-list">
          <ProductData products={products}/>
         </div>

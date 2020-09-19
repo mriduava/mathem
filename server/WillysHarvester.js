@@ -78,7 +78,7 @@ module.exports = class WillysHarvester {
       }
 
       static async uploadData(data){
-        console.log(data)
+        //console.log(data)
           for (let i = 0; i < data.length; i++){
             Product.find(
                 { productFullName : data[i].productFullName.toLowerCase() },
@@ -98,7 +98,7 @@ module.exports = class WillysHarvester {
       static async harvest(){
         let categories = await this.getCategories()
 
-        console.log('Connected to DB!!!')
+        //console.log('Connected to DB!!!')
         
         try {
          this.uploadCategories(categories)
