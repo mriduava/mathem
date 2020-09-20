@@ -7,14 +7,12 @@ const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
 const Citygross = require("./CityGrossHarvester");
-const ShoppingCart = require('./Shopping')
+const ShoppingCart = require("./Shopping");
 let mathem = new Mathem();
 let citygross = new Citygross();
 let cart = new ShoppingCart();
-const WillysProduct = require('./models/WillysProduct')
-const WillysHarvester = require('./WillysHarvester')
-
-
+const WillysProduct = require("./models/WillysProduct");
+const WillysHarvester = require("./WillysHarvester");
 
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
@@ -33,8 +31,7 @@ const dailyDataHarvestCheck = () => {
       todaysDate.save();
       mathem.harvester();
       citygross.harvester();
-      WillysHarvester.harvest()
-
+      WillysHarvester.harvest();
     } else {
       const condition =
         todaysDate.dateUpdated.getDate() >
@@ -45,14 +42,14 @@ const dailyDataHarvestCheck = () => {
         todaysDate.save();
         mathem.harvester();
         citygross.harvester();
-        WillysHarvester.harvest()
+        WillysHarvester.harvest();
       }
     }
   });
 };
 
 //WillysHarvester.harvest()
-dailyDataHarvestCheck()
+dailyDataHarvestCheck();
 //Above is mathem harvester and below is willys harvester
 
 //Get all Products from MongoDB
@@ -62,38 +59,39 @@ app.get("/api/mathem", async (req, res) => {
   });
 });
 
+app.get("/api/willys", async (req, res) => {
+  await Product.find({}, (err, result) => {
+    err ? res.json(err) : res.json(result);
+  });
+});
 
-
- app.get('/api/willys', async(req, res) => {
-   await Product.find({}, (err, result) => {
-     err? res.json(err): res.json(result)
-   })
- })
-
- app.get('/api/willys/:search', async (req,res)=>{
-  var regex = new RegExp(req.params.search, 'i')
-  await Product.find(
-    {$text: {$search: regex}},
-    (err, result)=>{
-      return res.send(result)
-  }).limit(10)
+app.get("/api/willys/:search", async (req, res) => {
+  var regex = new RegExp(req.params.search, "i");
+  const query = {
+    $text: { $search: regex },
+    price: { $gt: 40 },
+  };
+  await Product.find(query, (err, result) => {
+    return res.send(result);
+  }).limit(10);
 });
 
 app.get("/api/willys/:id", async (req, res) => {
   await Product.findById(req.params.id, (err, result) => {
-      err ? res.json(err) : res.json(result)
-    }
-  )
-})
+    err ? res.json(err) : res.json(result);
+  });
+});
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  await Product
-    .find({ $text: { $search: regex } }, (err, result) => {
-      return res.send(result);
-    })
-    .limit(10);
+  const query = {
+    $text: { $search: regex },
+    price: { $gt: 40, $lt: 90 },
+  };
+  await Product.find(query, (err, result) => {
+    return res.send(result);
+  }).limit(10);
 });
 
 //Find Product by ID
@@ -105,22 +103,24 @@ app.get("/api/mathems/:id", async (req, res) => {
 
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
-  let dataPayload
+  let dataPayload;
   let compareList = [];
   let cartData = req.body;
   cartData.map(async (data, i) => {
-    i = i+1
+    i = i + 1;
     let regex = new RegExp(data.productName, "i");
     await Product.find({ $text: { $search: regex } }, (err, result) => {
-        compareList = compareList.concat(result)
-        compareList = compareList.filter(product => product.retail !== data.retail)
-        compareList = [...compareList]
-        dataPayload = compareList    
+      compareList = compareList.concat(result);
+      compareList = compareList.filter(
+        (product) => product.retail !== data.retail
+      );
+      compareList = [...compareList];
+      dataPayload = compareList;
     }).limit(10);
-    if(i === cartData.length){
-      return res.send(dataPayload)
+    if (i === cartData.length) {
+      return res.send(dataPayload);
     }
-  })
+  });
 });
 
 //SERVER
