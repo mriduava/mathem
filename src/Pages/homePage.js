@@ -103,8 +103,15 @@ const HomePage = () => {
         <div className="product-list">
           <ProductData products={products} />
         </div>
-        <Button onClick={() => previousPage()}>Previous</Button>
-        <Button onClick={() => nextPage()}>Next</Button>
+        <div className="row">
+          <Button className="col-1 btn-warning" onClick={() => previousPage()}>
+            Previous
+          </Button>
+          <div className="col-10"></div>
+          <Button className="col-1 btn-warning" onClick={() => nextPage()}>
+            Next
+          </Button>
+        </div>
       </Container>
     </div>
   );
