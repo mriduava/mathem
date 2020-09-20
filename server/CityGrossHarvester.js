@@ -28,7 +28,7 @@ let categoryList = [
   3473,
 ];
 
-class Citygross {
+module.exports = class Citygross {
   async fetchData(categoryID) {
     let raw = await fetch(
       "https://www.citygross.se/api/v1/esales/products?categoryId=" +
@@ -61,7 +61,7 @@ class Citygross {
           retail: "City gross",
           origin: product.country || "unknown",
           descriptiveSize: product.descriptiveSize,
-          price: product.defaultPrice.currentPrice.price,
+          price: this.findPrice(product),
           comparisonPrice: product.defaultPrice.currentPrice.comparisonPrice,
           discount: this.checkDiscount(product),
           ecologic: this.isEcological(product.markings),
@@ -127,13 +127,18 @@ class Citygross {
   }
 
   checkDiscount(product) {
+    const memberPrice = product.defaultPrice.memberPrice;
     return product.defaultPrice.hasDiscount
       ? {
-          memberPrice: product.defaultPrice.memberPrice,
+          memberPrice: memberPrice === null ? false : memberPrice,
           prePrice: product.defaultPrice.ordinaryPrice.price,
         }
       : undefined;
   }
-}
 
-module.exports = Citygross;
+  findPrice(product) {
+    if (product.defaultPrice.hasDiscount)
+      return product.defaultPrice.promotions[0].price.price;
+    else return product.defaultPrice.currentPrice.price;
+  }
+};
