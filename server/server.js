@@ -7,14 +7,12 @@ const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
 const Citygross = require("./CityGrossHarvester");
-const ShoppingCart = require('./Shopping')
+const ShoppingCart = require("./Shopping");
 let mathem = new Mathem();
 let citygross = new Citygross();
 let cart = new ShoppingCart();
-const WillysProduct = require('./models/WillysProduct')
-const WillysHarvester = require('./WillysHarvester')
-
-
+const WillysProduct = require("./models/WillysProduct");
+const WillysHarvester = require("./WillysHarvester");
 
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
@@ -33,8 +31,7 @@ const dailyDataHarvestCheck = () => {
       todaysDate.save();
       mathem.harvester();
       citygross.harvester();
-      WillysHarvester.harvest()
-
+      WillysHarvester.harvest();
     } else {
       const condition =
         todaysDate.dateUpdated.getDate() >
@@ -45,14 +42,14 @@ const dailyDataHarvestCheck = () => {
         todaysDate.save();
         mathem.harvester();
         citygross.harvester();
-        WillysHarvester.harvest()
+        WillysHarvester.harvest();
       }
     }
   });
 };
 
 //WillysHarvester.harvest()
-dailyDataHarvestCheck()
+dailyDataHarvestCheck();
 //Above is mathem harvester and below is willys harvester
 
 //Get all Products from MongoDB
@@ -65,11 +62,18 @@ app.get("/api/mathem", async (req, res) => {
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  await Product
-    .find({ $text: { $search: regex } }, (err, result) => {
-      return res.send(result);
-    })
-    .limit(10);
+  console.log(req);
+  const query = {
+    $text: { $search: regex },
+    price: { $gt: 0, $lt: 999 },
+    ...(req.query.ecologic === "true" && { ecologic: true }),
+    ...(req.query.discount === "true" && { discount: { $type: "object" } }),
+  };
+  await Product.find(query, (err, result) => {
+    return res.send(result);
+  })
+    .limit(10)
+    .sort({ price: 1 });
 });
 
 //Find Product by ID
@@ -107,7 +111,7 @@ app.post("/api/cart/shopping", async (req, res) => {
       ).limit(5);
       if(i === cartData.length-1 && j === keywords.length-1){
         return res.send(dataPayload)
-       }
+      }
       })
     })
   }, 250);

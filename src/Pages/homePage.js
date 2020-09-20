@@ -4,11 +4,13 @@ import ProductData from '../Components/ProductData'
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  
+  const ecologic = false
+  const discount = false
   
   const searchProduct = async (search) => {
     if(search !== ""){
-      let res = await fetch(`/api/mathem/${search}`);
+          let res = await fetch(`/api/mathem/${search}?ecologic=${ecologic}&discount=${discount}`);
+
       res = await res.json();
       setProducts(res);
     }
