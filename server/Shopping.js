@@ -10,7 +10,7 @@ class Shopping{
     
     //Calculate price and compare with other stores of similar product
     calculatePrice(products){
-        console.log(products);
+        //console.log(products);
         return "compare here"
     }
 }
