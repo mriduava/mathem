@@ -59,29 +59,6 @@ app.get("/api/mathem", async (req, res) => {
   });
 });
 
-app.get("/api/willys", async (req, res) => {
-  await Product.find({}, (err, result) => {
-    err ? res.json(err) : res.json(result);
-  });
-});
-
-app.get("/api/willys/:search", async (req, res) => {
-  var regex = new RegExp(req.params.search, "i");
-  const query = {
-    $text: { $search: regex },
-    price: { $gt: 40 },
-  };
-  await Product.find(query, (err, result) => {
-    return res.send(result);
-  }).limit(10);
-});
-
-app.get("/api/willys/:id", async (req, res) => {
-  await Product.findById(req.params.id, (err, result) => {
-    err ? res.json(err) : res.json(result);
-  });
-});
-
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
@@ -106,26 +83,38 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
+let debounceID = null;
+
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
-  let dataPayload;
+  let dataPayload = ""
   let compareList = [];
   let cartData = req.body;
-  cartData.map(async (data, i) => {
-    i = i + 1;
-    let regex = new RegExp(data.productName, "i");
-    await Product.find({ $text: { $search: regex } }, (err, result) => {
-      compareList = compareList.concat(result);
-      compareList = compareList.filter(
-        (product) => product.retail !== data.retail
-      );
-      compareList = [...compareList];
-      dataPayload = compareList;
-    }).limit(10);
-    if (i === cartData.length) {
-      return res.send(dataPayload);
-    }
-  });
+      if (debounceID !== null) {
+        clearTimeout(debounceID);
+        debounceID = null;
+      }
+      debounceID = setTimeout(() => {
+    cartData.map(async (data, i) => {
+    let keywords = data.productName.split(" ")
+    keywords.map(async (word, j) => {
+      await Product.find(
+        { productFullName: { $regex: `.*${word}.*` } },
+        (err, result) => {
+          compareList = compareList.concat(result);
+          compareList = compareList.filter(
+            (product) => product.retail !== data.retail
+          );
+          compareList = [...compareList];
+          dataPayload = compareList;
+        }
+      ).limit(5);
+      if(i === cartData.length-1 && j === keywords.length-1){
+        return res.send(dataPayload)
+      }
+      })
+    })
+  }, 250);
 });
 
 //SERVER

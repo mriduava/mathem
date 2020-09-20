@@ -11,14 +11,19 @@ const Cart = () => {
       const toggle = () => setModal(!modal);
 
         const getProductComparison = async () => {
-          let res = await fetch(`/api/cart/shopping`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(productList)
-          });
-          res = await res.json()
-          if(res.length > 0){
-            setCompareList(res)
+          try{
+            let res = await fetch(`/api/cart/shopping`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(productList)
+            });
+            res = await res.json()
+            if(res.length > 0){
+              setCompareList(res)
+            }
+          }
+          catch{
+            
           }
         };
 
