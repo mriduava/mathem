@@ -72,8 +72,9 @@ app.get("/api/mathem/:search", async (req, res) => {
   await Product.find(query, (err, result) => {
     return res.send(result);
   })
-    .limit(10)
-    .sort({ price: 1 });
+    .limit(parseInt(req.query.limit))
+    .sort({ price: 1 })
+    .skip(parseInt(req.query.skip));
 });
 
 //Find Product by ID
@@ -87,33 +88,33 @@ let debounceID = null;
 
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
-  let dataPayload = ""
+  let dataPayload = "";
   let compareList = [];
   let cartData = req.body;
-      if (debounceID !== null) {
-        clearTimeout(debounceID);
-        debounceID = null;
-      }
-      debounceID = setTimeout(() => {
+  if (debounceID !== null) {
+    clearTimeout(debounceID);
+    debounceID = null;
+  }
+  debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
-    let keywords = data.productName.split(" ")
-    keywords.map(async (word, j) => {
-      await Product.find(
-        { productFullName: { $regex: `.*${word}.*` } },
-        (err, result) => {
-          compareList = compareList.concat(result);
-          compareList = compareList.filter(
-            (product) => product.retail !== data.retail
-          );
-          compareList = [...compareList];
-          dataPayload = compareList;
+      let keywords = data.productName.split(" ");
+      keywords.map(async (word, j) => {
+        await Product.find(
+          { productFullName: { $regex: `.*${word}.*` } },
+          (err, result) => {
+            compareList = compareList.concat(result);
+            compareList = compareList.filter(
+              (product) => product.retail !== data.retail
+            );
+            compareList = [...compareList];
+            dataPayload = compareList;
+          }
+        ).limit(5);
+        if (i === cartData.length - 1 && j === keywords.length - 1) {
+          return res.send(dataPayload);
         }
-      ).limit(5);
-      if(i === cartData.length-1 && j === keywords.length-1){
-        return res.send(dataPayload)
-      }
-      })
-    })
+      });
+    });
   }, 250);
 });
 
