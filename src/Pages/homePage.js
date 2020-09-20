@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FormGroup, Input, Container, Row, Col, Button } from "reactstrap";
 import ProductData from "../Components/ProductData";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState([]);
-  const [ecologic, setEcologic] = useState(false);
-  const [discount, setDiscount] = useState(false);
-  const [limit, setLimit] = useState(10);
+  const [ecologic] = useState(false);
+  const [discount] = useState(false);
+  const [limit] = useState(10);
   const [skip, setSkip] = useState(0);
 
   const nextPage = () => {
