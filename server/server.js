@@ -85,13 +85,18 @@ app.get("/api/willys/:id", async (req, res) => {
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
+  console.log(req);
   const query = {
     $text: { $search: regex },
-    price: { $gt: 40, $lt: 90 },
+    price: { $gt: 0, $lt: 999 },
+    ...(req.query.ecologic === "true" && { ecologic: true }),
+    ...(req.query.discount === "true" && { discount: { $type: "object" } }),
   };
   await Product.find(query, (err, result) => {
     return res.send(result);
-  }).limit(10);
+  })
+    .limit(10)
+    .sort({ price: 1 });
 });
 
 //Find Product by ID
