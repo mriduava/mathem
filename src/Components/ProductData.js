@@ -57,13 +57,13 @@ const ProductMap = ({products}, props) => {
             onClick={() => addProduct(product,'+')}>
               <div className="d-flex justify-content-end" style={{margin: '15px 0 0 0'}}>
                 <div style={{color: 'red'}}>
-                  <h2><i class="fas fa-minus-circle"></i></h2>
+                  <h2><i className="fas fa-minus-circle"></i></h2>
                 </div>
                 <div style={{margin: '2px 5px 0 5px', width:"65px"}}>
                   <Input type="number" min="0" max="100" placeholder="0" />
                 </div>
                 <div style={{color: 'green'}}>
-                  <h2><i class="fas fa-plus-circle"></i></h2>
+                  <h2><i className="fas fa-plus-circle"></i></h2>
                 </div>
               </div>
           </Col>
@@ -90,13 +90,13 @@ const ProductMap = ({products}, props) => {
               <p style={{color: '#294360', fontSize: '24px', textTransform: 'uppercase', margin: '5px 0 0 0'}}>{productInfo.retail}</p>        
               <div className="d-flex" style={{margin: '18px 0 0 0'}}>
                 <div style={{color: 'red'}}>
-                  <h1><i class="fas fa-minus-circle"></i></h1>
+                  <h1><i className="fas fa-minus-circle"></i></h1>
                 </div>
                 <div style={{margin: '6px 5px 0 5px', width:"65px"}}>
                   <Input type="number" min="0" max="100" placeholder="0" />
                 </div>
                 <div style={{color: 'green'}}>
-                  <h1><i class="fas fa-plus-circle"></i></h1>
+                  <h1><i className="fas fa-plus-circle"></i></h1>
                 </div>
               </div>
             </div>
