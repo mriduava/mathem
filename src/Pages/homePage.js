@@ -8,14 +8,15 @@ const HomePage = () => {
   const discount = false
   
   const searchProduct = async (search) => {
-    let res = await fetch(`/api/mathem/${search}?ecologic=${ecologic}&discount=${discount}`);
+    if(search !== ""){
+          let res = await fetch(`/api/mathem/${search}?ecologic=${ecologic}&discount=${discount}`);
+
       res = await res.json();
       setProducts(res);
     }
     else{
       setProducts([])
     }
-    if(search !== ""){
   };
   
   let debounceID = null
