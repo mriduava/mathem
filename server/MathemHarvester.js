@@ -136,7 +136,7 @@ class Mathem {
             }
           }
         );
-      });
+      }).catch(() => null);
     });
   };
 }
