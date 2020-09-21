@@ -47,8 +47,21 @@ const dailyDataHarvestCheck = () => {
   });
 };
 
-//WillysHarvester.harvest()
-dailyDataHarvestCheck();
+
+  let dailyHarvestID = null;
+  const dailyHarvestInterval = () => {
+    const twentyFourHoursInMilliseconds = 86400000
+    if (dailyHarvestID !== null) {
+      clearInterval(dailyHarvestID);
+      dailyHarvestID = null;
+    }
+    dailyHarvestID = setInterval(() => {
+      console.log("in interval fetch");
+      dailyDataHarvestCheck();
+    }, twentyFourHoursInMilliseconds);
+  };
+
+dailyHarvestInterval()
 //Above is mathem harvester and below is willys harvester
 
 //Get all Products from MongoDB
