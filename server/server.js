@@ -50,6 +50,7 @@ const dailyDataHarvestCheck = () => {
 
   let dailyHarvestID = null;
   const dailyHarvestInterval = () => {
+    dailyDataHarvestCheck()
     const twentyFourHoursInMilliseconds = 86400000
     if (dailyHarvestID !== null) {
       clearInterval(dailyHarvestID);

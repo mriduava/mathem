@@ -49,6 +49,13 @@ const fetch = require("node-fetch");
      return categories;
    };
 
+   getProductDescription = (product) => {
+     let descriptionText = product.url.split("/")
+    //  let mathemProduct = await fetch(`https://api.mathem.io/product-search/noauth/stores/10/products/detail?url=${descriptionText[2]}/${descriptionText[3]}`)
+     console.log(`https://api.mathem.io/product-search/noauth/stores/10/products/detail?url=${descriptionText[2]}/${descriptionText[3]}`);
+     return product
+   }
+
    scrubber = (dataHarvest) => {
      dataHarvest.map((product) => {
        let getLabels = () => {
@@ -93,6 +100,7 @@ const fetch = require("node-fetch");
              }
            : null,
        });
+       this.getProductDescription(dataProduct)
        mathemProduct.find(
          { productFullName: dataProduct.productFullName.toLowerCase() },
          (err, result) => {
