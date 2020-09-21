@@ -47,7 +47,7 @@ const dailyDataHarvestCheck = () => {
   });
 };
 
-//WillysHarvester.harvest()
+
 dailyDataHarvestCheck();
 //Above is mathem harvester and below is willys harvester
 
