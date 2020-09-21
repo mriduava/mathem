@@ -86,6 +86,7 @@ const ProductMap = ({products}, props) => {
               <div className="d-flex">
               <p style={{color: '#294360', fontSize: '16px'}}>{productInfo.volume}</p>
               <p style={{color: '#294360', fontSize: '16px', marginLeft: '20px'}}>Jmf pris: {productInfo.comparePrice}/{productInfo.compareUnit}</p>
+              <p style={{color: '#294360', fontSize: '16px', marginLeft: '20px'}}>Rabatt: {productInfo.discount}</p>
               </div>
               <p style={{color: '#294360', fontSize: '24px', textTransform: 'uppercase', margin: '5px 0 0 0'}}>{productInfo.retail}</p>        
               <div className="d-flex" style={{margin: '18px 0 0 0'}}>
