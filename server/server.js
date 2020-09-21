@@ -61,7 +61,6 @@ app.get("/api/mathem", async (req, res) => {
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  console.log(req);
   const query = {
     $text: { $search: regex },
     price: { $gt: 0, $lt: 999 },
