@@ -62,14 +62,6 @@ const dailyDataHarvestCheck = () => {
   };
 
 dailyHarvestInterval()
-//Above is mathem harvester and below is willys harvester
-
-//Get all Products from MongoDB
-app.get("/api/mathem", async (req, res) => {
-  await Product.find({}, (err, result) => {
-    err ? res.json(err) : res.json(result);
-  });
-});
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
