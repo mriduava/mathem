@@ -1,6 +1,5 @@
 const fetch = require('node-fetch');
 const Scrubber = require('./Scrubber');
-const Product = require('./models/WillysProduct')
 
 module.exports = class WillysScrubber extends Scrubber {
 

@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
 
-//Temporary
+//TODO: Move to database and use their categories instead
 let categoryList = [
   3467,
   1501,
@@ -28,7 +28,7 @@ let categoryList = [
   3473,
 ];
 
-class Citygross {
+module.exports = class Citygross {
   async fetchData(categoryID) {
     let raw = await fetch(
       "https://www.citygross.se/api/v1/esales/products?categoryId=" +
@@ -38,9 +38,6 @@ class Citygross {
     return (await raw.json()).data;
   }
 
-  ///<Summary>
-  /// Makes the api data readable to our database
-  ///</Summary>
   async saveCategories(categories) {
     return Promise.all(
       categories.map((category) => this.saveCategoryProducts(category))
@@ -50,17 +47,11 @@ class Citygross {
   async saveCategoryProducts(categoryProducts) {
     return Promise.all(
       categoryProducts.map((product) => {
-        const volume = product.grossWeight
-          ? `${product.grossWeight.value}${this.units(
-              product.grossWeight.unitOfMeasure
-            )}`
-          : undefined;
-
-        const p = {
+        const dbProduct = {
           categoryName: product.superCategory,
           productName: product.name,
           productFullName: product.name,
-          volume,
+          volume: this.calculateVolume(product),
           image:
             "https://www.citygross.se/images/products/" +
             product.images[0].url +
@@ -70,32 +61,21 @@ class Citygross {
           retail: "City gross",
           origin: product.country || "unknown",
           descriptiveSize: product.descriptiveSize,
-          price: product.defaultPrice.currentPrice.price,
-          comparisonPrice: product.defaultPrice.currentPrice.comparisonPrice,
-
-          discount: !product.defaultPrice.hasDiscount
-            ? {
-                memberPrice: product.defaultPrice.memberPrice,
-                prePrice: product.defaultPrice.ordinaryPrice.price,
-              }
-            : undefined,
-          
+          price: this.findPrice(product),
+          comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
+          compareUnit: this.unitLookupTable(product.grossWeight.unitOfMeasure),
+          discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
         };
 
-        return Product.replaceOne(
-          { productFullName: p.productFullName },
-          p,
-          {
-            upsert: true,
-          }
-        ).exec();
+        return Product.replaceOne({ productFullName: dbProduct.productFullName }, dbProduct, {
+          upsert: true,
+        }).exec();
       })
     );
   }
 
   async getAllProducts() {
-    // Add a request to get categories from the database when implemented.
     return Promise.all(
       categoryList.map((category) => this.fetchData(category))
     );
@@ -106,17 +86,12 @@ class Citygross {
     await this.saveCategories(categories);
   }
 
-  //Utility functions
-
-  ///<Summary>
-  ///Loops through the citygross markings array to search for ecological labels
-  ///</Summary >
   isEcological(arr) {
     let b = false;
     if (!Array.isArray(arr)) return b;
 
     arr.forEach((e) => {
-      if (this.isBrand(e.code) === true) {
+      if (this.hasMarking(e.code) === true) {
         b = true;
       }
     });
@@ -124,7 +99,7 @@ class Citygross {
     return b;
   }
 
-  isBrand(type) {
+  hasMarking(type) {
     return {
       SVANEN: true,
       ECOCERT_COSMOS_ORGANIC: true,
@@ -136,13 +111,35 @@ class Citygross {
     }[type];
   }
 
-  units(type) {
+  unitLookupTable(type) {
     return {
       0: "g",
       1: "hg",
       2: "kg",
     }[type];
   }
-}
 
-module.exports = Citygross;
+  calculateVolume(product) {
+    return product.grossWeight
+      ? `${product.grossWeight.value}${this.unitLookupTable(
+          product.grossWeight.unitOfMeasure
+        )}`
+      : undefined;
+  }
+
+  findDiscount(product) {
+    const memberPrice = product.defaultPrice.memberPrice;
+    return product.defaultPrice.hasDiscount
+      ? {
+          memberPrice: memberPrice === null ? false : memberPrice,
+          prePrice: product.defaultPrice.ordinaryPrice.price,
+        }
+      : undefined;
+  }
+
+  findPrice(product) {
+    if (product.defaultPrice.hasDiscount)
+      return product.defaultPrice.promotions[0].price.price;
+    else return product.defaultPrice.currentPrice.price;
+  }
+};
