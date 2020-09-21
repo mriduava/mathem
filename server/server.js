@@ -11,7 +11,6 @@ const ShoppingCart = require("./Shopping");
 let mathem = new Mathem();
 let citygross = new Citygross();
 let cart = new ShoppingCart();
-const WillysProduct = require("./models/WillysProduct");
 const WillysHarvester = require("./WillysHarvester");
 
 // /*To connect with MongoDB
