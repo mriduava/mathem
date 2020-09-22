@@ -149,14 +149,22 @@ module.exports = class Citygross {
       ? {
           memberPrice: memberPrice === null ? false : memberPrice,
           prePrice: product.defaultPrice.ordinaryPrice.price,
+          validFrom: product.defaultPrice.promotions[0].validFrom,
+          validTo: product.defaultPrice.promotions[0].validTo,
         }
       : undefined;
   }
 
   findPrice(product) {
-    if (product.defaultPrice.hasDiscount)
-      return product.defaultPrice.promotions[0].price.price;
-    else return product.defaultPrice.currentPrice.price;
+    if (product.defaultPrice.hasPromotion) {
+      console.log(product.defaultPrice.promotions[0]);
+      const itemQuantity = product.defaultPrice.promotions[0].numberOfItems;
+      const pricePerProduct = product.defaultPrice.promotions[0].effectAmount;
+      if (itemQuantity > 1) {
+        return `${itemQuantity} för ${pricePerProduct}`;
+      } else {
+        return pricePerProduct;
+      }
+    } else return product.defaultPrice.currentPrice.price;
   }
-
 };
