@@ -50,19 +50,7 @@ module.exports = class Citygross {
         const dbProduct = {
           productName: product.name,
           productFullName: product.name,
-          description: {
-            productDescription: product.description,
-            nutrition:
-              product.foodAndBeverageExtension === null
-                ? null
-                : product.foodAndBeverageExtension.nutrientInformations[0]
-                    .nutrientStatement,
-            ingridients:
-              product.foodAndBeverageExtension === null
-                ? null
-                : product.foodAndBeverageExtension.ingredientStatement,
-            usage: null,
-          },
+          description: this.findDescription(product),
           volume: this.calculateVolume(product),
           image:
             "https://www.citygross.se/images/products/" +
@@ -164,5 +152,21 @@ module.exports = class Citygross {
         return pricePerProduct;
       }
     } else return product.defaultPrice.currentPrice.price;
+  }
+
+  findDescription(product) {
+    const description = {};
+    description.productDescription = product.description;
+
+    description.nutrition =
+      product.foodAndBeverageExtension === null
+        ? null
+        : product.foodAndBeverageExtension.nutrientInformations[0]
+            .nutrientStatement;
+
+    description.ingridients =
+      product.foodAndBeverageExtension === null
+        ? null
+        : product.foodAndBeverageExtension.ingredientStatement;
   }
 };
