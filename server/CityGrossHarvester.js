@@ -63,7 +63,7 @@ module.exports = class Citygross {
           descriptiveSize: product.descriptiveSize,
           price: this.findPrice(product),
           comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
-          compareUnit: this.unitLookupTable(product.grossWeight.unitOfMeasure),
+          compareUnit: "kg",
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
         };
@@ -156,20 +156,18 @@ module.exports = class Citygross {
 
   findDescription(product) {
     const description = {};
+    const productDesc = product.foodAndBeverageExtension;
     description.productDescription = product.description;
 
-    if (product.foodAndBeverageExtension === null) return description;
+    if (productDesc !== null) {
+      description.ingridients = product.foodAndBeverageExtension =
+        productDesc.ingredientStatement;
 
-    description.ingridients =
-      product.foodAndBeverageExtension === null
-        ? null
-        : product.foodAndBeverageExtension.ingredientStatement;
-
-    if (product.foodAndBeverageExtension.nutrientInformations === undefined)
-      return description;
-
-    description.nutrition =
-      product.foodAndBeverageExtension.nutrientInformations[0].nutrientStatement;
+      if (productDesc.nutrientInformations === undefined) {
+        description.nutrition =
+          productDesc.nutrientInformations[0].nutrientStatement;
+      }
+    }
 
     return description;
   }
