@@ -20,7 +20,7 @@ let schema = new Schema({
   origin: { type: String, required: true },
   ecologic: { type: Boolean, required: false },
   priceUnit: { type: String, required: true },
-  price: { type: String, required: true },
+  price: { type: Number, required: true },
   compareUnit: { type: String, required: false },
   comparePrice: { required: false },
   discount: {
@@ -30,6 +30,7 @@ let schema = new Schema({
     prePrice: { type: Number, required: false },
     discountPrice: { type: Number, required: false },
     maxQuantity: { type: Number, required: false },
+    bulkPrice: { type: String, required: false },
   },
 });
 schema.index({ "$**": "text" });

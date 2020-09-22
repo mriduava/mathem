@@ -61,7 +61,7 @@ module.exports = class Citygross {
           retail: "City gross",
           origin: product.country || "unknown",
           descriptiveSize: product.descriptiveSize,
-          price: this.findPrice(product),
+          price: product.defaultPrice.currentPrice.price,
           comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
           compareUnit: "kg",
           discount: this.findDiscount(product),
@@ -132,26 +132,29 @@ module.exports = class Citygross {
   }
 
   findDiscount(product) {
-    return product.defaultPrice.hasDiscount
-      ? {
-          memberPrice: product.defaultPrice.hasPromotion,
-          prePrice: product.defaultPrice.ordinaryPrice.price,
-        }
-      : undefined;
+    if (!product.defaultPrice.hasDiscount) return undefined;
+
+    const discount = {};
+    const promotion = product.defaultPrice.promotions[0];
+
+    discount.memberDiscount = product.defaultPrice.hasPromotion;
+
+    discount.prePrice = product.defaultPrice.ordinaryPrice.price;
+
+    if (promotion !== undefined) {
+      discount.maxQuantity = promotion.amountLimitPerReceipt;
+
+      const itemQuantity = promotion.numberOfItems;
+      if (itemQuantity > 1) {
+        discount.bulkPrice = `${itemQuantity} för ${promotion.effectAmount}`;
+      }
+    }
+
+    return discount;
   }
 
   findPrice(product) {
-    if (product.defaultPrice.hasPromotion) {
-      if (product.defaultPrice.promotions[0] === undefined)
-        return product.defaultPrice.currentPrice.price;
-      const itemQuantity = product.defaultPrice.promotions[0].numberOfItems;
-      const pricePerProduct = product.defaultPrice.promotions[0].effectAmount;
-      if (itemQuantity > 1) {
-        return `${itemQuantity} för ${pricePerProduct}`;
-      } else {
-        return pricePerProduct;
-      }
-    } else return product.defaultPrice.currentPrice.price;
+    return;
   }
 
   findDescription(product) {
@@ -163,7 +166,7 @@ module.exports = class Citygross {
       description.ingridients = product.foodAndBeverageExtension =
         productDesc.ingredientStatement;
 
-      if (productDesc.nutrientInformations === undefined) {
+      if (productDesc.nutrientInformations !== undefined) {
         description.nutrition =
           productDesc.nutrientInformations[0].nutrientStatement;
       }
