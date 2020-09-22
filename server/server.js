@@ -47,16 +47,22 @@ const dailyDataHarvestCheck = () => {
   });
 };
 
-//WillysHarvester.harvest()
-dailyDataHarvestCheck();
-//Above is mathem harvester and below is willys harvester
 
-//Get all Products from MongoDB
-app.get("/api/mathem", async (req, res) => {
-  await Product.find({}, (err, result) => {
-    err ? res.json(err) : res.json(result);
-  });
-});
+  let dailyHarvestID = null;
+  const dailyHarvestInterval = () => {
+    dailyDataHarvestCheck()
+    const twentyFourHoursInMilliseconds = 86400000
+    if (dailyHarvestID !== null) {
+      clearInterval(dailyHarvestID);
+      dailyHarvestID = null;
+    }
+    dailyHarvestID = setInterval(() => {
+      console.log("in interval fetch");
+      dailyDataHarvestCheck();
+    }, twentyFourHoursInMilliseconds);
+  };
+
+dailyHarvestInterval()
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {

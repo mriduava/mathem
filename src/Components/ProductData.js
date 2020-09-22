@@ -7,11 +7,14 @@ const ProductMap = ({products}, props) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
+  const [count, setCount] = useState(0);
+
   const operators = {
     "+": function (a) {
       return a + 1;
     },
     "-": function (a) {
+        setCount(count--)
       return a - 1;
     },
   };
@@ -60,7 +63,7 @@ const ProductMap = ({products}, props) => {
                   <h2><i className="fas fa-minus-circle"></i></h2>
                 </div>
                 <div style={{margin: '2px 5px 0 5px', width:"65px"}}>
-                  <Input type="number" min="0" max="100" placeholder="0" />
+                  <Input type="number" min="0" max="100" placeholder="0" value={count}/>
                 </div>
                 <div style={{color: 'green'}}>
                   <h2><i className="fas fa-plus-circle"></i></h2>
@@ -91,13 +94,13 @@ const ProductMap = ({products}, props) => {
               <p style={{color: '#294360', fontSize: '24px', textTransform: 'uppercase', margin: '5px 0 0 0'}}>{productInfo.retail}</p>        
               <div className="d-flex" style={{margin: '18px 0 0 0'}}>
                 <div style={{color: 'red'}}>
-                  <h1><i className="fas fa-minus-circle"></i></h1>
+                  <h1 onClick={() => addProduct(productInfo,'+')}><i className="fas fa-minus-circle"></i></h1>
                 </div>
                 <div style={{margin: '6px 5px 0 5px', width:"65px"}}>
                   <Input type="number" min="0" max="100" placeholder="0" />
                 </div>
                 <div style={{color: 'green'}}>
-                  <h1><i className="fas fa-plus-circle"></i></h1>
+                  <h1 onClick={() => addProduct(productInfo,'-')}><i className="fas fa-plus-circle"></i></h1>
                 </div>
               </div>
             </div>
@@ -105,8 +108,10 @@ const ProductMap = ({products}, props) => {
         </Row>
         </ModalBody>
         <ModalBody>
-        <div style={{ marginLeft: '30px'}}>
-           <p>Product description goes here...</p>
+        <div style={{ margin: '5px 30px', textAlign: 'justify'}}>
+          <h6>PRODUCTBESKRIVNING</h6>
+          <p>{productInfo.description? productInfo.description.productDescription: null}</p>
+          <p>{productInfo.description? productInfo.description.ingredients: null}</p>
         </div>         
         </ModalBody>
       </Modal>
