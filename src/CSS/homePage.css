@@ -64,7 +64,21 @@ html {
 
 .btn-group{
     display: flexbox
-    
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.fa-plus-circle:hover{
+    cursor: pointer;
+    color: rgb(14, 180, 28);
+}
+.fa-minus-circle:hover{
+    cursor: pointer;
+    color: indianred;
 }
 
 .footer-button{
