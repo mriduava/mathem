@@ -158,15 +158,19 @@ module.exports = class Citygross {
     const description = {};
     description.productDescription = product.description;
 
-    description.nutrition =
-      product.foodAndBeverageExtension === null
-        ? null
-        : product.foodAndBeverageExtension.nutrientInformations[0]
-            .nutrientStatement;
+    if (product.foodAndBeverageExtension === null) return description;
 
     description.ingridients =
       product.foodAndBeverageExtension === null
         ? null
         : product.foodAndBeverageExtension.ingredientStatement;
+
+    if (product.foodAndBeverageExtension.nutrientInformations === undefined)
+      return description;
+
+    description.nutrition =
+      product.foodAndBeverageExtension.nutrientInformations[0].nutrientStatement;
+
+    return description;
   }
 };
