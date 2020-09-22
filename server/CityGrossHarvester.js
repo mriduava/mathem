@@ -48,9 +48,9 @@ module.exports = class Citygross {
     return Promise.all(
       categoryProducts.map((product) => {
         const dbProduct = {
-          categoryName: product.superCategory,
           productName: product.name,
           productFullName: product.name,
+          description: this.findDescription(product),
           volume: this.calculateVolume(product),
           image:
             "https://www.citygross.se/images/products/" +
@@ -61,16 +61,20 @@ module.exports = class Citygross {
           retail: "City gross",
           origin: product.country || "unknown",
           descriptiveSize: product.descriptiveSize,
-          price: this.findPrice(product),
+          price: product.defaultPrice.currentPrice.price,
           comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
-          compareUnit: this.unitLookupTable(product.grossWeight.unitOfMeasure),
+          compareUnit: "kg",
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
         };
 
-        return Product.replaceOne({ productFullName: dbProduct.productFullName }, dbProduct, {
-          upsert: true,
-        }).exec();
+        return Product.replaceOne(
+          { productFullName: dbProduct.productFullName },
+          dbProduct,
+          {
+            upsert: true,
+          }
+        ).exec();
       })
     );
   }
@@ -128,18 +132,46 @@ module.exports = class Citygross {
   }
 
   findDiscount(product) {
-    const memberPrice = product.defaultPrice.memberPrice;
-    return product.defaultPrice.hasDiscount
-      ? {
-          memberPrice: memberPrice === null ? false : memberPrice,
-          prePrice: product.defaultPrice.ordinaryPrice.price,
-        }
-      : undefined;
+    if (!product.defaultPrice.hasDiscount) return undefined;
+
+    const discount = {};
+    const promotion = product.defaultPrice.promotions[0];
+
+    discount.memberDiscount = product.defaultPrice.hasPromotion;
+
+    discount.prePrice = product.defaultPrice.ordinaryPrice.price;
+
+    if (promotion !== undefined) {
+      discount.maxQuantity = promotion.amountLimitPerReceipt;
+
+      const itemQuantity = promotion.numberOfItems;
+      if (itemQuantity > 1) {
+        discount.bulkPrice = `${itemQuantity} för ${promotion.effectAmount}`;
+      }
+    }
+
+    return discount;
   }
 
   findPrice(product) {
-    if (product.defaultPrice.hasDiscount)
-      return product.defaultPrice.promotions[0].price.price;
-    else return product.defaultPrice.currentPrice.price;
+    return;
+  }
+
+  findDescription(product) {
+    const description = {};
+    const productDesc = product.foodAndBeverageExtension;
+    description.productDescription = product.description;
+
+    if (productDesc !== null) {
+      description.ingridients = product.foodAndBeverageExtension =
+        productDesc.ingredientStatement;
+
+      if (productDesc.nutrientInformations !== undefined) {
+        description.nutrition =
+          productDesc.nutrientInformations[0].nutrientStatement;
+      }
+    }
+
+    return description;
   }
 };
