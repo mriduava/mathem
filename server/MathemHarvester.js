@@ -3,19 +3,8 @@ const Category = require("./models/Category");
 const fetch = require("node-fetch");
 
 class Mathem {
-  harvester = () => {
-    let categories = this.databaseCategories();
-    categories.forEach(async (category) => {
-      let dataHarvest = await fetch(
-        `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
-      ).then((data) => data.json());
-      dataHarvest = dataHarvest.products;
-      this.scrubber(dataHarvest);
-    });
-  };
-
-  databaseCategories = () => {
-    let categories = [
+  
+    categories = [
       "frukt-o-gront",
       "mejeri-o-ost",
       "brod-o-bageri",
@@ -32,6 +21,19 @@ class Mathem {
       "djurmat-o-tillbehor",
       "kiosk",
     ];
+
+  harvester = () => {
+    let categories = this.databaseCategories();
+    categories.forEach(async (category) => {
+      let dataHarvest = await fetch(
+        `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
+      ).then((data) => data.json());
+      dataHarvest = dataHarvest.products;
+      this.scrubber(dataHarvest);
+    });
+  };
+
+  databaseCategories = () => {
     categories.forEach(async (category) => {
       let dataCategory = new Category({
         name: category,
