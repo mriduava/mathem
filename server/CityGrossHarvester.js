@@ -48,9 +48,21 @@ module.exports = class Citygross {
     return Promise.all(
       categoryProducts.map((product) => {
         const dbProduct = {
-          categoryName: product.superCategory,
           productName: product.name,
           productFullName: product.name,
+          description: {
+            productDescription: product.description,
+            nutrition:
+              product.foodAndBeverageExtension === null
+                ? null
+                : product.foodAndBeverageExtension.nutrientInformations[0]
+                    .nutrientStatement,
+            ingridients:
+              product.foodAndBeverageExtension === null
+                ? null
+                : product.foodAndBeverageExtension.ingredientStatement,
+            usage: null,
+          },
           volume: this.calculateVolume(product),
           image:
             "https://www.citygross.se/images/products/" +
@@ -68,9 +80,13 @@ module.exports = class Citygross {
           ecologic: this.isEcological(product.markings),
         };
 
-        return Product.replaceOne({ productFullName: dbProduct.productFullName }, dbProduct, {
-          upsert: true,
-        }).exec();
+        return Product.replaceOne(
+          { productFullName: dbProduct.productFullName },
+          dbProduct,
+          {
+            upsert: true,
+          }
+        ).exec();
       })
     );
   }
@@ -142,4 +158,5 @@ module.exports = class Citygross {
       return product.defaultPrice.promotions[0].price.price;
     else return product.defaultPrice.currentPrice.price;
   }
+
 };
