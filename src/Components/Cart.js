@@ -37,6 +37,15 @@ const Cart = () => {
             }, 250);
           };
 
+    const calculatePrice = () => {
+      if (productList.length < 0) return 0
+      let totalPrice = 0
+      for (let i = 0; i < productList.length; i++){
+        totalPrice = totalPrice + productList[i].price
+      }
+      return totalPrice
+    }
+
     return (
       <div>
         <Button color="warning" onClick={toggle}>
@@ -46,6 +55,7 @@ const Cart = () => {
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
           <ModalBody>
             {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}
+            <h4>Summa: {calculatePrice()} kr.</h4>
             </ModalBody>
           <ModalFooter>
             <Button color="warning" className="mr-auto" onClick={() => debounceHelper()}>Jämför</Button>
