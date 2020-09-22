@@ -4,6 +4,14 @@ const modelName = "Product";
 let schema = new Schema({
   productName: { type: String, required: true },
   productFullName: { type: String, required: true },
+  description: {
+    type: Object, 
+    required: false,
+    productDescription: {type: String, required: false},
+    nutrition: {type: String, required: false},
+    ingredients: {type: String, required: false},
+    usage: {type: String, required: false},
+  },
   volume: { type: String, required: false },
   url: { type: String, required: false },
   image: { type: String, required: false },

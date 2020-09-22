@@ -11,7 +11,6 @@ const ShoppingCart = require("./Shopping");
 let mathem = new Mathem();
 let citygross = new Citygross();
 let cart = new ShoppingCart();
-const WillysProduct = require("./models/WillysProduct");
 const WillysHarvester = require("./WillysHarvester");
 
 // /*To connect with MongoDB
@@ -48,21 +47,26 @@ const dailyDataHarvestCheck = () => {
   });
 };
 
-//WillysHarvester.harvest()
-dailyDataHarvestCheck();
-//Above is mathem harvester and below is willys harvester
 
-//Get all Products from MongoDB
-app.get("/api/mathem", async (req, res) => {
-  await Product.find({}, (err, result) => {
-    err ? res.json(err) : res.json(result);
-  });
-});
+  let dailyHarvestID = null;
+  const dailyHarvestInterval = () => {
+    dailyDataHarvestCheck()
+    const twentyFourHoursInMilliseconds = 86400000
+    if (dailyHarvestID !== null) {
+      clearInterval(dailyHarvestID);
+      dailyHarvestID = null;
+    }
+    dailyHarvestID = setInterval(() => {
+      console.log("in interval fetch");
+      dailyDataHarvestCheck();
+    }, twentyFourHoursInMilliseconds);
+  };
+
+dailyHarvestInterval()
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
   var regex = new RegExp(req.params.search, "i");
-  console.log(req);
   const query = {
     $text: { $search: regex },
     price: { $gt: 0, $lt: 999 },
