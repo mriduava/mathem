@@ -104,17 +104,12 @@ app.post("/api/cart/shopping", async (req, res) => {
   debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
       let keywords = data.productName.split(" ");
-      // productName: {
-      //   $regex: `.*${word}.*`;
-      // }
-      keywords.map(async (word, j) => {
-        var regex = new RegExp(req.params.search, "i");
         await Product.find(
           { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i' }},
           (err, result) => {
             if(result.length > 0){
               compareList = compareList.concat(result);
-              compareList = [...compareList];
+              compareList = [...new Set(compareList)];
               mathemList = compareList.filter(
                 (product) => product.retail === "mathem"
               );
@@ -132,10 +127,9 @@ app.post("/api/cart/shopping", async (req, res) => {
             }
           }
         ).limit(5);
-        if (i === cartData.length - 1 && j === keywords.length - 1) {
+        if (i === cartData.length - 1) {
           return res.send(dataPayload);
         }
-      });
     });
   }, 250);
 });
