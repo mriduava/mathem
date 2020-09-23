@@ -97,8 +97,6 @@ module.exports = class WillysHarvester {
       static async harvest(){
         let categories = await this.getCategories()
 
-        //console.log('Connected to DB!!!')
-        
         try {
          this.uploadCategories(categories)
          this.getData(categories)
