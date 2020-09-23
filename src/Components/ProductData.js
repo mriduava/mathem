@@ -36,17 +36,6 @@ const ProductMap = ({products}, props) => {
               <p style={{color: '#294360', fontSize: '16px', marginLeft: '20px'}}>Rabatt: {productInfo.discount ? productInfo.discount.memberDiscount : null}</p>
               </div>
               <p style={{color: '#294360', fontSize: '24px', textTransform: 'uppercase', margin: '5px 0 0 0'}}>{productInfo.retail}</p>        
-              {/* <div className="d-flex" style={{margin: '18px 0 0 0'}}>
-                <div style={{color: 'red'}}>
-                  <h1 onClick={() => addProduct(productInfo,'+')}><i className="fas fa-minus-circle"></i></h1>
-                </div>
-                <div style={{margin: '6px 5px 0 5px', width:"65px"}}>
-                  <Input type="number" min="0" max="100" placeholder="0" value={productInfo.quantity} />
-                </div>
-                <div style={{color: 'green'}}>
-                  <h1 onClick={() => addProduct(productInfo,'-')}><i className="fas fa-plus-circle"></i></h1>
-                </div>
-              </div> */}
             </div>
           </Col>
         </Row>
