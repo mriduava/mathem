@@ -11,7 +11,7 @@ const Cart = () => {
       const toggle = () => setModal(!modal);
 
         const getProductComparison = async () => {
-          // try{
+          try{
             let res = await fetch(`/api/cart/shopping`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -22,10 +22,10 @@ const Cart = () => {
             if(res.length > 0){
               setCompareList(res)
             }
-          // }
-          // catch{
+          }
+          catch{
             
-          // }
+          }
         };
 
           const debounceHelper = () => {

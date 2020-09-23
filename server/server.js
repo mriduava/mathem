@@ -104,31 +104,34 @@ app.post("/api/cart/shopping", async (req, res) => {
   debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
       let keywords = data.productName.split(" ");
+      // productName: {
+      //   $regex: `.*${word}.*`;
+      // }
       keywords.map(async (word, j) => {
-        await Product.findOne(
-          { productName: { $regex: `.*${word}.*` }},
+        var regex = new RegExp(req.params.search, "i");
+        await Product.find(
+          { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i' }},
           (err, result) => {
-            compareList = compareList.concat(result);
-            compareList = [...compareList];
-            mathemList = compareList.filter(
-              (product) => product.retail === "mathem"
-            );
-            console.log(mathemList.length);
-            cityGrossList = compareList.filter(
-              (product) => product.retail === "cityGross"
-            );
-            console.log(cityGrossList.length);
-            willysList = compareList.filter(
-              (product) => product.retail === "Willys"
-            );
-            console.log(willysList.length);
-            dataPayload = {
-              mathem: mathemList,
-              cityGross: cityGrossList,
-              willys: willysList,
-            };
+            if(result.length > 0){
+              compareList = compareList.concat(result);
+              compareList = [...compareList];
+              mathemList = compareList.filter(
+                (product) => product.retail === "mathem"
+              );
+              cityGrossList = compareList.filter(
+                (product) => product.retail === "cityGross"
+              );
+              willysList = compareList.filter(
+                (product) => product.retail === "Willys"
+              );
+              dataPayload = {
+                mathem: mathemList,
+                cityGross: cityGrossList,
+                willys: willysList,
+              };
+            }
           }
-        );
+        ).limit(5);
         if (i === cartData.length - 1 && j === keywords.length - 1) {
           return res.send(dataPayload);
         }
