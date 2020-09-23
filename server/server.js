@@ -12,6 +12,7 @@ let mathem = new Mathem();
 let citygross = new Citygross();
 let cart = new ShoppingCart();
 const WillysHarvester = require("./WillysHarvester");
+const { distinct } = require("./models/Product");
 
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
@@ -105,20 +106,24 @@ app.post("/api/cart/shopping", async (req, res) => {
     cartData.map(async (data, i) => {
       let keywords = data.productName.split(" ");
         await Product.find(
-          { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i' }},
+          { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}},
           (err, result) => {
             if(result.length > 0){
+              console.log(compareList);
               compareList = compareList.concat(result);
               compareList = [...new Set(compareList)];
               mathemList = compareList.filter(
                 (product) => product.retail === "mathem"
               );
+              mathemList = mathemList.slice(0,5)
               cityGrossList = compareList.filter(
                 (product) => product.retail === "cityGross"
               );
+              cityGrossList = cityGrossList.slice(0,5)
               willysList = compareList.filter(
                 (product) => product.retail === "Willys"
               );
+              willysList = willysList.slice(0,5)
               dataPayload = {
                 mathem: mathemList,
                 cityGross: cityGrossList,
@@ -126,7 +131,7 @@ app.post("/api/cart/shopping", async (req, res) => {
               };
             }
           }
-        ).limit(5);
+        );
         if (i === cartData.length - 1) {
           return res.send(dataPayload);
         }
