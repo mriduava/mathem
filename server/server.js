@@ -88,10 +88,11 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (list,store, compareList) => {
-  list = compareList.filter((product) => product.retail === store);
-  list = list.slice(0, 2);
-  return list
+const filterList = (list , store, compareList) => {
+  let newList = list
+  newList = compareList.filter((product) => product.retail === store);
+  newList = newList.slice(list.length, list.length + 1);
+  return newList;
 }
 
 let debounceID = null;
@@ -99,7 +100,6 @@ let debounceID = null;
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
   let dataPayload = "";
-  let compareList = [];
   let mathemList = [];
   let cityGrossList = [];
   let willysList = [];
@@ -115,12 +115,15 @@ app.post("/api/cart/shopping", async (req, res) => {
           { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}},
           (err, result) => {
             if(result.length > 0){
-              console.log(compareList);
-              compareList = compareList.concat(result);
-              compareList = [...new Set(compareList)];
-              mathemList = filterList(mathemList, "mathem", compareList)
-              cityGrossList = filterList(cityGrossList, "cityGross", compareList);
-              willysList = filterList(willysList, "Willys", compareList);
+              mathemList = mathemList.concat(
+                filterList(mathemList, "mathem", result)
+              ); 
+              cityGrossList = cityGrossList.concat(
+                filterList(cityGrossList, "cityGross", result)
+              );
+              willysList = willysList.concat(
+                filterList(willysList, "Willys", result)
+              );
               dataPayload = {
                 mathem: mathemList,
                 cityGross: cityGrossList,
