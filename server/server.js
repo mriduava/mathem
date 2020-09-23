@@ -103,15 +103,11 @@ app.post("/api/cart/shopping", async (req, res) => {
   }
   debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
-      let wordMatchCounter = 0
       let keywords = data.productName.split(" ");
       keywords.map(async (word, j) => {
-        await Product.find(
+        await Product.findOne(
           { productFullName: { $regex: `.*${word}.*` }},
           (err, result) => {
-            if(result.length > 0){
-              wordMatchCounter++
-            }
             compareList = compareList.concat(result);
             // compareList = compareList.filter(
             //   (product) => product.retail === mathem
@@ -135,7 +131,7 @@ app.post("/api/cart/shopping", async (req, res) => {
               willys: willysList,
             };
           }
-        ).limit(2);
+        );
         if (i === cartData.length - 1 && j === keywords.length - 1) {
           return res.send(dataPayload);
         }
