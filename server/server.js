@@ -90,7 +90,7 @@ app.get("/api/mathems/:id", async (req, res) => {
 
 const filterList = (list,store, compareList) => {
   list = compareList.filter((product) => product.retail === store);
-  list = list.slice(0, 5);
+  list = list.slice(0, 2);
   return list
 }
 
