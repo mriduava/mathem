@@ -9,27 +9,15 @@ const Product = ({product, i, toggle}) => {
         const [count, setCount] = useState(0);
 
         
-        const operators = {
-           "+": function (a) {
-             return a + 1;
-           },
-           "-": function (a) {
-             setCount(count--);
-             return a - 1;
-           },
-         };
       
-
-        const addProduct = (product, operator) => {
+        const addProduct = (product) => {
           const matchingProduct = productList.find(
             (x) => x.productFullName === product.productFullName
           );
           if (matchingProduct !== undefined) {
-            matchingProduct.quantity = operators[operator](
-              matchingProduct.quantity
-            );
+            matchingProduct.quantity = count
           } else {
-            product.quantity = 1;
+            product.quantity = count;
             updateProductList(product);
           }
         };
@@ -94,7 +82,6 @@ const Product = ({product, i, toggle}) => {
             textAlign: "right",
             backgroundColor: "rgb(234 234 234)",
           }}
-          onClick={() => setCount(count + 1)}
         >
           <div
             className="d-flex justify-content-end"
@@ -102,7 +89,10 @@ const Product = ({product, i, toggle}) => {
           >
             <div style={{ color: "red" }}>
               <h2>
-                <i className="fas fa-minus-circle"></i>
+                <i
+                  className="fas fa-minus-circle"
+                  onClick={() => setCount(count - 1)}
+                ></i>
               </h2>
             </div>
             <div style={{ margin: "2px 5px 0 5px", width: "65px" }}>
@@ -111,20 +101,24 @@ const Product = ({product, i, toggle}) => {
                 min="0"
                 max="100"
                 placeholder="0"
-                value={count}
+                className="text-center"
+                value={count ? count : product.quantity ? product.quantity : 0}
                 onChange={(data) => {
-                  setCount(data);
+                  setCount(data.target.value);
                 }}
               />
             </div>
             <div style={{ color: "green" }}>
               <h2>
-                <i className="fas fa-plus-circle"></i>
+                <i
+                  className="fas fa-plus-circle"
+                  onClick={() => setCount(count + 1)}
+                ></i>
               </h2>
             </div>
           </div>
           <Row className="col-12">
-            <Button className="mx-auto">Lägg till</Button>
+            <Button className="mx-auto" onClick={() => {addProduct(product)}}>Lägg till</Button>
           </Row>
         </Col>
         <hr />
