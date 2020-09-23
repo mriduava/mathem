@@ -92,9 +92,10 @@ module.exports = class Citygross {
 
   isEcological(arr) {
     if (!Array.isArray(arr)) return false;
-    let b = false;
-
-    return arr.reduce((acc, cur) => acc || this.hasMarking(cur.code), false);
+    return arr.reduce(
+      (hasMarking, element) => hasMarking || this.hasMarking(element.code),
+      false
+    );
   }
 
   hasMarking(type) {
