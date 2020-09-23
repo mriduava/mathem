@@ -93,6 +93,9 @@ let debounceID = null;
 app.post("/api/cart/shopping", async (req, res) => {
   let dataPayload = "";
   let compareList = [];
+  let mathemList = [];
+  let cityGrossList = [];
+  let willysList = [];
   let cartData = req.body;
   if (debounceID !== null) {
     clearTimeout(debounceID);
@@ -100,19 +103,39 @@ app.post("/api/cart/shopping", async (req, res) => {
   }
   debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
+      let wordMatchCounter = 0
       let keywords = data.productName.split(" ");
       keywords.map(async (word, j) => {
         await Product.find(
           { productFullName: { $regex: `.*${word}.*` }},
           (err, result) => {
+            if(result.length > 0){
+              wordMatchCounter++
+            }
             compareList = compareList.concat(result);
-            compareList = compareList.filter(
-              (product) => product.retail !== data.retail
-            );
+            // compareList = compareList.filter(
+            //   (product) => product.retail === mathem
+            // );
             compareList = [...compareList];
-            dataPayload = compareList;
+            mathemList = compareList.filter(
+              (product) => product.retail === "mathem"
+            );
+            console.log(mathemList.length);
+            cityGrossList = compareList.filter(
+              (product) => product.retail === "cityGross"
+            );
+            console.log(cityGrossList.length);
+            willysList = compareList.filter(
+              (product) => product.retail === "Willys"
+            );
+            console.log(willysList.length);
+            dataPayload = {
+              mathem: mathemList,
+              cityGross: cityGrossList,
+              willys: willysList,
+            };
           }
-        ).limit(5);
+        ).limit(2);
         if (i === cartData.length - 1 && j === keywords.length - 1) {
           return res.send(dataPayload);
         }
