@@ -40,7 +40,7 @@ const Cart = () => {
     return (
       <div>
         <Button color="warning" onClick={toggle}>
-          Kundvagn
+          Inköpslista
         </Button>
         <Modal isOpen={modal} toggle={toggle} size="lg">
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
