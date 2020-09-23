@@ -88,6 +88,12 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
+const filterList = (list,store, compareList) => {
+  list = compareList.filter((product) => product.retail === store);
+  list = list.slice(0, 5);
+  return list
+}
+
 let debounceID = null;
 
 //This post is for the comparison list and returns possible products from other stores.
@@ -112,18 +118,9 @@ app.post("/api/cart/shopping", async (req, res) => {
               console.log(compareList);
               compareList = compareList.concat(result);
               compareList = [...new Set(compareList)];
-              mathemList = compareList.filter(
-                (product) => product.retail === "mathem"
-              );
-              mathemList = mathemList.slice(0,5)
-              cityGrossList = compareList.filter(
-                (product) => product.retail === "cityGross"
-              );
-              cityGrossList = cityGrossList.slice(0,5)
-              willysList = compareList.filter(
-                (product) => product.retail === "Willys"
-              );
-              willysList = willysList.slice(0,5)
+              mathemList = filterList(mathemList, "mathem", compareList)
+              cityGrossList = filterList(cityGrossList, "cityGross", compareList);
+              willysList = filterList(willysList, "Willys", compareList);
               dataPayload = {
                 mathem: mathemList,
                 cityGross: cityGrossList,
