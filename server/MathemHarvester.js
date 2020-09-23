@@ -3,24 +3,6 @@ const Category = require("./models/Category");
 const fetch = require("node-fetch");
 
 class Mathem {
-  
-    categories = [
-      "frukt-o-gront",
-      "mejeri-o-ost",
-      "brod-o-bageri",
-      "kott-o-chark",
-      "dryck",
-      "skafferi",
-      "fisk-o-skaldjur",
-      "hem-o-hygien",
-      "fardigmat-o-halvfabrikat",
-      "glass-godis-o-snacks",
-      "barnmat-o-tillbehor",
-      "apotek-o-halsa",
-      "smaksattare",
-      "djurmat-o-tillbehor",
-      "kiosk",
-    ];
 
   harvester = () => {
     let categories = this.databaseCategories();
@@ -34,6 +16,23 @@ class Mathem {
   };
 
   databaseCategories = () => {
+       let categories = [
+          "frukt-o-gront",
+          "mejeri-o-ost",
+          "brod-o-bageri",
+          "kott-o-chark",
+          "dryck",
+          "skafferi",
+          "fisk-o-skaldjur",
+          "hem-o-hygien",
+          "fardigmat-o-halvfabrikat",
+          "glass-godis-o-snacks",
+          "barnmat-o-tillbehor",
+          "apotek-o-halsa",
+          "smaksattare",
+          "djurmat-o-tillbehor",
+          "kiosk",
+        ];
     categories.forEach(async (category) => {
       let dataCategory = new Category({
         name: category,
