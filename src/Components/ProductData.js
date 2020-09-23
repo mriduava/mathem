@@ -48,8 +48,8 @@ const ProductMap = ({products}, props) => {
                 </div>
               </Col>
               <Col xs="6" sm="6">
-                <h4 style={{color:'#424242'}}>{product.productName}</h4>
-                <p style={{textTransform: 'uppercase'}}>{product.retail}</p>
+                <h4 style={{color:'#424242'}} className="ml-3">{product.productName}</h4>
+                <p style={{textTransform: 'uppercase'}} className="ml-3">{product.retail}</p>
               </Col>
               <Col xs="2" sm="2">
                 <h5 style={{color:'#FA5858'}}>{product.price} :-</h5>
