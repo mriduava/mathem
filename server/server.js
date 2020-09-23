@@ -78,7 +78,7 @@ app.get("/api/mathem/:search", async (req, res) => {
     return res.send(result);
   })
     .limit(parseInt(req.query.limit))
-    .skip(parseInt(req.query.skip));
+    .skip(parseInt(req.query.skip))
 });
 
 //Find Product by ID
@@ -111,30 +111,26 @@ app.post("/api/cart/shopping", async (req, res) => {
   debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
       let keywords = data.productName.split(" ");
-        await Product.find(
-          { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}},
-          (err, result) => {
-            if(result.length > 0){
-              mathemList = mathemList.concat(
-                filterList(mathemList, "mathem", result)
-              ); 
-              cityGrossList = cityGrossList.concat(
-                filterList(cityGrossList, "cityGross", result)
-              );
-              willysList = willysList.concat(
-                filterList(willysList, "Willys", result)
-              );
-              dataPayload = {
-                mathem: mathemList,
-                cityGross: cityGrossList,
-                willys: willysList,
-              };
-            }
-          }
+      let result =  await Product.find({ productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}});
+      if(result.length > 0){
+        mathemList = mathemList.concat(
+          filterList(mathemList, "mathem", result)
+        ); 
+        cityGrossList = cityGrossList.concat(
+          filterList(cityGrossList, "cityGross", result)
         );
-        if (i === cartData.length - 1) {
-          return res.send(dataPayload);
-        }
+        willysList = willysList.concat(
+          filterList(willysList, "Willys", result)
+        );
+        dataPayload = {
+          mathem: mathemList,
+          cityGross: cityGrossList,
+          willys: willysList,
+        };
+      }
+      if (i === cartData.length - 1) {
+        return res.send(dataPayload);
+      }
     });
   }, 250);
 });
