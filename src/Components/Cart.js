@@ -45,7 +45,7 @@ const Cart = () => {
         <Modal isOpen={modal} toggle={toggle} size="lg">
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
           <ModalBody>
-            {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}
+            {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom lista</h4>}
             </ModalBody>
           <ModalFooter>
             <Button color="warning" className="mr-auto" onClick={() => debounceHelper()}>Jämför</Button>
