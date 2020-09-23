@@ -55,7 +55,7 @@ const Cart = () => {
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
           <ModalBody>
             {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}
-            <h4>Summa: {calculatePrice()} kr.</h4>
+            <h4>Summa: {calculatePrice()} kr</h4>
             </ModalBody>
           <ModalFooter>
             <Button color="warning" className="mr-auto" onClick={() => debounceHelper()}>Jämför</Button>
