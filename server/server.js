@@ -106,12 +106,9 @@ app.post("/api/cart/shopping", async (req, res) => {
       let keywords = data.productName.split(" ");
       keywords.map(async (word, j) => {
         await Product.findOne(
-          { productFullName: { $regex: `.*${word}.*` }},
+          { productName: { $regex: `.*${word}.*` }},
           (err, result) => {
             compareList = compareList.concat(result);
-            // compareList = compareList.filter(
-            //   (product) => product.retail === mathem
-            // );
             compareList = [...compareList];
             mathemList = compareList.filter(
               (product) => product.retail === "mathem"
