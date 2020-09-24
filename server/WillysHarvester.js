@@ -4,6 +4,8 @@ const WillysScrubber = require('./WillysScrubber')
 const Category = require("./models/Category");
 
 module.exports = class WillysHarvester {
+
+
     static bustCache() {
         return '?avoidCache=' + (Math.random() + '').split('.')[1]
       }
@@ -20,8 +22,9 @@ module.exports = class WillysHarvester {
         return (await raw.json()).results
       }
 
-      static async getData(categories){
+      static async getDataOld(categories){
         let scrubbedData = []
+        let productCategories = []
         for (let i = 0; i < categories.children.length; i++){
           let raw = await this.getProducts(categories.children[i].url)
           let scrubbed = await WillysScrubber.scrubAll(raw)
@@ -50,12 +53,48 @@ module.exports = class WillysHarvester {
                 discountPrice: scrubbedData[i][j].discount[2],
                 maxQuantity: scrubbedData[i][j].discount[3],
                 applied: scrubbedData[i][j].discount[4]
-              },
+              }
             })
           data.push(p)
           }
         }
 
+        this.uploadData(data)
+      }
+
+      static async getData(categories) {
+        let data = []
+        for (let i = 0; i < categories.children.length; i++){
+          
+          let raw = await this.getProducts(categories.children[i].url)
+          let scrubbed = await WillysScrubber.scrubAll(raw)
+          for (let j = 0; j < raw.length; j++){
+            let p = new Product({
+              productName: scrubbed[j].name,
+              productFullName: scrubbed[j].name,
+              volume: scrubbed[j].unitVolume,
+              url: scrubbed[j].url,
+              image: scrubbed[j].imageUrl,
+              retail: 'Willys',
+              label: scrubbed[j].name,
+              origin: scrubbed[j].countryOfOrigin,
+              ecologic: scrubbed[j].ecological,
+              priceUnit: scrubbed[j].unitMeasurement,
+              price: scrubbed[j].unitPrice,
+              compareUnit: scrubbed[j].compareMeasurement,
+              comparePrice: scrubbed[j].comparePrice,
+              discount: {
+                memberDiscount: scrubbed[j].discount[0],
+                prePrice: scrubbed[j].discount[1],
+                discountPrice: scrubbed[j].discount[2],
+                maxQuantity: scrubbed[j].discount[3],
+                applied: scrubbed[j].discount[4]
+              },
+              category: categories.children[i].url
+            })
+            data.push(p)
+          }
+        }
         this.uploadData(data)
       }
 
