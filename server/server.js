@@ -88,11 +88,24 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (list , store, compareList) => {
+const filterList = (list , store, compareList, keywords) => {
   let newList = list
   newList = compareList.filter((product) => product.retail === store);
-  newList = newList.slice(list.length, list.length + 1);
-  return newList;
+  newList.map((product, i) => {
+    let wordMatchesFound = 0;
+    keywords.map((keyword) => {
+      if (product.productName.includes(keyword)) {
+        wordMatchesFound++;
+        // word match logic here
+        product.wordMatches = wordMatchesFound
+        if(i > 0 && newList[i-1].wordMatches < product.wordMatches){
+          newList.splice(i-1,1)
+        }
+      }
+    });
+  });
+  let matchedProducts = newList.slice(list.length, list.length + 1);
+  return matchedProducts;
 }
 
 let debounceID = null;
@@ -114,13 +127,13 @@ app.post("/api/cart/shopping", async (req, res) => {
       let result =  await Product.find({ productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}});
       if(result.length > 0){
         mathemList = mathemList.concat(
-          filterList(mathemList, "mathem", result)
+          filterList(mathemList, "mathem", result, keywords)
         ); 
         cityGrossList = cityGrossList.concat(
-          filterList(cityGrossList, "cityGross", result)
+          filterList(cityGrossList, "cityGross", result, keywords)
         );
         willysList = willysList.concat(
-          filterList(willysList, "Willys", result)
+          filterList(willysList, "Willys", result, keywords)
         );
         dataPayload = {
           mathem: mathemList,
