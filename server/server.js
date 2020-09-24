@@ -98,8 +98,13 @@ const filterList = (list , store, compareList, keywords) => {
         wordMatchesFound++;
         // word match logic here
         product.wordMatches = wordMatchesFound
-        if(i > 0 && newList[i-1].wordMatches < product.wordMatches){
-          newList.splice(i-1,1)
+        if(i > 0){
+          if(newList[i-1].wordMatches < product.wordMatches){
+            newList.splice(i-1,1)
+          }
+          else{
+            newList.splice(i,1)
+          }
         }
       }
     });
@@ -145,7 +150,7 @@ app.post("/api/cart/shopping", async (req, res) => {
         return res.send(dataPayload);
       }
     });
-  }, 250);
+  }, 100);
 });
 
 //SERVER
