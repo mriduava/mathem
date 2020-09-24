@@ -96,7 +96,6 @@ const filterList = (list , store, compareList, keywords) => {
     keywords.map((keyword) => {
       if (product.productName.includes(keyword)) {
         wordMatchesFound++;
-        // word match logic here
         product.wordMatches = wordMatchesFound
         if(i > 0){
           if(newList[i-1].wordMatches < product.wordMatches){
