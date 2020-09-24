@@ -91,20 +91,13 @@ app.get("/api/mathems/:id", async (req, res) => {
 const filterList = (list , store, compareList, keywords) => {
   let newList = list
   newList = compareList.filter((product) => product.retail === store);
-  newList.map((product, i) => {
-    let wordMatchesFound = 0;
-    keywords.map((keyword) => {
-      if (product.productName.includes(keyword)) {
-        wordMatchesFound++;
-        product.wordMatches = wordMatchesFound
-        if(i > 0){
-          if(newList[i-1].wordMatches < product.wordMatches){
-            newList.splice(i-1,1)
-          }
-          else{
-            newList.splice(i,1)
-          }
-        }
+  newList.map((product) => {
+    let highestAmountOfWordsMatched = 1;
+    let wordMatches = 0;
+    keywords.map((word) => {
+      if(product.productName.toLowerCase().includes(word.toLowerCase())){
+        wordMatches++
+        console.log(wordMatches + " " + product.productName);
       }
     });
   });
