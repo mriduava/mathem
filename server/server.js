@@ -97,6 +97,10 @@ const filterList = (list , store, compareList, keywords) => {
     keywords.map((word) => {
       if(product.productName.toLowerCase().includes(word.toLowerCase())){
         wordMatches++
+        if(wordMatches > highestAmountOfWordsMatched){
+          highestAmountOfWordsMatched = wordMatches
+          console.log("highest amount increased to " + highestAmountOfWordsMatched);
+        }
         console.log(wordMatches + " " + product.productName);
       }
     });
