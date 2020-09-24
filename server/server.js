@@ -105,6 +105,7 @@ const filterList = (list , store, compareList, keywords) => {
       }
     });
   });
+  //Return one product instead, filter and check for highest wordmatch atm until categories is implemented
   let matchedProducts = newList.slice(list.length, list.length + 1);
   return matchedProducts;
 }
