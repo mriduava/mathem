@@ -46,7 +46,6 @@ const dailyDataHarvestCheck = () => {
     }
   });
 };
-  WillysHarvester.harvest()
   let dailyHarvestID = null;
   const dailyHarvestInterval = () => {
     dailyDataHarvestCheck()
