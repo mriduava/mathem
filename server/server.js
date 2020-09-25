@@ -47,8 +47,6 @@ const dailyDataHarvestCheck = () => {
     }
   });
 };
-
-
   let dailyHarvestID = null;
   const dailyHarvestInterval = () => {
     dailyDataHarvestCheck()
