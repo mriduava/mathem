@@ -18,6 +18,7 @@ const Cart = () => {
               body: JSON.stringify(productList)
             });
             res = await res.json()
+            console.log(res);
             if(res.length > 0){
               setCompareList(res)
             }
@@ -51,7 +52,7 @@ const Cart = () => {
         <Button color="warning" onClick={toggle}>
           Inköpslista
         </Button>
-        <Modal isOpen={modal} toggle={toggle} size="lg">
+        <Modal isOpen={modal} toggle={toggle} size="xl">
           <ModalHeader toggle={toggle} charCode="" className="mx-auto">Kundvagn</ModalHeader>
           <ModalBody>
             {productList.length > 0 ? <ProductData products={productList}/> : <h4 className="text-center">Tom kundvagn</h4>}

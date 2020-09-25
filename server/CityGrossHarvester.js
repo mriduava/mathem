@@ -58,7 +58,7 @@ module.exports = class Citygross {
             "?w=300",
           url: "https://www.citygross.se" + product.url,
           label: product.brand,
-          retail: "City gross",
+          retail: "cityGross",
           origin: product.country || "unknown",
           descriptiveSize: product.descriptiveSize,
           price: product.defaultPrice.currentPrice.price,
