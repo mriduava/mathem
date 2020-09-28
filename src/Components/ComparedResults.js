@@ -10,15 +10,25 @@ const ComparedResults = () => {
     mathem: "Mathem",
     willys: "Willys",
   };
+
   const findBestValues = (objList) => {
+    let results = [];
+
     const keys = Object.keys(objList);
 
     for (let i = 0; i < objList["mathem"].length; ++i) {
-      Math.min(
-        ...keys.map((p) =>
-          typeof objList[p][i] === "object" ? objList[p][i].price : Infinity
-        )
-      );
+      results = keys.filter((obj) => {
+        return objList[obj][i]
+          ? objList[obj][i].price ===
+              Math.min(
+                ...keys.map((p) =>
+                  typeof objList[p][i] === "object"
+                    ? objList[p][i].price
+                    : Infinity
+                )
+              )
+          : false;
+      });
     }
   };
 
