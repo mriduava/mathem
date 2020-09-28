@@ -33,6 +33,10 @@ const ComparedResults = () => {
     }
   };
 
+  useEffect(() => {
+    findBestValues(compareList);
+  }, [compareList]);
+
   return (
     <div>
       <Row>
