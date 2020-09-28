@@ -104,14 +104,12 @@ const filterList = (data , store, compareList, keywords) => {
       if(product.productName.toLowerCase().includes(word.toLowerCase())){
         wordMatches++
         if(wordMatches > highestAmountOfWordsMatched){
-          console.log(highestAmountOfWordsMatched + " " + wordMatches);
           highestAmountOfWordsMatched = wordMatches
           productMatch = product
         }
       }
     })
   })
-  //Return one product instead, filter and check for highest wordmatch atm until categories is implemented
   return productMatch;
 }
 
