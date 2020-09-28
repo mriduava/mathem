@@ -4,38 +4,31 @@ import { ProductContext } from "../contexts/ProductContextProvider";
 import "../CSS/comparedList.css";
 
 const ComparedResults = () => {
-  const { productList } = useContext(ProductContext);
-  const [compareList, setCompareList] = useState({});
-
-  const getProductComparison = async () => {
-    try {
-      let res = await fetch(`/api/cart/shopping`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productList),
-      });
-      res = await res.json();
-      if (res.length > 0) {
-        updateCompareList(res);
-      }
-    } catch {}
+  const { compareList } = useContext(ProductContext);
+  const prettyRetailor = {
+    cityGross: "City Gross",
+    mathem: "Mathem",
+    willys: "Willys",
   };
-
-  const updateCompareList = (update) => {
-    setCompareList({ ...compareList, ...update });
-  };
-
-  useEffect(() => {
-    getProductComparison();
-  }, [productList]);
-
-  const test = () => {
-    console.log(compareList);
-  };
-
   return (
     <div>
-      <Button onClick={test}>TEST</Button>
+      <Row>
+        {Object.keys(compareList).map((retail, i) => {
+          const products = compareList[retail];
+          return (
+            <Col key={i} xs="3">
+              <h1>{prettyRetailor[retail]}</h1>
+              {products.map((p, j) => {
+                return (
+                  <Row key={j}>
+                    <h6>{p.productName}</h6>
+                  </Row>
+                );
+              })}
+            </Col>
+          );
+        })}
+      </Row>
     </div>
   );
 };
