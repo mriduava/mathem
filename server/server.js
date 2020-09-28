@@ -88,26 +88,31 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (list , store, compareList, keywords) => {
-  let newList = list
-  newList = compareList.filter((product) => product.retail === store);
-  newList.map((product) => {
-    let highestAmountOfWordsMatched = 1;
-    let wordMatches = 0;
-    keywords.map((word) => {
+const filterList = (data , store, compareList, keywords) => {
+  let productMatch
+  newList = compareList.filter(
+    (product) =>
+      product.retail === store &&
+      product.productName.includes(keywords[0]) &&
+      data.price < product.price * 2 &&
+      data.price > product.price * 0.5
+  );
+    let highestAmountOfWordsMatched = 0;
+    newList.map(product => {
+      let wordMatches = 0;
+          keywords.map((word) => {
       if(product.productName.toLowerCase().includes(word.toLowerCase())){
         wordMatches++
         if(wordMatches > highestAmountOfWordsMatched){
+          console.log(highestAmountOfWordsMatched + " " + wordMatches);
           highestAmountOfWordsMatched = wordMatches
-          console.log("highest amount increased to " + highestAmountOfWordsMatched);
+          productMatch = product
         }
-        console.log(wordMatches + " " + product.productName);
       }
-    });
-  });
+    })
+  })
   //Return one product instead, filter and check for highest wordmatch atm until categories is implemented
-  let matchedProducts = newList.slice(list.length, list.length + 1);
-  return matchedProducts;
+  return productMatch;
 }
 
 let debounceID = null;
@@ -128,15 +133,9 @@ app.post("/api/cart/shopping", async (req, res) => {
       let keywords = data.productName.split(" ");
       let result =  await Product.find({ productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}});
       if(result.length > 0){
-        mathemList = mathemList.concat(
-          filterList(mathemList, "mathem", result, keywords)
-        ); 
-        cityGrossList = cityGrossList.concat(
-          filterList(cityGrossList, "cityGross", result, keywords)
-        );
-        willysList = willysList.concat(
-          filterList(willysList, "Willys", result, keywords)
-        );
+        mathemList.push(filterList(data, "mathem", result, keywords)); 
+        cityGrossList.push(filterList(data, "cityGross", result, keywords));
+        willysList.push(filterList(data, "Willys", result, keywords));
         dataPayload = {
           mathem: mathemList,
           cityGross: cityGrossList,
