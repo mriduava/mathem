@@ -1,27 +1,41 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Card, Row, Col, Button } from "reactstrap";
+import { Card, Row, Col, Button, CardImg } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import "../CSS/comparedList.css";
 
 const ComparedResults = () => {
   const { compareList } = useContext(ProductContext);
-  const prettyRetailor = {
+  const prettifyRetailor = {
     cityGross: "City Gross",
     mathem: "Mathem",
     willys: "Willys",
   };
+  const findBestValues = (objList) => {
+    const keys = Object.keys(objList);
+
+    for (let i = 0; i < objList["mathem"].length; ++i) {
+      Math.min(
+        ...keys.map((p) =>
+          typeof objList[p][i] === "object" ? objList[p][i].price : Infinity
+        )
+      );
+    }
+  };
+
   return (
     <div>
       <Row>
         {Object.keys(compareList).map((retail, i) => {
           const products = compareList[retail];
           return (
-            <Col key={i} xs="3">
-              <h1>{prettyRetailor[retail]}</h1>
+            <Col key={i}>
+              <h1>{prettifyRetailor[retail]}</h1>
               {products.map((p, j) => {
                 return (
                   <Row key={j}>
-                    <h6>{p.productName}</h6>
+                    {p.productName}
+                    {p.price}
+                    {p.bestValue ? "bestPrice" : ""}
                   </Row>
                 );
               })}
