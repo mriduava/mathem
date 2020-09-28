@@ -57,38 +57,48 @@ const ComparedResults = () => {
                 //TODO reuse code above to check max length of the longest array and create dummy ones for correct
                 return (
                   <Row key={j}>
-                    <Card>
-                      <div>
-                        <Card>
-                          <div>
-                            <CardImg
-                              src={product.image}
-                              className="link card-img-top"
-                              onClick={() => window.open(product.url)}
-                            />
-                          </div>
-                          <div className="centerText">
-                            <h3
-                              className="link"
-                              onClick={() => window.open(product.url)}
-                            >
-                              {product.productName}
-                            </h3>
-                          </div>
-                          <br />
-                          <b>{product.price} kr</b>
-                          <div className="centerText">
-                            {product.bestValue ? (
-                              <h5>
-                                Denna produkten är billigast! {checkMarkEmoji}
-                              </h5>
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </Card>
-                      </div>
-                    </Card>
+                    <Col>
+                      <Card
+                        style={{
+                          justifyContent: "center",
+                          alignContent: "center",
+                        }}
+                      >
+                        <div>
+                          <Card
+                            style={{ width: "18rem" }}
+                            className="link"
+                            onClick={() => window.open(product.url)}
+                          >
+                            <div>
+                              <div>
+                                <CardImg
+                                  src={product.image}
+                                  top
+                                  width="50%"
+                                  height="50%"
+                                />
+                                <div className="centerText">
+                                  <h3>{product.productName}</h3>
+                                </div>
+                              </div>
+                            </div>
+
+                            <br />
+                            <b>{product.price} kr</b>
+                            <div className="centerText">
+                              {product.bestValue ? (
+                                <h5>
+                                  Denna produkten är billigast! {checkMarkEmoji}
+                                </h5>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </Card>
+                        </div>
+                      </Card>
+                    </Col>
                   </Row>
                 );
               })}
