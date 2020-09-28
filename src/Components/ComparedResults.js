@@ -1,10 +1,14 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Card, Row, Col, Button, CardImg } from "reactstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Row, Col } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import "../CSS/comparedList.css";
 
 const ComparedResults = () => {
   const { compareList } = useContext(ProductContext);
+  const [localCompareList, setlocalCompareList] = useState({});
+  const updateLocalCompareList = (updates) => {
+    setlocalCompareList({ ...localCompareList, ...updates });
+  };
   const prettifyRetailor = {
     cityGross: "City Gross",
     mathem: "Mathem",
@@ -29,7 +33,7 @@ const ComparedResults = () => {
               )
           : false;
       });
-      objList[results][i].bestValue = true;
+      updateLocalCompareList((objList[results][i].bestValue = true));
     }
   };
 
