@@ -46,6 +46,8 @@ class Mathem {
       return 'Husdjur'
     }else if (mathemCategory === 'kiosk'){
       return 'Kiosk'
+    }else {
+      return mathemCategory
     }
   }
 
