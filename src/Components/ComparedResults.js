@@ -15,8 +15,8 @@ const ComparedResults = () => {
     let results = [];
 
     const keys = Object.keys(objList);
-    
-    for (let i = 0; i < objList["mathem"].length; ++i) {
+    const length = Math.max(...keys.map((p) => objList[p].length));
+    for (let i = 0; i < length; ++i) {
       results = keys.filter((obj) => {
         return objList[obj][i]
           ? objList[obj][i].price ===
