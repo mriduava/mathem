@@ -1,3 +1,7 @@
 .centerText {
   text-align: center;
 }
+
+.link:hover {
+  cursor: pointer;
+}
