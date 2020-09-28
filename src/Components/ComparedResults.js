@@ -15,7 +15,7 @@ const ComparedResults = () => {
     let results = [];
 
     const keys = Object.keys(objList);
-
+    
     for (let i = 0; i < objList["mathem"].length; ++i) {
       results = keys.filter((obj) => {
         return objList[obj][i]
@@ -29,6 +29,7 @@ const ComparedResults = () => {
               )
           : false;
       });
+      objList[results][i].bestValue = true;
     }
   };
 
