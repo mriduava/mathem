@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Card, CardImg } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import "../CSS/comparedList.css";
 
@@ -9,6 +9,8 @@ const ComparedResults = () => {
   const updateLocalCompareList = (updates) => {
     setlocalCompareList({ ...localCompareList, ...updates });
   };
+  const checkMarkEmoji = "✅";
+
   const prettifyRetailor = {
     cityGross: "City Gross",
     mathem: "Mathem",
@@ -17,6 +19,7 @@ const ComparedResults = () => {
 
   const findBestValues = (objList) => {
     let results = [];
+    //TODO figure out cheapest price per kg
 
     const keys = Object.keys(objList);
     const length = Math.max(...keys.map((p) => objList[p].length));
@@ -47,14 +50,45 @@ const ComparedResults = () => {
         {Object.keys(compareList).map((retail, i) => {
           const products = compareList[retail];
           return (
-            <Col key={i}>
+            <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
-              {products.map((p, j) => {
+
+              {products.map((product, j) => {
+                //TODO reuse code above to check max length of the longest array and create dummy ones for correct
                 return (
                   <Row key={j}>
-                    {p.productName}
-                    {p.price}
-                    {p.bestValue ? "bestPrice" : ""}
+                    <Card>
+                      <div>
+                        <Card>
+                          <div>
+                            <CardImg
+                              src={product.image}
+                              className="link card-img-top"
+                              onClick={() => window.open(product.url)}
+                            />
+                          </div>
+                          <div className="centerText">
+                            <h3
+                              className="link"
+                              onClick={() => window.open(product.url)}
+                            >
+                              {product.productName}
+                            </h3>
+                          </div>
+                          <br />
+                          <b>{product.price} kr</b>
+                          <div className="centerText">
+                            {product.bestValue ? (
+                              <h5>
+                                Denna produkten är billigast! {checkMarkEmoji}
+                              </h5>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                        </Card>
+                      </div>
+                    </Card>
                   </Row>
                 );
               })}
