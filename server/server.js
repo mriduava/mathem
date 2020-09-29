@@ -47,8 +47,6 @@ const dailyDataHarvestCheck = () => {
     }
   });
 };
-
-
   let dailyHarvestID = null;
   const dailyHarvestInterval = () => {
     dailyDataHarvestCheck()
@@ -64,6 +62,7 @@ const dailyDataHarvestCheck = () => {
   };
 
 dailyHarvestInterval()
+
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
