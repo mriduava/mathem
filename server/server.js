@@ -93,8 +93,7 @@ const filterList = (data , store, compareList, keywords) => {
     (product) =>
       product.retail === store &&
       product.productName.includes(keywords[0]) &&
-      data.price < product.price * 2 &&
-      data.price > product.price * 0.5
+      product.category === data.category
   );
     let highestAmountOfWordsMatched = 0;
     newList.map(product => {
