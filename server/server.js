@@ -2,7 +2,6 @@ const db = "mathem";
 const PORT = 3200;
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
-const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
@@ -56,7 +55,6 @@ const dailyDataHarvestCheck = () => {
       dailyHarvestID = null;
     }
     dailyHarvestID = setInterval(() => {
-      console.log("in interval fetch");
       dailyDataHarvestCheck();
     }, twentyFourHoursInMilliseconds);
   };

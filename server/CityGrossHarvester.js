@@ -106,7 +106,6 @@ module.exports = class Citygross {
           ecologic: this.isEcological(product.markings),
           category: this.getCat(product.superCategory.toLowerCase()),
         };
-        console.log(dbProduct)
         return Product.replaceOne(
           { productFullName: dbProduct.productFullName },
           dbProduct,
