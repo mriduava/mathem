@@ -3,6 +3,7 @@ const Category = require("./models/Category");
 const fetch = require("node-fetch");
 
 class Mathem {
+
   harvester = () => {
     let categories = this.databaseCategories();
     categories.forEach(async (category) => {
@@ -14,24 +15,60 @@ class Mathem {
     });
   };
 
+  getCat = (mathemCategory) => {
+    if(mathemCategory === 'frukt-o-gront'){
+      return 'Frukt-och-Gront'
+    }else if (mathemCategory === 'mejeri-o-ost'){
+      return 'Mejeri-ost-och-agg'
+    } else if (mathemCategory === 'brod-o-bageri'){
+      return 'Brod-och-Kakor'
+    }else if (mathemCategory === 'kott-o-chark'){
+      return 'Kott-chark-och-fagel'
+    }else if (mathemCategory === 'dryck'){
+      return 'Dryck'
+    }else if (mathemCategory === 'skafferi'){
+      return 'Skafferi'
+    }else if (mathemCategory === 'fisk-o-skaldjur'){
+      return 'Fisk-och-Skaldjur'
+    }else if (mathemCategory === 'hem-o-hygien'){
+      return 'Halsa-och-Skonhet'
+    }else if (mathemCategory === 'fardigmat-o-halvfabrikat'){
+      return 'Fardigmat'
+    }else if (mathemCategory === 'glass-godis-o-snacks'){
+      return 'Glass-godis-och-snacks'
+    }else if (mathemCategory === 'barnmat-o-tillbehor'){
+      return 'Barn'
+    }else if (mathemCategory === 'apotek-o-halsa'){
+      return 'Apotek'
+    }else if (mathemCategory === 'smaksattre'){
+      return 'Skafferi'
+    }else if (mathemCategory === 'djurmat-o-tillbehor'){
+      return 'Husdjur'
+    }else if (mathemCategory === 'kiosk'){
+      return 'Kiosk'
+    }else {
+      return mathemCategory
+    }
+  }
+
   databaseCategories = () => {
-    let categories = [
-      "frukt-o-gront",
-      "mejeri-o-ost",
-      "brod-o-bageri",
-      "kott-o-chark",
-      "dryck",
-      "skafferi",
-      "fisk-o-skaldjur",
-      "hem-o-hygien",
-      "fardigmat-o-halvfabrikat",
-      "glass-godis-o-snacks",
-      "barnmat-o-tillbehor",
-      "apotek-o-halsa",
-      "smaksattare",
-      "djurmat-o-tillbehor",
-      "kiosk",
-    ];
+       let categories = [
+          "frukt-o-gront",
+          "mejeri-o-ost",
+          "brod-o-bageri",
+          "kott-o-chark",
+          "dryck",
+          "skafferi",
+          "fisk-o-skaldjur",
+          "hem-o-hygien",
+          "fardigmat-o-halvfabrikat",
+          "glass-godis-o-snacks",
+          "barnmat-o-tillbehor",
+          "apotek-o-halsa",
+          "smaksattare",
+          "djurmat-o-tillbehor",
+          "kiosk",
+        ];
     categories.forEach(async (category) => {
       let dataCategory = new Category({
         name: category,
@@ -123,6 +160,7 @@ class Mathem {
                   : null,
               }
             : null,
+          category: this.getCat(product.department.url.toLowerCase())
         });
         mathemProduct.find(
           {

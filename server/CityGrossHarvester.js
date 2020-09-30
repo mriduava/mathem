@@ -29,12 +29,50 @@ let categoryList = [
 ];
 
 module.exports = class Citygross {
+  getCat = (cityGrossCategory) => {
+    if (cityGrossCategory === 'skönhet & hygien' || cityGrossCategory === 'hem & städ'){
+      return 'Halsa-och-Skonhet'
+    }else if (cityGrossCategory === 'barn'){
+      return 'Barn'
+    }else if (cityGrossCategory === 'blommor & tillbehör'){
+      return cityGrossCategory
+    }else if (cityGrossCategory === 'bröd & bageri'){
+      return 'Brod-och-Kakor'
+    }else if (cityGrossCategory === 'chark' || cityGrossCategory === 'kött & fågel'){
+      return 'Kott-chark-och-fagel'
+    }else if (cityGrossCategory === 'dryck'){
+      return 'Dryck'
+    }else if (cityGrossCategory === 'fisk & skaldjur'){
+      return 'Fisk-och-Skaldjur'
+    }else if (cityGrossCategory === 'frukt & grönt'){
+      return 'Frukt-och-Gront'
+    }else if (cityGrossCategory === 'fryst' || cityGrossCategory === 'kyld färdigmat'){
+      return 'Fardigmat'
+    }else if (cityGrossCategory === 'godis' || cityGrossCategory === 'snacks'){
+      return 'Glass-godis-och-snacks'
+    }else if (cityGrossCategory === 'husdjur'){
+      return 'Husdjur'
+    }else if (cityGrossCategory === 'hälsa'){
+      return 'Apotek'
+    }else if (cityGrossCategory === 'manuell delikatess' || cityGrossCategory === 'skafferiet'){
+      return 'Skafferi'
+    }else if (cityGrossCategory === 'mejeri, ost & ägg'){
+      return 'Mejeri-ost-och-agg'
+    }else if (cityGrossCategory === 'tobak'){
+      return 'tobak'
+    }else {
+      return cityGrossCategory
+    }
+
+  }
+
   async fetchData(categoryID) {
     let raw = await fetch(
       "https://www.citygross.se/api/v1/esales/products?categoryId=" +
         categoryID +
         "&size=900"
     );
+
     return (await raw.json()).data;
   }
 
@@ -58,7 +96,7 @@ module.exports = class Citygross {
             "?w=300",
           url: "https://www.citygross.se" + product.url,
           label: product.brand,
-          retail: "City gross",
+          retail: "cityGross",
           origin: product.country || "unknown",
           descriptiveSize: product.descriptiveSize,
           price: product.defaultPrice.currentPrice.price,
@@ -67,8 +105,9 @@ module.exports = class Citygross {
           kgPrice: this.findKgPrice(product),
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
+          category: this.getCat(product.superCategory.toLowerCase()),
         };
-
+        console.log(dbProduct)
         return Product.replaceOne(
           { productFullName: dbProduct.productFullName },
           dbProduct,

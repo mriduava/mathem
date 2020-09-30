@@ -33,6 +33,7 @@ let schema = new Schema({
     maxQuantity: { type: Number, required: false },
     bulkPrice: { type: String, required: false },
   },
+  category: {type: String, required: false},
 });
 schema.index({ "$**": "text" });
 
