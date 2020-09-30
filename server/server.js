@@ -2,7 +2,6 @@ const db = "mathem";
 const PORT = 3200;
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
-const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
@@ -47,8 +46,6 @@ const dailyDataHarvestCheck = () => {
     }
   });
 };
-
-
   let dailyHarvestID = null;
   const dailyHarvestInterval = () => {
     dailyDataHarvestCheck()
@@ -58,12 +55,12 @@ const dailyDataHarvestCheck = () => {
       dailyHarvestID = null;
     }
     dailyHarvestID = setInterval(() => {
-      console.log("in interval fetch");
       dailyDataHarvestCheck();
     }, twentyFourHoursInMilliseconds);
   };
 
 dailyHarvestInterval()
+
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
@@ -78,7 +75,7 @@ app.get("/api/mathem/:search", async (req, res) => {
     return res.send(result);
   })
     .limit(parseInt(req.query.limit))
-    .skip(parseInt(req.query.skip));
+    .skip(parseInt(req.query.skip))
 });
 
 //Find Product by ID
@@ -88,11 +85,28 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (list , store, compareList) => {
-  let newList = list
-  newList = compareList.filter((product) => product.retail === store);
-  newList = newList.slice(list.length, list.length + 1);
-  return newList;
+const filterList = (data , store, compareList, keywords) => {
+  let productMatch
+  let newList = compareList.filter(
+    (product) =>
+      product.retail === store &&
+      product.productName.includes(keywords[0]) &&
+      product.category === data.category
+  );
+    let highestAmountOfWordsMatched = 0;
+    newList.map(product => {
+      let wordMatches = 0;
+          keywords.map((word) => {
+      if(product.productName.toLowerCase().includes(word.toLowerCase())){
+        wordMatches++
+        if(wordMatches > highestAmountOfWordsMatched){
+          highestAmountOfWordsMatched = wordMatches
+          productMatch = product
+        }
+      }
+    })
+  })
+  return productMatch;
 }
 
 let debounceID = null;
@@ -111,32 +125,22 @@ app.post("/api/cart/shopping", async (req, res) => {
   debounceID = setTimeout(() => {
     cartData.map(async (data, i) => {
       let keywords = data.productName.split(" ");
-        await Product.find(
-          { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}},
-          (err, result) => {
-            if(result.length > 0){
-              mathemList = mathemList.concat(
-                filterList(mathemList, "mathem", result)
-              ); 
-              cityGrossList = cityGrossList.concat(
-                filterList(cityGrossList, "cityGross", result)
-              );
-              willysList = willysList.concat(
-                filterList(willysList, "Willys", result)
-              );
-              dataPayload = {
-                mathem: mathemList,
-                cityGross: cityGrossList,
-                willys: willysList,
-              };
-            }
-          }
-        );
-        if (i === cartData.length - 1) {
-          return res.send(dataPayload);
-        }
+      let result =  await Product.find({ productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}});
+      if(result.length > 0){
+        mathemList.push(filterList(data, "mathem", result, keywords)); 
+        cityGrossList.push(filterList(data, "cityGross", result, keywords));
+        willysList.push(filterList(data, "Willys", result, keywords));
+        dataPayload = {
+          mathem: mathemList,
+          cityGross: cityGrossList,
+          willys: willysList,
+        };
+      }
+      if (i === cartData.length - 1) {
+        return res.send(dataPayload);
+      }
     });
-  }, 250);
+  }, 100);
 });
 
 //SERVER

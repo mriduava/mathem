@@ -23,6 +23,7 @@ let schema = new Schema({
   price: { type: Number, required: true },
   compareUnit: { type: String, required: false },
   comparePrice: { required: false },
+  kgPrice: { type: Number, required: false },
   discount: {
     type: Object,
     required: false,
@@ -32,6 +33,7 @@ let schema = new Schema({
     maxQuantity: { type: Number, required: false },
     bulkPrice: { type: String, required: false },
   },
+  category: {type: String, required: false},
 });
 schema.index({ "$**": "text" });
 
