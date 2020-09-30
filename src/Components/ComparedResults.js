@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col, Card, CardImg } from "reactstrap";
+import { Row, Col, Card, CardImg, Container } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import "../CSS/comparedList.css";
 
@@ -20,7 +20,6 @@ const ComparedResults = () => {
   const findBestValues = (objList) => {
     let results = [];
     //TODO figure out cheapest price per kg
-
     const keys = Object.keys(objList);
     const length = Math.max(...keys.map((p) => objList[p].length));
     for (let i = 0; i < length; ++i) {
@@ -52,56 +51,54 @@ const ComparedResults = () => {
           return (
             <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
-
-              {products.map((product, j) => {
-                //TODO reuse code above to check max length of the longest array and create dummy ones for correct
-                return (
-                  <Row key={j}>
-                    <Col>
-                      <Card
-                        style={{
-                          justifyContent: "center",
-                          alignContent: "center",
-                        }}
-                      >
-                        <div>
+              <div>
+                {products.map((product, j) => {
+                  //TODO reuse code above to check max length of the longest array and create dummy ones for correct
+                  return (
+                    <Container
+                      key={j}
+                      style={{ maxHeight: "300px", marginBottom: "20px", paddingBottom: "20px" }}
+                    >
+                      <Col>
+                        <div className="center">
                           <Card
-                            style={{ width: "18rem" }}
+                            style={{ height: "300px", paddingBottom: "30px" }}
                             className="link"
                             onClick={() => window.open(product.url)}
                           >
                             <div>
                               <div>
-                                <CardImg
-                                  src={product.image}
-                                  top
-                                  width="50%"
-                                  height="50%"
-                                />
-                                <div className="centerText">
-                                  <h3>{product.productName}</h3>
+                                <div>
+                                  <CardImg
+                                    src={product.image}
+                                    top
+                                    style={{ maxHeight: "200px" }}
+                                  />
+                                  <div className="centerText">
+                                    <h5>{product.productName}</h5>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                            <br />
-                            <b>{product.price} kr</b>
-                            <div className="centerText">
-                              {product.bestValue ? (
-                                <h5>
-                                  Denna produkten är billigast! {checkMarkEmoji}
-                                </h5>
-                              ) : (
-                                ""
-                              )}
+                              <b>{product.price} kr</b>
+                              <div className="centerText">
+                                {product.bestValue ? (
+                                  <b>
+                                    Denna produkten är billigast!{" "}
+                                    {checkMarkEmoji}
+                                  </b>
+                                ) : (
+                                  ""
+                                )}
+                              </div>
                             </div>
                           </Card>
                         </div>
-                      </Card>
-                    </Col>
-                  </Row>
-                );
-              })}
+                      </Col>
+                    </Container>
+                  );
+                })}
+              </div>
             </Col>
           );
         })}
