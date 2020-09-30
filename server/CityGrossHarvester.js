@@ -64,6 +64,7 @@ module.exports = class Citygross {
           price: product.defaultPrice.currentPrice.price,
           comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
           compareUnit: "kg",
+          kgPrice: this.findKgPrice(product),
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
         };
@@ -116,6 +117,22 @@ module.exports = class Citygross {
       1: "hg",
       2: "kg",
     }[type];
+  }
+
+  convertToKgPrice(product) {
+    if (product.grossWeight) return undefined;
+    const volume = product.grossWeight.value;
+    const unit = this.unitLookupTable(product.grossWeight.unitOfMeasure);
+    if (!volume || !unit) return;
+    const conversionFactor = {
+      g: 1000,
+      hg: 10,
+      kg: 1,
+      st: 1,
+    }[unit];
+    return (
+      (product.defaultPrice.currentPrice.price * conversionFactor) / volume
+    );
   }
 
   calculateVolume(product) {
