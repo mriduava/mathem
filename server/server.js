@@ -87,7 +87,7 @@ app.get("/api/mathems/:id", async (req, res) => {
 
 const filterList = (data , store, compareList, keywords) => {
   let productMatch
-  newList = compareList.filter(
+  let newList = compareList.filter(
     (product) =>
       product.retail === store &&
       product.productName.includes(keywords[0]) &&
