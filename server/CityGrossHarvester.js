@@ -119,8 +119,8 @@ module.exports = class Citygross {
     }[type];
   }
 
-  convertToKgPrice(product) {
-    if (product.grossWeight) return undefined;
+  findKgPrice(product) {
+    if (!product.grossWeight) return undefined;
     const volume = product.grossWeight.value;
     const unit = this.unitLookupTable(product.grossWeight.unitOfMeasure);
     if (!volume || !unit) return;
@@ -131,7 +131,11 @@ module.exports = class Citygross {
       st: 1,
     }[unit];
     return (
-      (product.defaultPrice.currentPrice.price * conversionFactor) / volume
+      Math.round(
+        ((product.defaultPrice.currentPrice.price * conversionFactor) /
+          volume) *
+          100
+      ) / 100
     );
   }
 
