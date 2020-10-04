@@ -102,6 +102,7 @@ module.exports = class Citygross {
           price: product.defaultPrice.currentPrice.price,
           comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
           compareUnit: "kg",
+          kgPrice: this.findKgPrice(product),
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
           category: this.getCat(product.superCategory.toLowerCase()),
@@ -129,16 +130,11 @@ module.exports = class Citygross {
   }
 
   isEcological(arr) {
-    let b = false;
-    if (!Array.isArray(arr)) return b;
-
-    arr.forEach((e) => {
-      if (this.hasMarking(e.code) === true) {
-        b = true;
-      }
-    });
-
-    return b;
+    if (!Array.isArray(arr)) return false;
+    return arr.reduce(
+      (hasMarking, element) => hasMarking || this.hasMarking(element.code),
+      false
+    );
   }
 
   hasMarking(type) {
@@ -161,25 +157,44 @@ module.exports = class Citygross {
     }[type];
   }
 
+  findKgPrice(product) {
+    if (!product.grossWeight) return undefined;
+    const volume = product.grossWeight.value;
+    const unit = this.unitLookupTable(product.grossWeight.unitOfMeasure);
+    if (!volume || !unit) return;
+    const conversionFactor = {
+      g: 1000,
+      hg: 10,
+      kg: 1,
+      st: 1,
+    }[unit];
+    return (
+      Math.round(
+        ((product.defaultPrice.currentPrice.price * conversionFactor) /
+          volume) *
+          100
+      ) / 100
+    );
+  }
+
   calculateVolume(product) {
-    return product.grossWeight
-      ? `${product.grossWeight.value}${this.unitLookupTable(
-          product.grossWeight.unitOfMeasure
-        )}`
-      : undefined;
+    if (product.grossWeight)
+      return `${product.grossWeight.value}${this.unitLookupTable(
+        product.grossWeight.unitOfMeasure
+      )}`;
+    return undefined;
   }
 
   findDiscount(product) {
     if (!product.defaultPrice.hasDiscount) return undefined;
 
-    const discount = {};
+    const discount = {
+      memberDiscount: product.defaultPrice.hasPromotion,
+      prePrice: product.defaultPrice.ordinaryPrice.price,
+    };
+
     const promotion = product.defaultPrice.promotions[0];
-
-    discount.memberDiscount = product.defaultPrice.hasPromotion;
-
-    discount.prePrice = product.defaultPrice.ordinaryPrice.price;
-
-    if (promotion !== undefined) {
+    if (promotion) {
       discount.maxQuantity = promotion.amountLimitPerReceipt;
 
       const itemQuantity = promotion.numberOfItems;
@@ -191,20 +206,18 @@ module.exports = class Citygross {
     return discount;
   }
 
-  findPrice(product) {
-    return;
-  }
-
   findDescription(product) {
-    const description = {};
-    const productDesc = product.foodAndBeverageExtension;
-    description.productDescription = product.description;
+    const description = {
+      productDescription: product.description,
+    };
 
-    if (productDesc !== null) {
+    const productDesc = product.foodAndBeverageExtension;
+
+    if (productDesc) {
       description.ingridients = product.foodAndBeverageExtension =
         productDesc.ingredientStatement;
 
-      if (productDesc.nutrientInformations !== undefined) {
+      if (productDesc.nutrientInformations) {
         description.nutrition =
           productDesc.nutrientInformations[0].nutrientStatement;
       }
