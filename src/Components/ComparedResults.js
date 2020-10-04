@@ -19,7 +19,6 @@ const ComparedResults = () => {
 
   const findBestValues = (objList) => {
     const keys = Object.keys(objList);
-    //TODO figure out cheapest price per kg
     const length = Math.max(
       ...keys.map((retailor) => objList[retailor].length)
     );
@@ -124,7 +123,7 @@ const ComparedResults = () => {
                           marginBottom: "20px",
                           paddingBottom: "20px",
                         }}
-                      ></Container>
+                      />
                     );
                   }
                 })}
