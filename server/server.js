@@ -46,21 +46,20 @@ const dailyDataHarvestCheck = () => {
     }
   });
 };
-  let dailyHarvestID = null;
-  const dailyHarvestInterval = () => {
-    dailyDataHarvestCheck()
-    const twentyFourHoursInMilliseconds = 86400000
-    if (dailyHarvestID !== null) {
-      clearInterval(dailyHarvestID);
-      dailyHarvestID = null;
-    }
-    dailyHarvestID = setInterval(() => {
-      dailyDataHarvestCheck();
-    }, twentyFourHoursInMilliseconds);
-  };
+let dailyHarvestID = null;
+const dailyHarvestInterval = () => {
+  dailyDataHarvestCheck();
+  const twentyFourHoursInMilliseconds = 86400000;
+  if (dailyHarvestID !== null) {
+    clearInterval(dailyHarvestID);
+    dailyHarvestID = null;
+  }
+  dailyHarvestID = setInterval(() => {
+    dailyDataHarvestCheck();
+  }, twentyFourHoursInMilliseconds);
+};
 
-dailyHarvestInterval()
-
+dailyHarvestInterval();
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
@@ -75,7 +74,7 @@ app.get("/api/mathem/:search", async (req, res) => {
     return res.send(result);
   })
     .limit(parseInt(req.query.limit))
-    .skip(parseInt(req.query.skip))
+    .skip(parseInt(req.query.skip));
 });
 
 //Find Product by ID
@@ -85,61 +84,72 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (data , store, compareList, keywords) => {
-  let productMatch
-  let newList = compareList.filter(
+const filterList = (data, store, products, keywords) => {
+  let filteredProducts = products.filter(
     (product) =>
       product.retail === store &&
       product.productName.includes(keywords[0]) &&
       product.category === data.category
   );
-    let highestAmountOfWordsMatched = 0;
-    newList.map(product => {
-      let wordMatches = 0;
-          keywords.map((word) => {
-      if(product.productName.toLowerCase().includes(word.toLowerCase())){
-        wordMatches++
-        if(wordMatches > highestAmountOfWordsMatched){
-          highestAmountOfWordsMatched = wordMatches
-          productMatch = product
+
+  let highestAmountOfWordsMatched = 0;
+
+  let productMatch;
+
+  filteredProducts.map((product) => {
+    let wordMatches = 0;
+    keywords.map((word) => {
+      if (product.productName.toLowerCase().includes(word.toLowerCase())) {
+        wordMatches++;
+        if (wordMatches > highestAmountOfWordsMatched) {
+          highestAmountOfWordsMatched = wordMatches;
+          productMatch = product;
         }
       }
-    })
-  })
+    });
+  });
   return productMatch;
-}
+};
 
 let debounceID = null;
 
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
-  let dataPayload = "";
-  let mathemList = [];
-  let cityGrossList = [];
-  let willysList = [];
-  let cartData = req.body;
   if (debounceID !== null) {
     clearTimeout(debounceID);
     debounceID = null;
   }
-  debounceID = setTimeout(() => {
-    cartData.map(async (data, i) => {
-      let keywords = data.productName.split(" ");
-      let result =  await Product.find({ productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}});
-      if(result.length > 0){
-        mathemList.push(filterList(data, "mathem", result, keywords)); 
-        cityGrossList.push(filterList(data, "cityGross", result, keywords));
-        willysList.push(filterList(data, "Willys", result, keywords));
-        dataPayload = {
-          mathem: mathemList,
-          cityGross: cityGrossList,
-          willys: willysList,
-        };
-      }
-      if (i === cartData.length - 1) {
-        return res.send(dataPayload);
-      }
-    });
+  debounceID = setTimeout(async () => {
+    const cartData = req.body;
+
+    const mathemList = [];
+    const cityGrossList = [];
+    const willysList = [];
+
+    await Promise.all(
+      cartData.map(async (data, i) => {
+        const keywords = data.productName.split(" ");
+        const result = await Product.find({
+          productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
+        });
+
+        if (result.length > 0) {
+          mathemList.push(filterList(data, "mathem", result, keywords));
+          cityGrossList.push(filterList(data, "cityGross", result, keywords));
+          willysList.push(filterList(data, "Willys", result, keywords));
+        }
+      })
+    );
+
+    if (mathemList.length || cityGrossList.length || willysList.length) {
+      res.send({
+        mathem: mathemList,
+        cityGross: cityGrossList,
+        willys: willysList,
+      });
+    } else {
+      res.send("");
+    }
   }, 100);
 });
 
