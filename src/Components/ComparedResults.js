@@ -18,7 +18,6 @@ const ComparedResults = () => {
   };
 
   const findBestValues = (objList) => {
-    console.log(compareList)
     const keys = Object.keys(objList);
     const length = Math.max(
       ...keys.map((retailor) => objList[retailor].length)
