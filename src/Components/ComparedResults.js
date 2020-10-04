@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col, Card, CardImg, Container } from "reactstrap";
+import { Row, Col, Card, CardImg, Container, Button } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import "../CSS/comparedList.css";
 
@@ -18,30 +18,37 @@ const ComparedResults = () => {
   };
 
   const findBestValues = (objList) => {
-    let results = [];
-    //TODO figure out cheapest price per kg
     const keys = Object.keys(objList);
-    const length = Math.max(...keys.map((p) => objList[p].length));
+    //TODO figure out cheapest price per kg
+    const length = Math.max(
+      ...keys.map((retailor) => objList[retailor].length)
+    );
+    if (length <= 0) return;
     for (let i = 0; i < length; ++i) {
-      results = keys.filter((obj) => {
-        return objList[obj][i]
-          ? objList[obj][i].price ===
-              Math.min(
-                ...keys.map((p) =>
-                  typeof objList[p][i] === "object"
-                    ? objList[p][i].price
-                    : Infinity
-                )
-              )
-          : false;
-      });
-      updateLocalCompareList((objList[results][i].bestValue = true));
+      const bestPrices = findAllValues(keys, i, objList, "price");
+      const bestBulkPrices = findAllValues(keys, i, objList, "kgPrice");
+      updateLocalCompareList((objList[bestPrices][i].bestValue = true));
+      updateLocalCompareList((objList[bestBulkPrices][i].bestBulkValue = true));
     }
   };
 
-  useEffect(() => {
-    findBestValues(compareList);
-  }, [compareList]);
+  const findAllValues = (retailors, index, objOfArrsOfObj, value) => {
+    const values = retailors.map((retailor) => {
+      const product = objOfArrsOfObj[retailor][index];
+
+      return typeof product === "object" && value in product
+        ? product[value]
+        : Infinity;
+    });
+    const minPrice = Math.min(...values);
+
+    return retailors.filter((retailor) => {
+      const product = objOfArrsOfObj[retailor][index];
+      return value in product ? product[value] === minPrice : false;
+    });
+  };
+
+  useEffect(() => findBestValues(compareList), [compareList]);
 
   return (
     <div>
@@ -57,7 +64,11 @@ const ComparedResults = () => {
                   return (
                     <Container
                       key={j}
-                      style={{ maxHeight: "300px", marginBottom: "20px", paddingBottom: "20px" }}
+                      style={{
+                        maxHeight: "300px",
+                        marginBottom: "20px",
+                        paddingBottom: "20px",
+                      }}
                     >
                       <Col>
                         <div className="center">
@@ -83,10 +94,15 @@ const ComparedResults = () => {
                               <b>{product.price} kr</b>
                               <div className="centerText">
                                 {product.bestValue ? (
-                                  <b>
+                                  <h6>
                                     Denna produkten är billigast!{" "}
                                     {checkMarkEmoji}
-                                  </b>
+                                  </h6>
+                                ) : (
+                                  ""
+                                )}
+                                {product.bestBulkValue ? (
+                                  <h6>Bästa kilo priset! {checkMarkEmoji}</h6>
                                 ) : (
                                   ""
                                 )}
