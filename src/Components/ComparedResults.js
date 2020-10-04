@@ -18,6 +18,7 @@ const ComparedResults = () => {
   };
 
   const findBestValues = (objList) => {
+    console.log(compareList)
     const keys = Object.keys(objList);
     const length = Math.max(
       ...keys.map((retailor) => objList[retailor].length)
@@ -60,13 +61,12 @@ const ComparedResults = () => {
               <h1>{prettifyRetailor[retail]}</h1>
               <div>
                 {products.map((product, j) => {
-                  console.log(product);
                   if (product !== null) {
                     return (
                       <Container
                         key={j}
                         style={{
-                          Height: "300px",
+                          height: "350px",
                           marginBottom: "20px",
                           paddingBottom: "20px",
                         }}
@@ -74,7 +74,7 @@ const ComparedResults = () => {
                         <Col>
                           <div className="center">
                             <Card
-                              style={{ height: "300px", paddingBottom: "30px" }}
+                              style={{ height: "340px", paddingBottom: "30px" }}
                               className="link"
                               onClick={() => window.open(product.url)}
                             >
@@ -93,6 +93,7 @@ const ComparedResults = () => {
                                 </div>
 
                                 <b>{product.price} kr</b>
+                                <p>{product.volume}</p>
                                 <div className="centerText">
                                   {product.bestValue ? (
                                     <h6>
@@ -119,7 +120,7 @@ const ComparedResults = () => {
                       <Container
                         key={j}
                         style={{
-                          Height: "300px",
+                          height: "350px",
                           marginBottom: "20px",
                           paddingBottom: "20px",
                         }}
