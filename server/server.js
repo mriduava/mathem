@@ -132,11 +132,23 @@ app.post("/api/cart/shopping", async (req, res) => {
         const result = await Product.find({
           productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
         });
-
+        console.log(data);
         if (result.length > 0) {
-          mathemList.push(filterList(data, "mathem", result, keywords));
-          cityGrossList.push(filterList(data, "cityGross", result, keywords));
-          willysList.push(filterList(data, "Willys", result, keywords));
+          mathemList.push(
+            data.retail === "mathem"
+              ? data
+              : filterList(data, "mathem", result, keywords)
+          );
+          cityGrossList.push(
+            data.retail === "cityGross"
+              ? data
+              : filterList(data, "cityGross", result, keywords)
+          );
+          willysList.push(
+            data.retail === "willys"
+              ? data
+              : filterList(data, "Willys", result, keywords)
+          );
         }
       })
     );

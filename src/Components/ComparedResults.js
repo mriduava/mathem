@@ -48,6 +48,22 @@ const ComparedResults = () => {
     });
   };
 
+ const openProductInStore = (product) => {
+    if(product.retail === "mathem"){
+      windowOpen(`mathem.se${product.url}`)
+    }
+    else{
+      window.open(product.url)
+    }
+  }
+
+  const windowOpen = (url, name, specs) => {
+    if (!url.match(/^https?:\/\//i)) {
+      url = "http://" + url;
+    }
+    return window.open(url, name, specs);
+  }
+
   useEffect(() => findBestValues(compareList), [compareList]);
 
   return (
@@ -75,7 +91,7 @@ const ComparedResults = () => {
                             <Card
                               style={{ height: "340px", paddingBottom: "30px" }}
                               className="link"
-                              onClick={() => window.open(product.url)}
+                              onClick={() => openProductInStore(product)}
                             >
                               <div>
                                 <div>
