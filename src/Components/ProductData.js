@@ -8,10 +8,6 @@ const ProductMap = ({products, inCart}, props) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
-  useEffect(() => {
-    console.log("change happened");
-  },[products])
-
   return(
     <div>
       {products ? 

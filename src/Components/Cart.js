@@ -10,10 +10,6 @@ const Cart = () => {
   let debounceID = null;
   const toggle = () => setModal(!modal);
 
-  useEffect(() => {
-    console.log("change happened");
-  },[productList])
-
   const getProductComparison = async () => {
     try {
       let res = await fetch(`/api/cart/shopping`, {
@@ -58,7 +54,7 @@ const Cart = () => {
         </ModalHeader>
         <ModalBody>
           {productList.length > 0 ? (
-            <ProductData products={productList} inCart={true}/>
+            <ProductData products={productList} inCart={true} />
           ) : (
             <h4 className="text-center">Tom kundvagn</h4>
           )}
