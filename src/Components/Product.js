@@ -9,12 +9,8 @@ const Product = ({product, i, toggle, inCart, productsInCart}) => {
         const [count, setCount] = useState(0);
 
         const removeProduct = () => {
-          console.log(i);
-          console.log(productsInCart);
           productsInCart.splice(i,1)
-        }
-
-        
+        } 
       
         const addProduct = (product) => {
           const matchingProduct = productList.find(
@@ -132,7 +128,11 @@ const Product = ({product, i, toggle, inCart, productsInCart}) => {
             >
               Lägg till
             </Button>
-            {inCart ? <h6 className="mx-auto my-auto" onClick={() => removeProduct()}>X</h6> : null}
+            {inCart ? (
+              <h6 className="mx-auto my-auto" onClick={() => removeProduct()}>
+                X
+              </h6>
+            ) : null}
           </Row>
         </Col>
         <hr />
