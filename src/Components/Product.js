@@ -3,14 +3,28 @@ import { Row, Col, CardImg, Input, Button } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 
 const Product = ({ product, i, toggle, inCart, productsInCart }) => {
-  const { getProductInfo, productList, updateProductList } = useContext(
-    ProductContext
-  );
+  const {
+    getProductInfo,
+    productList,
+    updateProductList,
+    updateCompareList,
+    compareList,
+  } = useContext(ProductContext);
   const [count, setCount] = useState(0);
 
   const removeProduct = () => {
     productsInCart.splice(i, 1);
     updateProductList(productsInCart);
+
+    updateCompareList(
+      Object.keys(compareList).length !== 0
+        ? Object.keys(compareList).forEach((product) => {
+            const arr = compareList[product];
+            console.log(arr);
+            return typeof arr[i] === "object" ? arr.splice(i, 1) : false;
+          })
+        : compareList
+    );
   };
 
   const addProduct = (product) => {
