@@ -116,7 +116,6 @@ module.exports = class WillysHarvester {
       }
 
       static async uploadData(data){
-        //console.log(data)
           for (let i = 0; i < data.length; i++){
             Product.find(
                 { productFullName : data[i].productFullName.toLowerCase() },
