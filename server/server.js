@@ -132,7 +132,7 @@ app.post("/api/cart/shopping", async (req, res) => {
         const result = await Product.find({
           productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
         });
-        console.log(data);
+        
         if (result.length > 0) {
           mathemList.push(
             data.retail === "mathem"

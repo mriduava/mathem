@@ -19,12 +19,10 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
       Object.keys(compareList).length !== 0
         ? Object.keys(compareList).forEach((product) => {
             const arr = compareList[product];
-            console.log(arr);
-            return typeof arr[i] === "object" ? arr.splice(i, 1) : false;
+            return typeof arr[i] === "object" ? arr.splice(i, 1) : undefined;
           })
         : compareList
     );
-    console.log(compareList)
   };
 
   const addProduct = (product) => {
