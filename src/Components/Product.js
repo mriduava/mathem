@@ -14,7 +14,6 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
 
   const removeProduct = () => {
     productsInCart.splice(i, 1);
-    updateProductList(productsInCart);
 
     updateCompareList(
       Object.keys(compareList).length !== 0
@@ -25,6 +24,7 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
           })
         : compareList
     );
+    console.log(compareList)
   };
 
   const addProduct = (product) => {
