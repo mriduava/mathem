@@ -2,11 +2,17 @@ import React,{useContext, useState} from 'react'
 import { Row, Col, CardImg, Input, Button } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 
-const Product = ({product, i, toggle}) => {
+const Product = ({product, i, toggle, inCart, productsInCart}) => {
       const { getProductInfo, productList, updateProductList } = useContext(
         ProductContext
       );
         const [count, setCount] = useState(0);
+
+        const removeProduct = () => {
+          console.log(i);
+          console.log(productsInCart);
+          productsInCart.splice(i,1)
+        }
 
         
       
@@ -118,7 +124,15 @@ const Product = ({product, i, toggle}) => {
             </div>
           </div>
           <Row className="col-12">
-            <Button className="mx-auto" onClick={() => {addProduct(product)}}>Lägg till</Button>
+            <Button
+              className="mx-auto"
+              onClick={() => {
+                addProduct(product);
+              }}
+            >
+              Lägg till
+            </Button>
+            {inCart ? <h6 className="mx-auto my-auto" onClick={() => removeProduct()}>X</h6> : null}
           </Row>
         </Col>
         <hr />

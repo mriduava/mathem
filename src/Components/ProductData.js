@@ -1,12 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {  Row, Col, CardImg, Modal, ModalBody, Input, Button } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import Product from './Product'
 
-const ProductMap = ({products}, props) => {
+const ProductMap = ({products, inCart}, props) => {
   const { productInfo} = useContext(ProductContext);
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
+
+  useEffect(() => {
+    console.log("change happened");
+  },[products])
 
   return(
     <div>
@@ -14,7 +18,7 @@ const ProductMap = ({products}, props) => {
       products.map((product, i) => {
       return (
         <div key={product._id + i}>
-          <Product product={product} i={i} toggle={toggle}/>
+          <Product product={product} i={i} toggle={toggle} inCart={inCart} productsInCart={products}/>
         </div>
       );
     }) : null}

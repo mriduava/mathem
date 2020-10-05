@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import ProductData from "./ProductData";
 import { ProductContext } from "../contexts/ProductContextProvider";
@@ -9,6 +9,10 @@ const Cart = () => {
   const [modal, setModal] = useState(false);
   let debounceID = null;
   const toggle = () => setModal(!modal);
+
+  useEffect(() => {
+    console.log("change happened");
+  },[productList])
 
   const getProductComparison = async () => {
     try {
@@ -54,7 +58,7 @@ const Cart = () => {
         </ModalHeader>
         <ModalBody>
           {productList.length > 0 ? (
-            <ProductData products={productList} />
+            <ProductData products={productList} inCart={true}/>
           ) : (
             <h4 className="text-center">Tom kundvagn</h4>
           )}
