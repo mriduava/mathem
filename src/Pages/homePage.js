@@ -49,7 +49,6 @@ const HomePage = () => {
       debounceID = null;
     }
     debounceID = setTimeout(() => {
-      console.log(debounceID);
       searchProduct(search);
     }, 250);
   };

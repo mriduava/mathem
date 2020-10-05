@@ -69,7 +69,9 @@ const Cart = () => {
             Jämför
           </Button>
           <Button color="primary">Köp</Button>{" "}
-          <Button color="success">Stäng</Button>
+          <Button color="success" toggle={toggle}>
+            Stäng
+          </Button>
         </ModalFooter>
         <ComparedResults />
       </Modal>
