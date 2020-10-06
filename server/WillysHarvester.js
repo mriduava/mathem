@@ -136,9 +136,9 @@ module.exports = class WillysHarvester {
         let categories = await this.getCategories()
 
         try {
-         this.uploadCategories(categories)
-         this.getData(categories)
-
+         await this.uploadCategories(categories)
+         await this.getData(categories)
+          
         }catch(err){
             console.log(err)
         }
