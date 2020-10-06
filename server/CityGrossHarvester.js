@@ -30,56 +30,82 @@ let categoryList = [
 
 module.exports = class Citygross {
   getCat = (cityGrossCategory) => {
-    if (cityGrossCategory === 'skönhet & hygien' || cityGrossCategory === 'hem & städ'){
-      return 'Halsa-och-Skonhet'
-    }else if (cityGrossCategory === 'barn'){
-      return 'Barn'
-    }else if (cityGrossCategory === 'blommor & tillbehör'){
-      return cityGrossCategory
-    }else if (cityGrossCategory === 'bröd & bageri'){
-      return 'Brod-och-Kakor'
-    }else if (cityGrossCategory === 'chark' || cityGrossCategory === 'kött & fågel'){
-      return 'Kott-chark-och-fagel'
-    }else if (cityGrossCategory === 'dryck'){
-      return 'Dryck'
-    }else if (cityGrossCategory === 'fisk & skaldjur'){
-      return 'Fisk-och-Skaldjur'
-    }else if (cityGrossCategory === 'frukt & grönt'){
-      return 'Frukt-och-Gront'
-    }else if (cityGrossCategory === 'fryst' || cityGrossCategory === 'kyld färdigmat'){
-      return 'Fardigmat'
-    }else if (cityGrossCategory === 'godis' || cityGrossCategory === 'snacks'){
-      return 'Glass-godis-och-snacks'
-    }else if (cityGrossCategory === 'husdjur'){
-      return 'Husdjur'
-    }else if (cityGrossCategory === 'hälsa'){
-      return 'Apotek'
-    }else if (cityGrossCategory === 'manuell delikatess' || cityGrossCategory === 'skafferiet'){
-      return 'Skafferi'
-    }else if (cityGrossCategory === 'mejeri, ost & ägg'){
-      return 'Mejeri-ost-och-agg'
-    }else if (cityGrossCategory === 'tobak'){
-      return 'tobak'
-    }else {
-      return cityGrossCategory
+    if (
+      cityGrossCategory === "skönhet & hygien" ||
+      cityGrossCategory === "hem & städ"
+    ) {
+      return "Halsa-och-Skonhet";
+    } else if (cityGrossCategory === "barn") {
+      return "Barn";
+    } else if (cityGrossCategory === "blommor & tillbehör") {
+      return cityGrossCategory;
+    } else if (cityGrossCategory === "bröd & bageri") {
+      return "Brod-och-Kakor";
+    } else if (
+      cityGrossCategory === "chark" ||
+      cityGrossCategory === "kött & fågel"
+    ) {
+      return "Kott-chark-och-fagel";
+    } else if (cityGrossCategory === "dryck") {
+      return "Dryck";
+    } else if (cityGrossCategory === "fisk & skaldjur") {
+      return "Fisk-och-Skaldjur";
+    } else if (cityGrossCategory === "frukt & grönt") {
+      return "Frukt-och-Gront";
+    } else if (
+      cityGrossCategory === "fryst" ||
+      cityGrossCategory === "kyld färdigmat"
+    ) {
+      return "Fardigmat";
+    } else if (
+      cityGrossCategory === "godis" ||
+      cityGrossCategory === "snacks"
+    ) {
+      return "Glass-godis-och-snacks";
+    } else if (cityGrossCategory === "husdjur") {
+      return "Husdjur";
+    } else if (cityGrossCategory === "hälsa") {
+      return "Apotek";
+    } else if (
+      cityGrossCategory === "manuell delikatess" ||
+      cityGrossCategory === "skafferiet"
+    ) {
+      return "Skafferi";
+    } else if (cityGrossCategory === "mejeri, ost & ägg") {
+      return "Mejeri-ost-och-agg";
+    } else if (cityGrossCategory === "tobak") {
+      return "tobak";
+    } else {
+      return cityGrossCategory;
     }
-
-  }
+  };
 
   async fetchData(categoryID) {
-    let raw = await fetch(
-      "https://www.citygross.se/api/v1/esales/products?categoryId=" +
-        categoryID +
-        "&size=900"
-    );
+    let data = [];
 
-    return (await raw.json()).data;
-  }
+    const pageSize = 125;
+    let currentPage = 0;
 
-  async saveCategories(categories) {
-    return Promise.all(
-      categories.map((category) => this.saveCategoryProducts(category))
-    );
+    while (true) {
+      const url = `https://www.citygross.se/api/v1/esales/products?categoryId=${categoryID}&size=${pageSize}&page=${currentPage}`;
+
+      let raw;
+      try {
+        raw = await fetch(url);
+      } catch (err) {
+        raw = await fetch(url);
+      }
+      const result = await raw.json();
+
+      data = data.concat(result.data);
+
+      if (currentPage >= result.meta.pageCount) {
+        break;
+      }
+      currentPage += 1;
+    }
+
+    return data;
   }
 
   async saveCategoryProducts(categoryProducts) {
@@ -119,8 +145,15 @@ module.exports = class Citygross {
   }
 
   async getAllProducts() {
-    return Promise.all(
+    const result = await Promise.all(
       categoryList.map((category) => this.fetchData(category))
+    );
+
+    return result;
+  }
+  async saveCategories(categories) {
+    return Promise.all(
+      categories.map((category) => this.saveCategoryProducts(category))
     );
   }
 
