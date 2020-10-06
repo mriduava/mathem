@@ -25,12 +25,12 @@ const { app } = require("mongoosy")({
 //Function that checks if today's already been fetched. If not then fetch data/harvest
 const dailyDataHarvestCheck = () => {
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
-  DateUpdate.find({}, (err, result) => {
+  DateUpdate.find({}, async (err, result) => {
     if (!result.length) {
       todaysDate.save();
       mathem.harvester();
-      citygross.harvester();
-      WillysHarvester.harvest();
+      await citygross.harvester();
+      await WillysHarvester.harvest();
     } else {
       const condition =
         todaysDate.dateUpdated.getDate() >
@@ -40,8 +40,8 @@ const dailyDataHarvestCheck = () => {
       if (condition) {
         todaysDate.save();
         mathem.harvester();
-        citygross.harvester();
-        WillysHarvester.harvest();
+        await citygross.harvester();
+        await WillysHarvester.harvest();
       }
     }
   });
