@@ -84,21 +84,21 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (data, store, products, keywords) => {
-  let filteredProducts = products.filter(
+const filterList = (category, store, allProducts, keywords) => {
+  let filteredProducts = allProducts.filter(
     (product) =>
       product.retail === store &&
-      product.productName.includes(keywords[0]) &&
-      product.category === data.category
+      //product.productName.includes(keywords[0]) &&
+      product.category === category
   );
 
   let highestAmountOfWordsMatched = 0;
 
   let productMatch;
 
-  filteredProducts.map((product) => {
+  filteredProducts.forEach((product) => {
     let wordMatches = 0;
-    keywords.map((word) => {
+    keywords.forEach((word) => {
       if (product.productName.toLowerCase().includes(word.toLowerCase())) {
         wordMatches++;
         if (wordMatches > highestAmountOfWordsMatched) {
@@ -113,6 +113,15 @@ const filterList = (data, store, products, keywords) => {
 
 let debounceID = null;
 
+function addToList(retailor, cartItem, retailorList, products, keywords) {
+  if (cartItem.retail === retailor) {
+    retailorList.push(cartItem);
+  } else {
+    retailorList.push(
+      filterList(cartItem.category, retailor, products, keywords)
+    );
+  }
+}
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
   if (debounceID !== null) {
@@ -127,28 +136,16 @@ app.post("/api/cart/shopping", async (req, res) => {
     const willysList = [];
 
     await Promise.all(
-      cartData.map(async (data, i) => {
-        const keywords = data.productName.split(" ");
-        const result = await Product.find({
+      cartData.map(async (cartItem, i) => {
+        const keywords = cartItem.productName.split(" ");
+        const products = await Product.find({
           productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
-        });
-        
-        if (result.length > 0) {
-          mathemList.push(
-            data.retail === "mathem"
-              ? data
-              : filterList(data, "mathem", result, keywords)
-          );
-          cityGrossList.push(
-            data.retail === "cityGross"
-              ? data
-              : filterList(data, "cityGross", result, keywords)
-          );
-          willysList.push(
-            data.retail === "willys"
-              ? data
-              : filterList(data, "Willys", result, keywords)
-          );
+        }).sort({ price: 1 });
+
+        if (products.length) {
+          addToList("mathem", cartItem, mathemList, products, keywords);
+          addToList("cityGross", cartItem, cityGrossList, products, keywords);
+          addToList("Willys", cartItem, willysList, products, keywords);
         }
       })
     );
