@@ -45,9 +45,17 @@ const Cart = () => {
 
   return (
     <div>
-      <Button color="warning" onClick={toggle}>
-        Inköpslista
-      </Button>
+      <div onClick={toggle} style={{color: "#fff", marginRight: "40px"}}>
+        <div style={{width: "30px", height: "30px", backgroundColor: "#fff", 
+          borderRadius: "50%", padding: "0 0 5px 0", position: "absolute",
+          right: 65, top: 10, textAlign: "center",
+          color: "red", fontSize: "20px"}}>{productList.length}
+      </div>
+        <div onClick={toggle} 
+          style={{cursor: "pointer", fontSize: "24px", width: "160px", height: "50px",
+            color: "#294360", backgroundColor: "#FFC654", padding: "5px 5px", borderRadius: "5px"}}>
+          <i class="fas fa-cart-arrow-down"></i> Inköpslista</div>
+      </div>
       <Modal isOpen={modal} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle} charCode="" className="mx-auto">
           Kundvagn
