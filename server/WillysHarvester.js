@@ -22,12 +22,20 @@ module.exports = class WillysHarvester {
         return (await raw.json()).results
       }
 
+      static isLooseWeight(product) {
+        if (product.unitMeasurement === 'kg'){
+          return true
+        }
+        return false
+      }
+
       static async getDataOld(categories){
         let scrubbedData = []
         let productCategories = []
         for (let i = 0; i < categories.children.length; i++){
           let raw = await this.getProducts(categories.children[i].url)
           let scrubbed = await WillysScrubber.scrubAll(raw)
+          productCategories.push(categories.children[i].url)
           scrubbedData.push(scrubbed)
         }
         let data = []
@@ -53,8 +61,11 @@ module.exports = class WillysHarvester {
                 discountPrice: scrubbedData[i][j].discount[2],
                 maxQuantity: scrubbedData[i][j].discount[3],
                 applied: scrubbedData[i][j].discount[4]
-              }
+              },
+              category: productCategories[i],
+              looseWeight: this.isLooseWeight(scrubbedData[i][j])
             })
+          
           data.push(p)
           }
         }
@@ -90,7 +101,8 @@ module.exports = class WillysHarvester {
                 maxQuantity: scrubbed[j].discount[3],
                 applied: scrubbed[j].discount[4]
               },
-              category: categories.children[i].url
+              category: categories.children[i].url,
+              looseWeight: this.isLooseWeight(scrubbed[j])
             })
             data.push(p)
           }
