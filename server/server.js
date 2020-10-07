@@ -140,7 +140,7 @@ app.post("/api/cart/shopping", async (req, res) => {
         const keywords = cartItem.productName.split(" ");
         const products = await Product.find({
           productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
-        }).sort({ price: 1 });
+        });
 
         if (products.length) {
           addToList("mathem", cartItem, mathemList, products, keywords);
