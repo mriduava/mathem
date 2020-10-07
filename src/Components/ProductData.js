@@ -29,7 +29,7 @@ const ProductMap = ({products, inCart}, props) => {
           <Col sm="7">
             <div style={{marginTop: '70px', lineHeight: '80%'}}>
               <h3 style={{color: '#294360', fontSize: '30px', margin: '10px 0'}}>{productInfo.productName}</h3>
-              <p style={{color: '#ff1466', fontSize: '24px'}}>{productInfo.price} :- /st</p>
+              <p style={{color: '#ff1466', fontSize: '24px'}}>{productInfo.price} kr</p>
               <div className="d-flex">
               <p style={{color: '#294360', fontSize: '16px'}}>{productInfo.volume}</p>
               <p style={{color: '#294360', fontSize: '16px', marginLeft: '20px'}}>Jmf pris: {productInfo.comparePrice}/{productInfo.compareUnit}</p>

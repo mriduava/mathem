@@ -86,7 +86,7 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
             </p>
           </Col>
           <Col xs="2" sm="2">
-            <h5 style={{ color: "#FA5858" }}>{product.price} :-</h5>
+            <h5 style={{ color: "#FA5858" }}>{product.price} kr</h5>
           </Col>
         </Row>
       </Col>

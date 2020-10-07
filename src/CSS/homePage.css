@@ -5,6 +5,10 @@
     border: none;
 }
 
+body {
+    padding-top: 45px;
+}
+
 .App {
     display: flex;
     min-height: 100vh;

@@ -24,6 +24,7 @@ const { app } = require("mongoosy")({
 
 //Function that checks if today's already been fetched. If not then fetch data/harvest
 const dailyDataHarvestCheck = () => {
+  console.log('yay')
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
   DateUpdate.find({}, async (err, result) => {
     if (!result.length) {
@@ -60,6 +61,8 @@ const dailyHarvestInterval = () => {
 };
 
 dailyHarvestInterval();
+dailyHarvestInterval()
+      
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
@@ -140,7 +143,7 @@ app.post("/api/cart/shopping", async (req, res) => {
         const keywords = cartItem.productName.split(" ");
         const products = await Product.find({
           productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
-        }).sort({ price: 1 });
+        });
 
         if (products.length) {
           addToList("mathem", cartItem, mathemList, products, keywords);

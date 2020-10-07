@@ -133,6 +133,7 @@ module.exports = class Citygross {
           ecologic: this.isEcological(product.markings),
           category: this.getCat(product.superCategory.toLowerCase()),
         };
+        
         return Product.replaceOne(
           { productFullName: dbProduct.productFullName },
           dbProduct,
