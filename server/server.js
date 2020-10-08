@@ -24,6 +24,7 @@ const { app } = require("mongoosy")({
 
 //Function that checks if today's already been fetched. If not then fetch data/harvest
 const dailyDataHarvestCheck = () => {
+  console.log('yay')
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
   DateUpdate.find({}, async (err, result) => {
     if (!result.length) {
@@ -60,6 +61,8 @@ const dailyHarvestInterval = () => {
 };
 
 dailyHarvestInterval();
+dailyHarvestInterval()
+      
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
