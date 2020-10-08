@@ -65,6 +65,10 @@ const ComparedResults = () => {
     return window.open(url, name, specs);
   };
 
+  const calculateTotalPrice = (arr) => {
+    return arr.reduce((a, b) => a + b.price, 0);
+  };
+
   useEffect(() => findBestValues(compareList), [compareList]);
 
   return (
@@ -75,6 +79,11 @@ const ComparedResults = () => {
           return (
             <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
+              <h4>
+                {Math.round(calculateTotalPrice(compareList[retail]) * 100) /
+                  100}
+                kr
+              </h4>
               <div>
                 {products.map((product, j) => {
                   if (product !== null) {
