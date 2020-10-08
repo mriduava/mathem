@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from "react";
-import {  Row, Col, CardImg, Modal, ModalBody, Input, Button } from "reactstrap";
+import React, { useState, useContext } from "react";
+import {  Row, Col, CardImg, Modal, ModalBody} from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import Product from './Product'
 
-const ProductMap = ({products, inCart}, props) => {
+const ProductMap = ({products, inCart}) => {
   const { productInfo} = useContext(ProductContext);
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
@@ -23,7 +23,7 @@ const ProductMap = ({products, inCart}, props) => {
         <Row>
           <Col sm="5" >
             <div style={{border: '1px solid #ddd',  marginLeft: '30px'}}>
-              <CardImg top width="100%" src={productInfo.image} alt="Card image cap" />
+              <CardImg top src={productInfo.image} alt="Card image cap" />
             </div>
           </Col>
           <Col sm="7">
