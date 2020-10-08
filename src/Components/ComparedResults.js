@@ -68,6 +68,11 @@ const ComparedResults = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [compareList]
   );
+  const calculateTotalPrice = (arr) => {
+    return arr.reduce((a, b) => {
+      return b ? a + b.price : a;
+    }, 0);
+  };
 
   return (
     <div>
@@ -77,6 +82,11 @@ const ComparedResults = () => {
           return (
             <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
+              <h4>
+                {Math.round(calculateTotalPrice(compareList[retail]) * 100) /
+                  100}
+                kr
+              </h4>
               <div>
                 {products.map((product, j) => {
                   if (product !== null) {
