@@ -25,9 +25,9 @@ const ComparedResults = () => {
     if (length <= 0) return;
     for (let i = 0; i < length; ++i) {
       const bestPrices = findAllValues(keys, i, objList, "price");
-      updateLocalCompareList((objList[bestPrices][i].bestValue = true));
-      // const bestBulkPrices = findAllValues(keys, i, objList, "kgPrice");
-      // updateLocalCompareList((objList[bestBulkPrices][i].bestBulkValue = true));
+      bestPrices.forEach((retailor) => {
+        updateLocalCompareList((objList[retailor][i].bestValue = true));
+      });
     }
   };
 
@@ -48,23 +48,31 @@ const ComparedResults = () => {
     });
   };
 
- const openProductInStore = (product) => {
-    if(product.retail === "mathem"){
-      windowOpen(`mathem.se${product.url}`)
+  const openProductInStore = (product) => {
+    if (product.retail === "mathem") {
+      windowOpen(`mathem.se${product.url}`);
+    } else {
+      window.open(product.url);
     }
-    else{
-      window.open(product.url)
-    }
-  }
+  };
 
   const windowOpen = (url, name, specs) => {
     if (!url.match(/^https?:\/\//i)) {
       url = "http://" + url;
     }
     return window.open(url, name, specs);
-  }
+  };
 
-  useEffect(() => findBestValues(compareList), [compareList]);
+  useEffect(
+    () => findBestValues(compareList),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [compareList]
+  );
+  const calculateTotalPrice = (arr) => {
+    return arr.reduce((a, b) => {
+      return b ? a + b.price : a;
+    }, 0);
+  };
 
   return (
     <div>
@@ -74,6 +82,11 @@ const ComparedResults = () => {
           return (
             <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
+              <h4>
+                {Math.round(calculateTotalPrice(compareList[retail]) * 100) /
+                  100}
+                kr
+              </h4>
               <div>
                 {products.map((product, j) => {
                   if (product !== null) {

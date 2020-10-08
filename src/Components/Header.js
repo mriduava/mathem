@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Navbar,
   NavbarBrand,
 } from "reactstrap";
 import Cart from './Cart'
 
-const MainHeader = (name) => {
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleNavbar = () => setCollapsed(!collapsed);
+const MainHeader = () => {
 
   return (
     <div>

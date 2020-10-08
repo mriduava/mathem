@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from "react";
-import {  Row, Col, CardImg, Modal, ModalBody, Input, Button } from "reactstrap";
+import React, { useState, useContext } from "react";
+import {  Row, Col, CardImg, Modal, ModalBody} from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 import Product from './Product'
 
-const ProductMap = ({products, inCart}, props) => {
+const ProductMap = ({products, inCart}) => {
   const { productInfo} = useContext(ProductContext);
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
@@ -23,13 +23,13 @@ const ProductMap = ({products, inCart}, props) => {
         <Row>
           <Col sm="5" >
             <div style={{border: '1px solid #ddd',  marginLeft: '30px'}}>
-              <CardImg top width="100%" src={productInfo.image} alt="Card image cap" />
+              <CardImg top src={productInfo.image} alt="Card image cap" />
             </div>
           </Col>
           <Col sm="7">
             <div style={{marginTop: '70px', lineHeight: '80%'}}>
               <h3 style={{color: '#294360', fontSize: '30px', margin: '10px 0'}}>{productInfo.productName}</h3>
-              <p style={{color: '#ff1466', fontSize: '24px'}}>{productInfo.price} :- /st</p>
+              <p style={{color: '#ff1466', fontSize: '24px'}}>{productInfo.price} kr</p>
               <div className="d-flex">
               <p style={{color: '#294360', fontSize: '16px'}}>{productInfo.volume}</p>
               <p style={{color: '#294360', fontSize: '16px', marginLeft: '20px'}}>Jmf pris: {productInfo.comparePrice}/{productInfo.compareUnit}</p>
