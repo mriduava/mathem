@@ -1,4 +1,4 @@
-const db = "mathem";
+const db = "matpris";
 const PORT = 3200;
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
