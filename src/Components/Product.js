@@ -69,7 +69,7 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
                 overflow: "hidden",
               }}
             >
-              <CardImg
+              <img
                 top
                 width="100%"
                 src={product.image}
