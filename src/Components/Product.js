@@ -70,7 +70,6 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
               }}
             >
               <img
-                top
                 width="100%"
                 src={product.image}
                 alt="Card cap"

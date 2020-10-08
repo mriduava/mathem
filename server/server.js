@@ -75,7 +75,7 @@ app.get("/api/mathem/:search", async (req, res) => {
   };
   await Product.find(query, (err, result) => {
     return res.send(result);
-  }).sort("price")
+  })
     .limit(parseInt(req.query.limit))
     .skip(parseInt(req.query.skip));
 });

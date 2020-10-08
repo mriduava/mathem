@@ -18,7 +18,6 @@ const ProductContextProvider = (props) => {
     let res = await fetch("/api/mathems/" + productId);
     res = await res.json();
     setProductInfo(res);
-    console.log(productInfo);
   };
 
   const values = {
