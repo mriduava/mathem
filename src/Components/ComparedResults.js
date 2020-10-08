@@ -27,8 +27,6 @@ const ComparedResults = () => {
       const bestPrices = findAllValues(keys, i, objList, "price");
       bestPrices.forEach((retailor) => {
         updateLocalCompareList((objList[retailor][i].bestValue = true));
-        // const bestBulkPrices = findAllValues(keys, i, objList, "kgPrice");
-        // updateLocalCompareList((objList[bestBulkPrices][i].bestBulkValue = true));
       });
     }
   };
@@ -65,7 +63,11 @@ const ComparedResults = () => {
     return window.open(url, name, specs);
   };
 
-  useEffect(() => findBestValues(compareList), [compareList]);
+  useEffect(
+    () => findBestValues(compareList),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [compareList]
+  );
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Row, Col, CardImg, Input, Button } from "reactstrap";
+import { Row, Col, Input, Button } from "reactstrap";
 import { ProductContext } from "../contexts/ProductContextProvider";
 
 const Product = ({ product, i, toggle, inCart, productsInCart }) => {
@@ -73,7 +73,7 @@ const Product = ({ product, i, toggle, inCart, productsInCart }) => {
                 top
                 width="100%"
                 src={product.image}
-                alt="Card image cap"
+                alt="Card cap"
               />
             </div>
           </Col>

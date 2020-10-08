@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext} from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import ProductData from "./ProductData";
 import { ProductContext } from "../contexts/ProductContextProvider";
@@ -54,7 +54,7 @@ const Cart = () => {
         <div onClick={toggle} 
           style={{cursor: "pointer", fontSize: "24px", width: "160px", height: "50px",
             color: "#294360", backgroundColor: "#FFC654", padding: "5px 5px", borderRadius: "5px"}}>
-          <i class="fas fa-cart-arrow-down"></i> Inköpslista</div>
+          <i className="fas fa-cart-arrow-down"></i> Inköpslista</div>
       </div>
       <Modal isOpen={modal} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle} charCode="" className="mx-auto">
