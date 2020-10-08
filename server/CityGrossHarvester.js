@@ -108,6 +108,14 @@ module.exports = class Citygross {
     return data;
   }
 
+  isLooseWeight(product) {
+    
+    if (product.comparisonUnit === 'kg'){
+      return true
+    }
+    return false
+  }
+
   async saveCategoryProducts(categoryProducts) {
     return Promise.all(
       categoryProducts.map((product) => {
@@ -132,8 +140,9 @@ module.exports = class Citygross {
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
           category: this.getCat(product.superCategory.toLowerCase()),
+          looseWeight: this.isLooseWeight(product)
         };
-        
+       // console.log(dbProduct)
         return Product.replaceOne(
           { productFullName: dbProduct.productFullName },
           dbProduct,

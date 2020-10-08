@@ -11,9 +11,17 @@ class Mathem {
         `https://api.mathem.io/product-search/noauth/search/products/10/categorytag/${category}?size=1000&storeId=10&searchType=category&sortTerm=popular&sortOrder=desc`
       ).then((data) => data.json());
       dataHarvest = dataHarvest.products;
+      
       this.scrubber(dataHarvest);
     });
   };
+
+  isLooseWeight(product) {
+    if (product.comparisonUnit === 'kg'){
+      return true
+    }
+    return false
+  }
 
   getCat = (mathemCategory) => {
     if(mathemCategory === 'frukt-o-gront'){
@@ -160,7 +168,8 @@ class Mathem {
                   : null,
               }
             : null,
-          category: this.getCat(product.department.url.toLowerCase())
+          category: this.getCat(product.department.url.toLowerCase()),
+          looseWeight: this.isLooseWeight(product)
         });
         mathemProduct.find(
           {

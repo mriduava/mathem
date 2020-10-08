@@ -34,6 +34,7 @@ let schema = new Schema({
     bulkPrice: { type: String, required: false },
   },
   category: {type: String, required: false},
+  looseWeight: {type: Boolean, required: false}
 });
 schema.index({ "$**": "text" });
 
