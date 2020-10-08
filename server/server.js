@@ -2,7 +2,6 @@ const db = "mathem";
 const PORT = 3200;
 const fetch = require("node-fetch");
 const Product = require("./models/Product");
-const Category = require("./models/Category");
 const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
@@ -25,13 +24,14 @@ const { app } = require("mongoosy")({
 
 //Function that checks if today's already been fetched. If not then fetch data/harvest
 const dailyDataHarvestCheck = () => {
+  console.log('yay')
   let todaysDate = new DateUpdate({ dateUpdated: new Date() });
-  DateUpdate.find({}, (err, result) => {
+  DateUpdate.find({}, async (err, result) => {
     if (!result.length) {
       todaysDate.save();
       mathem.harvester();
-      citygross.harvester();
-      WillysHarvester.harvest();
+      await citygross.harvester();
+      await WillysHarvester.harvest();
     } else {
       const condition =
         todaysDate.dateUpdated.getDate() >
@@ -41,28 +41,28 @@ const dailyDataHarvestCheck = () => {
       if (condition) {
         todaysDate.save();
         mathem.harvester();
-        citygross.harvester();
-        WillysHarvester.harvest();
+        await citygross.harvester();
+        await WillysHarvester.harvest();
       }
     }
   });
 };
-  let dailyHarvestID = null;
-  const dailyHarvestInterval = () => {
-    dailyDataHarvestCheck()
-    const twentyFourHoursInMilliseconds = 86400000
-    if (dailyHarvestID !== null) {
-      clearInterval(dailyHarvestID);
-      dailyHarvestID = null;
-    }
-    dailyHarvestID = setInterval(() => {
-      console.log("in interval fetch");
-      dailyDataHarvestCheck();
-    }, twentyFourHoursInMilliseconds);
-  };
+let dailyHarvestID = null;
+const dailyHarvestInterval = () => {
+  dailyDataHarvestCheck();
+  const twentyFourHoursInMilliseconds = 86400000;
+  if (dailyHarvestID !== null) {
+    clearInterval(dailyHarvestID);
+    dailyHarvestID = null;
+  }
+  dailyHarvestID = setInterval(() => {
+    dailyDataHarvestCheck();
+  }, twentyFourHoursInMilliseconds);
+};
 
+dailyHarvestInterval();
 dailyHarvestInterval()
-
+      
 
 //Updated search Function
 app.get("/api/mathem/:search", async (req, res) => {
@@ -87,55 +87,82 @@ app.get("/api/mathems/:id", async (req, res) => {
   });
 });
 
-const filterList = (list , store, compareList) => {
-  let newList = list
-  newList = compareList.filter((product) => product.retail === store);
-  newList = newList.slice(list.length, list.length + 1);
-  return newList;
-}
+const filterList = (category, store, allProducts, keywords) => {
+  let filteredProducts = allProducts.filter(
+    (product) =>
+      product.retail === store &&
+      //product.productName.includes(keywords[0]) &&
+      product.category === category
+  );
+
+  let highestAmountOfWordsMatched = 0;
+
+  let productMatch;
+
+  filteredProducts.forEach((product) => {
+    let wordMatches = 0;
+    keywords.forEach((word) => {
+      if (product.productName.toLowerCase().includes(word.toLowerCase())) {
+        wordMatches++;
+        if (wordMatches > highestAmountOfWordsMatched) {
+          highestAmountOfWordsMatched = wordMatches;
+          productMatch = product;
+        }
+      }
+    });
+  });
+  return productMatch;
+};
 
 let debounceID = null;
 
+function addToList(retailor, cartItem, retailorList, products, keywords) {
+  if (cartItem.retail === retailor) {
+    retailorList.push(cartItem);
+  } else {
+    retailorList.push(
+      filterList(cartItem.category, retailor, products, keywords)
+    );
+  }
+}
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
-  let dataPayload = "";
-  let mathemList = [];
-  let cityGrossList = [];
-  let willysList = [];
-  let cartData = req.body;
   if (debounceID !== null) {
     clearTimeout(debounceID);
     debounceID = null;
   }
-  debounceID = setTimeout(() => {
-    cartData.map(async (data, i) => {
-      let keywords = data.productName.split(" ");
-        await Product.find(
-          { productName: { '$regex': `.*${keywords[0]}.*`,'$options' : 'i'}},
-          (err, result) => {
-            if(result.length > 0){
-              mathemList = mathemList.concat(
-                filterList(mathemList, "mathem", result)
-              ); 
-              cityGrossList = cityGrossList.concat(
-                filterList(cityGrossList, "cityGross", result)
-              );
-              willysList = willysList.concat(
-                filterList(willysList, "Willys", result)
-              );
-              dataPayload = {
-                mathem: mathemList,
-                cityGross: cityGrossList,
-                willys: willysList,
-              };
-            }
-          }
-        );
-        if (i === cartData.length - 1) {
-          return res.send(dataPayload);
+  debounceID = setTimeout(async () => {
+    const cartData = req.body;
+
+    const mathemList = [];
+    const cityGrossList = [];
+    const willysList = [];
+
+    await Promise.all(
+      cartData.map(async (cartItem, i) => {
+        const keywords = cartItem.productName.split(" ");
+        const products = await Product.find({
+          productName: { $regex: `.*${keywords[0]}.*`, $options: "i" },
+        });
+
+        if (products.length) {
+          addToList("mathem", cartItem, mathemList, products, keywords);
+          addToList("cityGross", cartItem, cityGrossList, products, keywords);
+          addToList("Willys", cartItem, willysList, products, keywords);
         }
-    });
-  }, 250);
+      })
+    );
+
+    if (mathemList.length || cityGrossList.length || willysList.length) {
+      res.send({
+        mathem: mathemList,
+        cityGross: cityGrossList,
+        willys: willysList,
+      });
+    } else {
+      res.send("");
+    }
+  }, 100);
 });
 
 //SERVER

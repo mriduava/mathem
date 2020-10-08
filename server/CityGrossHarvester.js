@@ -30,56 +30,82 @@ let categoryList = [
 
 module.exports = class Citygross {
   getCat = (cityGrossCategory) => {
-    if (cityGrossCategory === 'skönhet & hygien' || cityGrossCategory === 'hem & städ'){
-      return 'Halsa-och-Skonhet'
-    }else if (cityGrossCategory === 'barn'){
-      return 'Barn'
-    }else if (cityGrossCategory === 'blommor & tillbehör'){
-      return cityGrossCategory
-    }else if (cityGrossCategory === 'bröd & bageri'){
-      return 'Brod-och-Kakor'
-    }else if (cityGrossCategory === 'chark' || cityGrossCategory === 'kött & fågel'){
-      return 'Kott-chark-och-fagel'
-    }else if (cityGrossCategory === 'dryck'){
-      return 'Dryck'
-    }else if (cityGrossCategory === 'fisk & skaldjur'){
-      return 'Fisk-och-Skaldjur'
-    }else if (cityGrossCategory === 'frukt & grönt'){
-      return 'Frukt-och-Gront'
-    }else if (cityGrossCategory === 'fryst' || cityGrossCategory === 'kyld färdigmat'){
-      return 'Fardigmat'
-    }else if (cityGrossCategory === 'godis' || cityGrossCategory === 'snacks'){
-      return 'Glass-godis-och-snacks'
-    }else if (cityGrossCategory === 'husdjur'){
-      return 'Husdjur'
-    }else if (cityGrossCategory === 'hälsa'){
-      return 'Apotek'
-    }else if (cityGrossCategory === 'manuell delikatess' || cityGrossCategory === 'skafferiet'){
-      return 'Skafferi'
-    }else if (cityGrossCategory === 'mejeri, ost & ägg'){
-      return 'Mejeri-ost-och-agg'
-    }else if (cityGrossCategory === 'tobak'){
-      return 'tobak'
-    }else {
-      return cityGrossCategory
+    if (
+      cityGrossCategory === "skönhet & hygien" ||
+      cityGrossCategory === "hem & städ"
+    ) {
+      return "Halsa-och-Skonhet";
+    } else if (cityGrossCategory === "barn") {
+      return "Barn";
+    } else if (cityGrossCategory === "blommor & tillbehör") {
+      return cityGrossCategory;
+    } else if (cityGrossCategory === "bröd & bageri") {
+      return "Brod-och-Kakor";
+    } else if (
+      cityGrossCategory === "chark" ||
+      cityGrossCategory === "kött & fågel"
+    ) {
+      return "Kott-chark-och-fagel";
+    } else if (cityGrossCategory === "dryck") {
+      return "Dryck";
+    } else if (cityGrossCategory === "fisk & skaldjur") {
+      return "Fisk-och-Skaldjur";
+    } else if (cityGrossCategory === "frukt & grönt") {
+      return "Frukt-och-Gront";
+    } else if (
+      cityGrossCategory === "fryst" ||
+      cityGrossCategory === "kyld färdigmat"
+    ) {
+      return "Fardigmat";
+    } else if (
+      cityGrossCategory === "godis" ||
+      cityGrossCategory === "snacks"
+    ) {
+      return "Glass-godis-och-snacks";
+    } else if (cityGrossCategory === "husdjur") {
+      return "Husdjur";
+    } else if (cityGrossCategory === "hälsa") {
+      return "Apotek";
+    } else if (
+      cityGrossCategory === "manuell delikatess" ||
+      cityGrossCategory === "skafferiet"
+    ) {
+      return "Skafferi";
+    } else if (cityGrossCategory === "mejeri, ost & ägg") {
+      return "Mejeri-ost-och-agg";
+    } else if (cityGrossCategory === "tobak") {
+      return "tobak";
+    } else {
+      return cityGrossCategory;
     }
-
-  }
+  };
 
   async fetchData(categoryID) {
-    let raw = await fetch(
-      "https://www.citygross.se/api/v1/esales/products?categoryId=" +
-        categoryID +
-        "&size=900"
-    );
+    let data = [];
 
-    return (await raw.json()).data;
-  }
+    const pageSize = 125;
+    let currentPage = 0;
 
-  async saveCategories(categories) {
-    return Promise.all(
-      categories.map((category) => this.saveCategoryProducts(category))
-    );
+    while (true) {
+      const url = `https://www.citygross.se/api/v1/esales/products?categoryId=${categoryID}&size=${pageSize}&page=${currentPage}`;
+
+      let raw;
+      try {
+        raw = await fetch(url);
+      } catch (err) {
+        raw = await fetch(url);
+      }
+      const result = await raw.json();
+
+      data = data.concat(result.data);
+
+      if (currentPage >= result.meta.pageCount) {
+        break;
+      }
+      currentPage += 1;
+    }
+
+    return data;
   }
 
   isLooseWeight(product) {
@@ -110,6 +136,7 @@ module.exports = class Citygross {
           price: product.defaultPrice.currentPrice.price,
           comparePrice: product.defaultPrice.currentPrice.comparisonPrice,
           compareUnit: "kg",
+          kgPrice: this.findKgPrice(product),
           discount: this.findDiscount(product),
           ecologic: this.isEcological(product.markings),
           category: this.getCat(product.superCategory.toLowerCase()),
@@ -128,8 +155,15 @@ module.exports = class Citygross {
   }
 
   async getAllProducts() {
-    return Promise.all(
+    const result = await Promise.all(
       categoryList.map((category) => this.fetchData(category))
+    );
+
+    return result;
+  }
+  async saveCategories(categories) {
+    return Promise.all(
+      categories.map((category) => this.saveCategoryProducts(category))
     );
   }
 
@@ -139,16 +173,11 @@ module.exports = class Citygross {
   }
 
   isEcological(arr) {
-    let b = false;
-    if (!Array.isArray(arr)) return b;
-
-    arr.forEach((e) => {
-      if (this.hasMarking(e.code) === true) {
-        b = true;
-      }
-    });
-
-    return b;
+    if (!Array.isArray(arr)) return false;
+    return arr.reduce(
+      (hasMarking, element) => hasMarking || this.hasMarking(element.code),
+      false
+    );
   }
 
   hasMarking(type) {
@@ -171,25 +200,44 @@ module.exports = class Citygross {
     }[type];
   }
 
+  findKgPrice(product) {
+    if (!product.grossWeight) return undefined;
+    const volume = product.grossWeight.value;
+    const unit = this.unitLookupTable(product.grossWeight.unitOfMeasure);
+    if (!volume || !unit) return;
+    const conversionFactor = {
+      g: 1000,
+      hg: 10,
+      kg: 1,
+      st: 1,
+    }[unit];
+    return (
+      Math.round(
+        ((product.defaultPrice.currentPrice.price * conversionFactor) /
+          volume) *
+          100
+      ) / 100
+    );
+  }
+
   calculateVolume(product) {
-    return product.grossWeight
-      ? `${product.grossWeight.value}${this.unitLookupTable(
-          product.grossWeight.unitOfMeasure
-        )}`
-      : undefined;
+    if (product.grossWeight)
+      return `${product.grossWeight.value}${this.unitLookupTable(
+        product.grossWeight.unitOfMeasure
+      )}`;
+    return undefined;
   }
 
   findDiscount(product) {
     if (!product.defaultPrice.hasDiscount) return undefined;
 
-    const discount = {};
+    const discount = {
+      memberDiscount: product.defaultPrice.hasPromotion,
+      prePrice: product.defaultPrice.ordinaryPrice.price,
+    };
+
     const promotion = product.defaultPrice.promotions[0];
-
-    discount.memberDiscount = product.defaultPrice.hasPromotion;
-
-    discount.prePrice = product.defaultPrice.ordinaryPrice.price;
-
-    if (promotion !== undefined) {
+    if (promotion) {
       discount.maxQuantity = promotion.amountLimitPerReceipt;
 
       const itemQuantity = promotion.numberOfItems;
@@ -201,20 +249,18 @@ module.exports = class Citygross {
     return discount;
   }
 
-  findPrice(product) {
-    return;
-  }
-
   findDescription(product) {
-    const description = {};
-    const productDesc = product.foodAndBeverageExtension;
-    description.productDescription = product.description;
+    const description = {
+      productDescription: product.description,
+    };
 
-    if (productDesc !== null) {
+    const productDesc = product.foodAndBeverageExtension;
+
+    if (productDesc) {
       description.ingridients = product.foodAndBeverageExtension =
         productDesc.ingredientStatement;
 
-      if (productDesc.nutrientInformations !== undefined) {
+      if (productDesc.nutrientInformations) {
         description.nutrition =
           productDesc.nutrientInformations[0].nutrientStatement;
       }

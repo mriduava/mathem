@@ -23,6 +23,7 @@ let schema = new Schema({
   price: { type: Number, required: true },
   compareUnit: { type: String, required: false },
   comparePrice: { required: false },
+  kgPrice: { type: Number, required: false },
   discount: {
     type: Object,
     required: false,
