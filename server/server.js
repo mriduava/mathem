@@ -6,10 +6,8 @@ const DateUpdate = require("./models/DateUpdate");
 //Classes here
 const Mathem = require("./MathemHarvester");
 const Citygross = require("./CityGrossHarvester");
-const ShoppingCart = require("./Shopping");
 let mathem = new Mathem();
 let citygross = new Citygross();
-let cart = new ShoppingCart();
 const WillysHarvester = require("./WillysHarvester");
 const { distinct } = require("./models/Product");
 
@@ -61,7 +59,6 @@ const dailyHarvestInterval = () => {
 };
 
 dailyHarvestInterval();
-dailyHarvestInterval()
       
 
 //Updated search Function
@@ -91,7 +88,7 @@ const filterList = (category, store, allProducts, keywords) => {
   let filteredProducts = allProducts.filter(
     (product) =>
       product.retail === store &&
-      //product.productName.includes(keywords[0]) &&
+      product.productName.includes(keywords[0]) &&
       product.category === category
   );
 
@@ -114,8 +111,6 @@ const filterList = (category, store, allProducts, keywords) => {
   return productMatch;
 };
 
-let debounceID = null;
-
 function addToList(retailor, cartItem, retailorList, products, keywords) {
   if (cartItem.retail === retailor) {
     retailorList.push(cartItem);
@@ -127,11 +122,6 @@ function addToList(retailor, cartItem, retailorList, products, keywords) {
 }
 //This post is for the comparison list and returns possible products from other stores.
 app.post("/api/cart/shopping", async (req, res) => {
-  if (debounceID !== null) {
-    clearTimeout(debounceID);
-    debounceID = null;
-  }
-  debounceID = setTimeout(async () => {
     const cartData = req.body;
 
     const mathemList = [];
@@ -162,7 +152,6 @@ app.post("/api/cart/shopping", async (req, res) => {
     } else {
       res.send("");
     }
-  }, 100);
 });
 
 //SERVER
