@@ -9,7 +9,6 @@ const Citygross = require("./CityGrossHarvester");
 let mathem = new Mathem();
 let citygross = new Citygross();
 const WillysHarvester = require("./WillysHarvester");
-const { distinct } = require("./models/Product");
 
 // /*To connect with MongoDB
 //  It will create a db named 'mathem'
