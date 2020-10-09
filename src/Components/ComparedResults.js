@@ -124,7 +124,7 @@ const ComparedResults = () => {
                                   </div>
                                 </div>
 
-                                <b>{product.price} kr</b>
+                                <b>{product.price.toFixed(2)} kr</b>
                                 <p>{product.volume}</p>
                                 <div className="centerText">
                                   {product.bestValue ? (
