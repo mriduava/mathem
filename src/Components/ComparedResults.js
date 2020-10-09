@@ -83,9 +83,13 @@ const ComparedResults = () => {
             <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
               <h4>
-                {Math.round(calculateTotalPrice(compareList[retail]) * 100) /
-                  100}
-                kr
+                <p>
+                  {(
+                    Math.round(calculateTotalPrice(compareList[retail]) * 100) /
+                    100
+                  ).toFixed(2)}{" "}
+                  kr
+                </p>
               </h4>
               <div>
                 {products.map((product, j) => {
