@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext} from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import ProductData from "./ProductData";
 import { ProductContext } from "../contexts/ProductContextProvider";
@@ -45,16 +45,39 @@ const Cart = () => {
 
   return (
     <div>
-      <div onClick={toggle} style={{color: "#fff", marginRight: "40px"}}>
-        <div style={{width: "30px", height: "30px", backgroundColor: "#fff", 
-          borderRadius: "50%", padding: "0 0 5px 0", position: "absolute",
-          right: 65, top: 10, textAlign: "center",
-          color: "red", fontSize: "20px"}}>{productList.length}
-      </div>
-        <div onClick={toggle} 
-          style={{cursor: "pointer", fontSize: "24px", width: "160px", height: "50px",
-            color: "#294360", backgroundColor: "#FFC654", padding: "5px 5px", borderRadius: "5px"}}>
-          <i class="fas fa-cart-arrow-down"></i> Inköpslista</div>
+      <div onClick={toggle} style={{ color: "#fff", marginRight: "40px" }}>
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+            backgroundColor: "#fff",
+            borderRadius: "50%",
+            padding: "0 0 5px 0",
+            position: "absolute",
+            right: 65,
+            top: 10,
+            textAlign: "center",
+            color: "red",
+            fontSize: "20px",
+          }}
+        >
+          {productList.length}
+        </div>
+        <div
+          onClick={toggle}
+          style={{
+            cursor: "pointer",
+            fontSize: "24px",
+            width: "160px",
+            height: "50px",
+            color: "#294360",
+            backgroundColor: "#FFC654",
+            padding: "5px 5px",
+            borderRadius: "5px",
+          }}
+        >
+          <i className="fas fa-cart-arrow-down"></i> Inköpslista
+        </div>
       </div>
       <Modal isOpen={modal} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle} charCode="" className="mx-auto">
@@ -66,7 +89,7 @@ const Cart = () => {
           ) : (
             <h4 className="text-center">Tom kundvagn</h4>
           )}
-          <h4>Summa: {calculatePrice()} kr</h4>
+          <h4>Summa: {calculatePrice().toFixed(2)} kr</h4>
         </ModalBody>
         <ModalFooter>
           <Button
@@ -76,7 +99,6 @@ const Cart = () => {
           >
             Jämför
           </Button>
-          <Button color="primary">Köp</Button>{" "}
           <Button color="success" toggle={toggle}>
             Stäng
           </Button>

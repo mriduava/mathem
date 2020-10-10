@@ -27,8 +27,6 @@ const ComparedResults = () => {
       const bestPrices = findAllValues(keys, i, objList, "price");
       bestPrices.forEach((retailor) => {
         updateLocalCompareList((objList[retailor][i].bestValue = true));
-        // const bestBulkPrices = findAllValues(keys, i, objList, "kgPrice");
-        // updateLocalCompareList((objList[bestBulkPrices][i].bestBulkValue = true));
       });
     }
   };
@@ -65,7 +63,16 @@ const ComparedResults = () => {
     return window.open(url, name, specs);
   };
 
-  useEffect(() => findBestValues(compareList), [compareList]);
+  useEffect(
+    () => findBestValues(compareList),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [compareList]
+  );
+  const calculateTotalPrice = (arr) => {
+    return arr.reduce((a, b) => {
+      return b ? a + b.price : a;
+    }, 0);
+  };
 
   return (
     <div>
@@ -75,6 +82,15 @@ const ComparedResults = () => {
           return (
             <Col key={i} className="clearfix centerText">
               <h1>{prettifyRetailor[retail]}</h1>
+              <h4>
+                <p>
+                  {(
+                    Math.round(calculateTotalPrice(compareList[retail]) * 100) /
+                    100
+                  ).toFixed(2)}{" "}
+                  kr
+                </p>
+              </h4>
               <div>
                 {products.map((product, j) => {
                   if (product !== null) {
@@ -108,7 +124,7 @@ const ComparedResults = () => {
                                   </div>
                                 </div>
 
-                                <b>{product.price} kr</b>
+                                <b>{product.price.toFixed(2)} kr</b>
                                 <p>{product.volume}</p>
                                 <div className="centerText">
                                   {product.bestValue ? (
